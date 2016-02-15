@@ -1,0 +1,268 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en]C-CCK-MCD   (Windows NT 5.0; U) [Netscape]">
+</head>
+<body>
+
+
+<p>All interfaces to MDSplus data are based on the evaluation of expressions.
+These expressions are written in a language called TDI (tree data interface)
+which supports a large number of functions and commands. TDI language has
+several hundred commands and programming constructs, fortunately, most
+users need only a handful of these. The simplest expressions are just node
+names and the evaluation returns the data in that node. Simple mathematical
+and logical operations are supported, along with string manipulation, simple
+programming instructions and commands to analyze or create specific MDSplus
+constructs. External routines written in other programming languages can
+be invoked, providing almost limitless flexibility. This capability has
+been widely used to provide access to legacy data through the MDSplus API.
+<p>Expressions are strings which can be evaluated by <code>mdsvalue</code>
+calls. To evaluate an expression you must be connected to an MDSplus server.
+If that expression calls for retrieving or storing information from a tree,
+you must first open that tree with <code>mdsopen</code>. The simplest and most
+common expressions used are just (fully qualified) node names. Evaluation
+of such an expression will return the data stored in the node. If the
+node contains a composite data type like a signal, the value portion of
+the data is returned. For example, using the magnetics tree above:
+<pre>mdsvalue('\magnetics::top.processed.current_data:ip')&nbsp;&nbsp;
+
+or using the tag name
+
+ip = mdsvalue('\ip')</pre>
+will return an array containing the plasma current for the currently open
+shot. To get the time base for this data use the TDI function <code>dim_of</code>.
+<pre>t = mdsvalue('dim_of(\ip)')</pre>
+For signals with more than one dimension, <code>dim_of</code> takes an argument
+specifying which dimension is to be returned. For one dimensional arrays
+the argument is optional. Given a two dimension signal stored in a node
+<code>\sig_name</code>
+which is a function of space and time, these axes can be retrieved with:
+<pre>x = mdsvalue('dim_of(\sig_name,0)')&nbsp;&nbsp;
+t = mdsvalue('dim_of(\sig_name,1)')</pre>
+For many applications, this is all the knowledge of TDI that is needed.
+However, it is often convenient to use additional features.
+<p><b>Arithmetic Functions</b>
+<pre>mdsvalue('2+2') = 4
+mdsvalue('2-2') = 0
+mdsvalue('2*3') = 6
+mdsvalue('6/2') = 3
+mdsvalue('3^2') = 9</pre>
+Thus calibration or normalization factors can be applied to data:
+<pre>mdsvalue('\ip/1.e6')&nbsp; converts Ip from Amps to MAmps
+
+or
+
+mdsvalue('\calib_factor_1*\sig_name+\calib_factor_2')</pre>
+A number of basic mathematical functions are built into TDI as well, including
+trigonometric, logarithmic, exponential, modulo, complex conjugate, and
+absolute value functions. Sums and products of arrays are available along
+with minima, maxima, and means. Logical operations, string manipulation,
+bitwise operations and variable type conversions can also be carried out.
+(See TDI manual for complete list.)
+<pre>a = mdsvalue('sin(\x)')
+b = mdsvalue('sum(\y)')
+c = mdsvalue('mean(\z)')
+d = mdsvalue('abs(\w)')
+
+Arrays of sequential integers or floats can be created:
+mdsvalue('0:10') will yield [0,1,2,3,4,5,6,7,8,9,10]
+
+String concatenation is useful for labeling plots in the SCOPE utility
+mdsvalue('"abc" // "def"') = "abcdef"
+
+</pre>
+TDI will attempt to reconcile mathematical operations with variables of
+different type or shape. Multiplying a scalar times a vector will return
+a vector. Adding an integer to a complex number returns a complex number.
+Specific details can be found in the TDI reference manual.
+<p><b>TDI Variables</b>
+<p>For convenience and to improve performance, intermediate results can
+be cached in memory using TDI VARIABLES. These variables are global in
+scope - that is they are available to all modules of an application. TDI
+variables are also useful for writing multi-line expressions
+<p>TDI variables always begin with the underscore character for example:
+<code>_x
+or _y</code>.
+<pre>ip = mdsvalue('_ip = \ip')
+t = mdsvalue('dim_of(_ip)')</pre>
+Note that commas are used to separate "lines" in TDI code. So that the
+example above could be written:
+<pre>t = mdsvalue('_ip = \ip, dim_of(_ip)')</pre>
+Where TDI returns the value of the last "line" in the expression.
+<p><b>"Constant" expressions</b>
+<p>For convenience, a set of mathematical and physical constants are built
+into TDI. These are preceded by a <code>$</code> sign for example
+<pre>mdsvalue('$pi') = 3.14159
+mdsvalue('$qe') = 1.60218e-19&nbsp; (electron charge)</pre>
+Information on the current MDSplus session is available with the same syntax.
+The currently open shot, tree and the default node can be retrieved as
+follows:
+<pre>mdsopen,'magnetics',1234
+
+then
+
+mdsvalue('$shot') = 1234
+mdsvalue('$expt') = magnetics
+mdsvalue('$default') = \magnetics::top</pre>
+<b>Array Subscripting</b>
+<p>Arrays of any type can be subscripted to obtain particular values or
+subarrays.
+<pre>mdsvalue('_x = 10*(0:10)')
+mdsvalue('_x[3]') = 30
+mdsvalue('_x[3:6]') = [30, 40, 50, 60]</pre>
+If the variable being subscripted is a signal, the subscripting is carried
+out not with indices but in terms of the independent variables. For example
+the signal \ip as defined in our tree example has an independent dimension
+time in units of seconds:
+<pre>mdsvalue('\ip[1.2]')&nbsp; yields the value of ip at 1.2 seconds</pre>
+Note: subscripting on left side of equivalence statements is not allowed.
+<p><b>Passing Parameters to TDI Expressions</b>
+<p>It is often necessary or useful to pass arguments from a program or
+procedure into a TDI expression. This is most commonly used when creating
+composite variable types as described in the next section. Parameters to
+be substituted are indicated by a "$" sign in the TDI expression. The arguments
+are passed to the <code>mdsvalue</code> call in the order that they appear
+in the expression.
+<pre>b = 3
+mdsvalue('_a = 0:4')
+mdsvalue('_a*$',b) = [0, 3, 6, 9, 12]</pre>
+The order in which external arguments are used can be defined explicitly
+by numbering the "$" signs. Consider the following examples
+<pre>mdsvalue('$-$',2,1)&nbsp;&nbsp;&nbsp;&nbsp; =&nbsp; 1
+mdsvalue('$-$',1,2)&nbsp;&nbsp;&nbsp;&nbsp; = -1
+mdsvalue('$1-$2',2,1)&nbsp;&nbsp; =&nbsp; 1
+mdsvalue('$2-$1',2,1)&nbsp;&nbsp; = -1</pre>
+<b>Creating Signals, Units</b>
+<p>Composite variable types are built with TDI expressions. The most useful
+of these types are signals and data "with units" and are created with:
+<pre>make_with_units(DATA,UNITS)
+make_signal(DATA,RAW,[DIMENSION,...])</pre>
+Where DATA is any expression including TDI variables. Often parameter substitution
+is used to pass arrays into these functions. UNITS is a character string
+containing the units label. RAW is an optional component of a signal and
+is generally used to store the "counts" from a piece of data acquisition
+hardware. A "*" symbol is used when this argument is not supplied.
+<p>A typical use of these commands would be:
+<pre>.
+code to define variables x which is a position measured in meters
+and its independent variable t measured in seconds
+.
+.
+mdsvalue('_x = make_with_units($,"meters")',x)
+mdsvalue('_t = make_with_units($,"seconds")',t)
+mdsvalue('_a = make_signal(_x,*,_t)')</pre>
+Resulting in the signal _a.
+<p><b>Retrieving Components of Composite Datatypes</b>
+<p>TDI functions exist which retrieve individual components of composite
+datatypes like signals. We've already been introduced to one of these <code>dim_of</code>
+which returns the independent axes of a signal.
+<pre>mdsvalue('dim_of(signal[,n])')&nbsp; returns the n<sup>th</sup> dimension of a&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; signal, defaults to 0<sup>th</sup> dimension
+mdsvalue('data(signal)')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; returns the data part of a signal
+mdsvalue('units(a)')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; returns the units of data with units
+mdsvalue('units(signal)')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; returns the units of a signal
+mdsvalue('units(dim_of(signal)')&nbsp; returns units of the dimension of a signal
+mdsvalue('raw_of(signal)')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; returns the raw part of a signal (if it exists)</pre>
+<b>Getting Information on Arrays</b>
+<p>A number of functions are available to get the size and shape of multidimensional
+arrays. For example, given a, a node containing a floating point array
+with 10 x 24 elements:
+<pre>mdsvalue('size(a)')&nbsp;&nbsp; = 240&nbsp;&nbsp;&nbsp; (total number of elements)
+
+mdsvalue('sizeof(a)') = 960&nbsp;&nbsp;&nbsp; (total number of bytes)
+
+mdsvalue('shape(a)')&nbsp; = 10, 24 (number of elements in each dimension)</pre>
+<b>Getting MDSplus Metadata</b>
+<p>The TDI function <code>getnci</code> can be used to return the metadata
+- that is information about the data stored in MDSplus nodes. Getnci stands
+for "get node characteristic information". The syntax for this functions
+is
+<code>'getnci([node],string,[usage])'</code>. The arguments of this function
+are:
+<pre>NODE&nbsp;&nbsp;&nbsp; Usually a string containing a fully qualified node name&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; but may also be a node's numerical id (NID) or an array of NIDs.&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If not present, this argument defaults to the current default node.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Wildcards may be used in the path name.&nbsp; See users manual
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; section on tree syntax for details.
+
+STRING&nbsp; A case-insensitive character scalar chosen from the table below.&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The string may be abbreviated in upper or lower case to any&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; unique form.&nbsp;
+
+USAGE&nbsp;&nbsp; A character scalar or array. This optional argument limits the&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; search of NODE names. It must be a valid usage name like "SIGNAL",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or "TEXT".&nbsp; "ANY" will cause nodes of all usage
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; types to be searched.</pre>
+<code>mdsvalue('getnci([node],string,[usage])')</code> will return a scalar
+or simple vector list of results. The metadata returned depends on the
+value of the STRING argument in the call. The table below describes some
+of the more commonly used calls. See the TDI reference manual for the complete
+list.
+<pre>The STRING names by returned type follow.
+
+Type of data returned&nbsp;&nbsp; STRING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Metadata returned
+---------------------&nbsp;&nbsp; ------&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -----------------
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Character&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FULLPATH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; path from top of tree
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MINPATH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; shortest relative path
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NODE_NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; last part of pathname
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PATH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; path from top or tag
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Logicals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IS_CHILD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; parent relationship
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IS_MEMBER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; parent relationship
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PARENT_STATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; parent on or off
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; on or off
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DEPTH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tree parents above
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LENGTH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data size
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NID_NUMBER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tree logical offset
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NUMBER_OF_CHILDREN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; number of child nodes
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NUMBER_OF_MEMBERS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; number of member nodes
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PARENT_RELATIONSHIP&nbsp;&nbsp;&nbsp;&nbsp; child or member
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Long unsigned&nbsp;&nbsp; OWNER_ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rights identifier
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; status
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Node data&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RECORD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; actual data
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Quadword unsigned TIME_INSERTED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; encoded date and time
+
+</pre>
+Some examples of the getnci function (refering to tree in section?):
+<pre>Get the full path corresponding to the tag name "ip"
+mdsvalue('getnci(\ip,"fullpath")') = '\MAGNETICS::TOP.PROCESSED.CURRENT_DATA:IP'
+
+Get the depth of \ip in the magnetics tree hierarchy (see note 2)
+mdsvalue('getnci("\\ip","depth")') = 4
+
+Same command using argument substitution
+mdsvalue('getnci($,"depth")',"\\ip") = 4
+
+mdsvalue('getnci(\ip,"nid_number")') = 1299
+
+mdsvalue('getnci(1299,"fullpath")') = '\MAGNETICS::TOP.PROCESSED.CURRENT_DATA:IP'</pre>
+
+Note 1: If a node is itself an expression, getnci(node,"length") will return
+the size of the expression not the size of the array.
+
+<p>Note 2: Node references are usually not quoted. However getnci will
+accept this argument as a text string. In this case the double backslash
+is needed since \ is a reserved character in the C language (which MDSplus
+is written in). For more details see the discussion on
+<a href="../users/tree_syntax.shtml"> "Node Spec or Character String?" </a>
+in users guide.
+
+<p><b>Calling External Routines</b>
+<p>TDI functionality can be extended via calls to external routines. These
+may be written in the TDI language itself and saved in files with the extension
+<code>.fun</code>
+into directories in the users MDS path. Compiled routines written in fortran
+or c and built into a shared library can also be accessed. The syntax for
+calling these routines from TDI is: <code>_result=shared_library->routine(arguments,..)</code>.
+The users path must include the shared library.
+<p>Specific details for this process will differ between operating systems.
+Details can be found in the users guide.
+<br>&nbsp;
+
+<p><a href="readwrite.shtml">next page</a>
+
+
+</body>
+</html>

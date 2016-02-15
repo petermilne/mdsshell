@@ -1,0 +1,69 @@
+<?xml version="1.0" standalone="no" ?>
+<ACQ>
+<!-- m5-default.xml $Revision: 1.10 $
+     this is the default m5 range config file
+     add calibration data if available via <Calibrated> fields -->
+<!-- calibration data -->
+<AcqCalibration>
+	<Info>
+        	<CalDate>20041225</CalDate>
+	        <Version>$Revision: 1.10 $</Version>
+	        <Model>ACQ216-M5</Model>
+                <Serialnum>d41000</Serialnum>
+	</Info>
+<!-- on M5 switch assignment is adjacent AB values in register
+     so logical range key by {ADC_RANGE,GAINA,GAINB} does not refer directly
+     to a physical device for the latter two fields.
+     mapping handled by M5 custom class in vin program, 
+	using SWPHYS attribute. Range selection is:
+	ADC_RANGE 0=1V, 1=1.6V
+	GAINA,GAINB 0,0:G1, 1,0:G2,  1,1:G4
+-->
+    
+	<Data AICHAN="16" polarity="REVERSED" code_min="-32768" code_max="32764"
+         SW="ADC_RANGE,M5_GAINA,M5_GAINB"
+         SWPHYS="ADC_RANGE,M5/GAIN.01-08,M5/GAIN.09-16" >
+        <Range name="30" sw="0,1,1" fmt="%8.6f,%8.6f">
+            	<Nominal min="-0.031" max="0.031" />
+        </Range>
+	<Range name="50" sw="1,1,1" fmt="%8.6f,%8.6f">
+		<Nominal min="-0.050" max="0.050" />
+	</Range> 
+        <Range name="625" sw="0,1,0">
+		<Nominal min="-0.625" max="0.625" />
+        </Range>
+	<Range name="1" sw="1,1,0">
+		<Nominal min="-1.00" max="1.00" />
+	</Range>
+	<Range name="1.9" sw="0,0,0">
+		<Nominal min="-1.9" max="1.9" />
+        </Range>
+	<Range name="3" sw="1,0,0">
+		<Nominal min="-3.00" max="3.00" />
+	</Range>
+<!-- example
+	<Range name="1.9" sw="0,0,0">
+		<Nominal min="-1.9" max="1.9" />
+
+            <Calibrated ch="10" min="-2.10," max="2.10" />
+            <Calibrated ch="10" min="-2.10," max="2.10" />
+            <Calibrated ch="16" min="-2.16," max="2.16" />
+
+        </Range>
+-->
+    </Data>
+</AcqCalibration>
+<ModelSpec>
+        <ChannelBlockMask>
+                <BlockWidth>4</BlockWidth>
+                <BlockSet>"1111","1110","1100","1000"</BlockSet>
+        </ChannelBlockMask>
+        <MaxAggregateRate>400 MB/sec</MaxAggregateRate>
+        <MaxDeviceRate>50 MS/sec</MaxDeviceRate>
+        <MinDeviceRate>1 MS/sec</MinDeviceRate>
+        <CalClock>10000000</CalClock>
+        <CalMeanN>1024000</CalMeanN>
+</ModelSpec>
+</ACQ>
+
+

@@ -1,0 +1,64 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en]C-CCK-MCD   (Windows NT 5.0; U) [Netscape]">
+</head>
+<body>
+
+<p>
+<b>TCL - Tree Command Language</b>
+
+<p>TCL is a scripting language used for building, browsing or editing trees. It performs
+many of the same tasks as the TRAVERSER using a command line rather than graphical 
+interface.  TCL commands can be invoked as a script or macro or called from 
+applications written in other 
+programming languages.   These options are 
+particularly useful for repetitive operations.  For example, if a user wishes to store 
+the results of some new analysis on old data, it would be necessary to add new nodes 
+to a large number of old shots.  Model trees are often created using TCL scripts, 
+providing self documentation for large, complex structures.  If significant changes in the structure are required (not uncommon during development), trees created in 
+this manner can be regenerated after the script has been edited.  For example, 
+consider a case where hundreds of nodes are added by a script underneath the current default node.  Inserting or modifying a "set default" command will produce wholesale changes that might take hours to carry out one node at a time with the graphical interface.
+
+<p>
+An index of TCL commands and their functions can be found <a href="http:../pppl_tcl/TCL_index.html">here.  </a>
+
+<p>
+Some TCL examples can be found here <a href="http:../pppl_tcl/TCL_examples.html">here.</a>
+
+<p>
+<br>
+<b>Devices, Actions, Events</b>
+
+<p>
+DEVICES are pre-defined groups of nodes which incorporate setup information, 
+data and task descriptions (ACTIONS). These are generally used for data acquisition and 
+automatic analysis.
+
+<p>
+ACTIONS are task descriptions which can be defined and executed by MDSplus.  These are 
+commonly used in data acquisition DEVICES.  A typical data acquisition device
+will have INIT and STORE actions.  Actions are also used for automatic data analysis.
+
+<p>
+EVENTS are messages which are issued by MDSplus actions or applications.  
+Events are issued by the command SETEVENT and are global in scope.  The function WFEVENT 
+will suspend program execution until an event of the appropriate name is heard.
+Events are used to synchronize data acquisition and analysis.  For example, when the event issued by a STORE action is received, it can trigger an analysis job for that data.
+
+<p>
+SCHEDULING is the process by which all the ACTIONS in an MDSplus tree are collected
+and organized into a DISPATCH TABLE for subsequent disposition.
+
+<p>
+DISPATCHING is the process of issuing ACTIONS to SERVERS for execution.
+
+<br>
+<br>
+<img SRC="Cartman.gif">
+
+<p><a href="tutorials.shtml">next page</a>
+
+</body>
+</html>

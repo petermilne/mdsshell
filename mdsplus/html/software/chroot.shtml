@@ -1,0 +1,121 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Software" -->
+<!--#include virtual="../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<p>When a remote client connects to an MDSplus server, the server determines if the client has been permitted to connect
+and which account the server should run under. The system manager of the MDSplus server defines the policies regarding who
+is permitted to connect (either by GSI credentials with MDSplus/Globus or by client username and network address with
+non-Globus MDSplus) and the account each user should use on the server system. Since the MDSplus server process can
+execute arbitrary commands or call routines in any shared libraries
+on behalf of the remote client, the remote client essentially has the ability to perform any operation as would be available
+if the client had logged into the server system directly. It is possible to greatly restrict the operations available to
+the client by using chroot on systems that support it. Chroot runs a command with a special root directory. Only the files in
+the special root directory hierarchy are visible to that process and any processes created by it.
+<p>The special root directory must be constructed such that it contains enough of the root file system to operate the MDSplus
+server program and potentially the data files that you want to serve to the clients. Once you have set up the special root
+then all that is needed is to configure your mdsip service to use the special root. The mdsipd script typically used to start
+the mdsip service has been modified to accept a fourth parameter which is the special root directory. If the fourth parameter
+is specificed, mdsipd will chroot to the special root and then run the mdsip program.
+<p>We have configured a special root on a RedHat 8.0 system to demonstrate this technique. The following describes the steps
+that were taken to make mdsip run with a special root file system.
+<p><h3>Prepare the special root</h3><p>
+The feature of mount --bind on Linux makes the preparation of a special root fairly easy to include most of the files needed
+for mdsip to operate. We created a special root using the following script:
+
+<pre>
+#!/bin/sh
+#
+#  mk_mdsplus_root  <new-root>
+#
+mkdir $1
+mkdir $1/lib
+mkdir $1/etc
+cp /etc/passwd $1/etc          # You can make a special/reduced passwd file for account mapping
+cp /etc/group  $1/etc          # Can be special/reduced
+cp /etc/nsswitch.conf $1/etc   # Needed to specify how account names, hostnames etc are resolved.
+cp /etc/mdsip.hosts $1/etc     # Remote client to local user account mappings
+cp /etc/services $1/etc        # Could contain only mdsip definition
+cp /etc/resolv.conf $1/etc     # DNS specification for hostname resolution
+cp /etc/localtime $1/etc       # Time conversion
+mkdir -p $1$MDSPLUS_DIR
+mkdir $1/etc/grid-security     # If using globus
+mkdir -p $1$GLOBUS_LOCATION    # If using globus
+mkdir $1/bin
+cp  /bin/chmod $1/bin          # If using SetMDSplusFileProtection for tree file creation
+cp  /bin/chgrp $1/bin          # If using SetMDSplusFileProtection
+cp  -P /bin/sh    $1/bin
+cp  -P /bin/bash  $1/bin
+cp  -P /bin/tcsh  $1/bin
+mkdir $1/dev
+cp /dev/null $1/dev
+mkdir $1/mdsplus_trees         # Include data directories if appropriate
+</pre>
+<p>
+<h3>Use mount to load required files to the new root</h3>
+You can add the required mount points to fstab on the server system modifying the actual
+directories to match your configuration.
+<pre>
+/usr/local/mdsplus /newroot/usr/local/mdsplus none ro,bind
+/usr/local/globus  /newroot/usr/local/globus  none ro,bind
+/etc/grid-security /newroot/etc/grid-security none ro,bind
+/lib               /newroot/lib               none ro,bind
+/mdsplus_trees     /newroot/mdsplus_trees     none ro,bind
+</pre>
+<p>
+<h3>Modify /etc/xinetd.d/mdsip to include new root</h3>
+You need to modify the xinetd file for mdsip to include the new root. (NOTE: The new
+/usr/locla/mdsplus/bin/mdsipd script which supports chroot was added to cvs on October
+21, 2003 so you may to update your version by getting it from the <a href=/cgi-bin/MDSplusCVS/mdstcpip/mdsipd>
+MDSplus cvs repository</a>). The /etc/xinetd.d/mdsip file should then look like:
+<pre>
+# default: on
+# description: The mdsip server serves mdsip sessions; it the \
+#       standard mdsip.hosts and logs into /var/log/mdsplus.
+service mdsip
+{
+        socket_type     = stream
+        wait            = no
+        cps             = 1000 5
+        instances       = UNLIMITED
+        user            = root
+        server          = /usr/local/mdsplus/bin/mdsipd
+        server_args     = mdsip /var/log/mdsplus/mdsipd /etc/mdsip.hosts /newroot
+        log_on_failure  += USERID
+        log_on_success  += USERID
+}
+</pre>
+<p>
+<h3>Reload xinetd</h3>
+Finally you must reload xinetd to complete the change.
+<pre>
+# /etc/rc.d/init.d/xinetd reload
+</pre>
+You can test your new configuration by evaluating an expression such as 'spawn("/bin/ls")'. With the
+original configuration you would have seen the output of ls in the mdsip access log file. With the
+new root you should get an error since ls is not present in the new root.
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

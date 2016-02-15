@@ -1,0 +1,56 @@
+<!-- BEGIN HEADING -->
+<table border="0" cellpadding="3" cellspacing="3" bgcolor="#ffffff">
+
+  <!-- Logo -->
+  <tr bgcolor="#ffffff">
+    <td rowspan="2">
+      <img src="/images/mdsplus_logo.jpg">
+    </td>
+
+  <!-- SubHeading -->
+    <td rowspan="1" colspan="4">
+      <b class="big">MDSplus: <!--#echo var="SUBHEADING" -->&nbsp;</b>
+    </td>
+  </tr>
+
+  <!-- NavBar -->
+  <tr bgcolor="#ffffff">
+    <td bgcolor="#ffffff" rowspan="1" colspan="1" align="left"> 
+      <!--#if expr="${SUBHEADING} = /Introduction/" -->
+      <b>Introduction</b>
+      <!--#else -->
+      <a class="bold" href="/intro/">Introduction</a>
+      <!--#endif -->
+    </td>
+    <td bgcolor="#ffffff" rowspan="1" colspan="1" align="left"> 
+      <!--#if expr="${SUBHEADING} = /Documentation/" -->
+      <b>Documentation</b>
+      <!--#else -->
+      <a class="bold" href="/documentation/">Documentation</a>
+      <!--#endif -->
+    </td>
+    <td bgcolor="#ffffff" rowspan="1" colspan="1" align="left"> 
+      <!--#if expr="${SUBHEADING} = /Projects/" -->
+      <b>Projects</b>
+      <!--#else -->
+      <a class="bold" href="/projects/">Projects</a>
+      <!--#endif -->
+    </td>
+    <td bgcolor="#ffffff" rowspan="1" colspan="1" align="left"> 
+      <!--#if expr="${SUBHEADING} = /Software/" -->
+      <b>Software</b>
+      <!--#else -->
+      <a class="bold" href="/software/">Software</a>
+      <!--#endif -->
+    </td>
+    <td bgcolor="#ffffff" rowspan="1" colspan="1" align="left">
+      <!--#if expr="${SUBHEADING} = /Links/" -->
+      <b>Software</b>
+      <!--#else -->
+      <a class="bold" href="/links/">Links</a>
+      <!--#endif -->
+    </td>
+  </tr>
+
+</table>
+<!-- END HEADING -->

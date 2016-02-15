@@ -1,0 +1,634 @@
+/*****************************************************************************
+ *
+ * File: measyredc
+ *
+ * $RCSfile: calibrate.cpp,v $
+ * 
+ * Copyright (C) 2003 D-TACQ Solutions Ltd
+ * not to be used without owner's permission
+ *
+ * Description:
+ *
+ * $Id: calibrate.cpp,v 1.30 2007/08/17 12:10:41 pgm Exp $
+ * $Log: calibrate.cpp,v $
+ * Revision 1.30  2007/08/17 12:10:41  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.29  2007/08/01 11:39:48  pgm
+ * --zerovolts V option - calibration with zero code at fixed DC offset
+ *
+ * Revision 1.28  2007/07/18 16:33:34  pgm
+ * sleep(1) works better
+ *
+ * Revision 1.27  2007/03/31 14:38:02  pgm
+ * clear volts to zero on exit, refactor VoltageSource class
+ *
+ * Revision 1.26  2007/03/31 11:33:58  pgm
+ * ensure mean of 1000000 doesnt overflow
+ *
+ * Revision 1.25  2007/03/31 11:19:03  pgm
+ * allocate raw buf _after_ nmean decided
+ *
+ * Revision 1.24  2007/03/31 10:18:30  pgm
+ * CAL_NMEAN control by environ
+ *
+ * Revision 1.23  2007/03/30 14:03:53  pgm
+ * acqcmd timeout
+ *
+ * Revision 1.22  2007/03/30 14:03:20  pgm
+ * transfer-function
+ *
+ * Revision 1.21  2007/03/21 18:58:13  pgm
+ * means index from 1, reduce new[] load
+ *
+ * Revision 1.20  2007/03/21 17:08:51  pgm
+ * CAPCOM env opt
+ *
+ * Revision 1.19  2007/03/15 20:06:22  pgm
+ * VoltageSource goes full auto
+ *
+ * Revision 1.18  2007/02/22 17:32:58  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.17  2007/02/22 15:41:44  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.16  2007/02/13 20:31:36  pgm
+ * code_min, code_max raw coding opts
+ *
+ * Revision 1.15  2007/02/04 10:57:57  pgm
+ * DvmReader support
+ *
+ * Revision 1.14  2006/11/01 10:41:26  pgm
+ * --zero offset adjust
+ *
+ * Revision 1.13  2006/01/25 11:42:31  pgm
+ * fmt attribute to change output precision
+ *
+ * Revision 1.12  2006/01/23 20:30:49  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.11  2006/01/23 20:19:17  pgm
+ * kludge acqcmd --until ST_STOP
+ *
+ * Revision 1.10  2006/01/13 14:44:16  pgm
+ * add warning when near rail
+ *
+ * Revision 1.9  2005/11/11 14:46:08  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.8  2005/11/03 14:28:53  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.7  2005/03/31 15:27:11  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.6  2005/03/31 11:40:07  pgm
+ * vin works with wacky acq216 ADC_RANGE. M2 needs test
+ *
+ * Revision 1.5  2005/03/10 17:21:46  pgm
+ * reverse incorrect double comp
+ *
+ * Revision 1.4  2005/03/08 16:04:20  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.3  2005/03/08 15:59:51  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.2  2005/03/08 15:53:33  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.1  2005/03/08 11:11:08  pgm
+ * calibrate is go
+ *
+ * Revision 1.4  2005/01/28 16:44:37  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.3  2005/01/28 16:44:00  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.2  2005/01/28 16:32:36  pgm
+ * *** empty log message ***
+ *
+ * Revision 1.1  2005/01/28 16:26:12  pgm
+ * *** empty log message ***
+ *
+ *
+ *
+\*****************************************************************************/
+
+/*
+ * compute-gain
+ * capture data
+ * calculate gain factor
+ */
+
+#include "local.h"
+
+#include <assert.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "popt.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <unistd.h>
+
+
+#include <errno.h>
+
+
+#include "InputBlock.h"
+#include "DvmReader.h"
+#include "VoltageSource.h"
+
+int acq200_debug;
+
+static int acq200_zero;			/** adjust for code 0x0000 = 0V */
+static double acq200_zcode_volts;	/** code 0x000 = xV */
+
+#define VERID "$RCSfile: calibrate.cpp,v $ $Revision: 1.30 $ B1051\n"
+
+
+char *calscript = "set.autozero";
+
+#define MAXSHORT 0x7fff
+
+static short *G_rawbuf;
+static FILE* freport = stdout;
+
+class DataSource {
+	int ch;
+	FILE* fp;
+ public:
+	DataSource(int _ch) : ch(_ch) {
+		char fname[80];
+		sprintf(fname, "/dev/acq200/data/%02d", ch);
+
+		fp = fopen(fname, "r");
+		assert(fp);
+	}
+	~DataSource() {
+		fclose(fp);
+	}
+	int read(short* buffer, int nread){
+		return fread(buffer, sizeof(short), nread, fp);
+	}
+};
+
+class DataSet {
+	ChannelSelection& selection;
+	double* means;
+	int nmean;
+	int reversed;
+	int touches_rail;
+
+	double computeMean(int ch, short *raw, int nmean) {
+		DataSource src(ch);     /** closure */
+			
+		int nread = src.read(raw, nmean);
+		if (nread != nmean){
+			err("[%2d] read %d nmean %d", nread, nmean);
+		}
+
+		long long total = 0;
+		short *praw = raw;
+
+		for (int togo = nmean; togo--; ){
+			short value = *praw++;
+			if (value < -32760 || value > 32760){
+				touches_rail = 1;	
+			}  
+			total += value;
+		}		
+		return (double)total/nmean;
+	}
+
+ public:
+	DataSet(ChannelSelection& _selection, int _nmean) : 
+		selection(_selection), nmean(_nmean), touches_rail(0)  {
+
+		dbg(2, "channels %d nmean %d", selection.getMaxChan(), nmean);
+
+		// index from 1
+		means = new double[selection.getMaxChan()+1];
+		memset(means, 0, selection.getMaxChan());
+	}
+
+	virtual ~DataSet() {
+		delete [] means;
+	}
+	void load(InputBlock& inputBlock, short* raw){
+		ChannelSelectionIterator it(selection);
+
+		reversed = inputBlock.polarityIsReversed();
+		
+		for (int ch; (ch = it.getNext()) > 0; ){
+			means[ch] = computeMean(ch, raw, nmean);
+			if (reversed){
+				means[ch] = -means[ch];
+			}
+
+			dbg(2, "Dataset::load() [%2d] mean %.1f %s",
+			    ch, means[ch], reversed? "reversed": "");
+		}
+
+		dbg(2, "99");
+	}
+
+	int getNMean() { return nmean; }
+	double getMean(int ch) { return means[ch]; }
+	int touchesRail() {
+		return touches_rail;	
+	}
+
+	ChannelSelection& getSelection() {
+		return selection;
+	}
+};
+
+
+/**
+static char *data_file(int ichan, char fname[])
+{
+	sprintf(fname, "/dev/acq200/data/%02d", ichan);
+	return fname;
+}
+*/
+
+
+static const char* get_result(const char* cmd, char buf[], int len)
+{
+	FILE *fp = popen(cmd, "r");
+
+	fgets(buf, len, fp);
+	fclose(fp);
+//	chomp(buf);
+	return buf;
+}
+static const char* hostname(void)
+{
+	static char hn[20];
+
+	return get_result("hostname", hn, 20);
+}
+
+static const char* date(void)
+{
+	static char date[80];
+
+	return get_result("date", date, 80);
+}
+
+static int getChannelCount(void)
+{
+	static char cmd[80];
+	int channel_count = 0;
+
+	get_result("acqcmd getAvailableChannels", cmd, 80);
+	if (sscanf(cmd, "ACQ32:getAvailableChannels AI=%d", 
+		   &channel_count) == 1){
+		return channel_count;
+	}
+
+	return 0;
+}
+
+struct Globs {
+	int nmean;
+	double v1;
+	double v2;
+	int obcoding;
+};
+
+#define CAPCOM "acqcmd setArm;acqcmd --timeout 10 --until ST_STOP"
+
+static int act_capture(void)
+{
+	char *capcom = CAPCOM;
+	if (getenv("CAPCOM")){
+		capcom = getenv("CAPCOM");
+	}
+	system(capcom);
+	return 0;
+}
+
+
+
+static void _capture(
+	InputBlock& inputblock, // ** to get nominal ranges 
+	DataSet& ds,
+	double* voltage, 
+	const char* txt )
+{
+	DvmReader* r = DvmReader::create(voltage, txt);	
+	act_capture();
+	ds.load(inputblock, G_rawbuf);
+	delete r;
+}		
+static void capture(
+	InputBlock& inputblock, // ** to get nominal ranges 
+	DataSet& ds,
+	double* voltage, 
+	const char* txt )
+{
+	VoltageSource::create(*voltage, txt);
+	_capture(inputblock, ds, voltage, txt);
+	dbg(2, "99");
+}
+
+
+
+static inline void printRange(const Range& r) {
+	printf("%6.4f,%6.4f", r.rmin, r.rmax);
+}
+
+
+static inline double straightLine(
+	double x1, double x2, double y1, double y2, double x)
+{
+	dbg(1, "x1:%.4f x2 %.4f y1:%.4f y2: %.4f x:%.4f",
+	       x1, x2, y1, y2, x);
+	return y1 + (x - x1) * (y2 - y1)/(x2 -x1);
+}
+
+static void checkEndstops(double x)
+{
+	if (x > 32300 || x < -32300){
+		fprintf(stderr, 
+			"WARNING: too close to rail, "
+			"please use a lower input voltage\n");
+	}
+}
+
+
+static void compute(
+	InputBlock& inputblock, 
+	DataSet& ds1, double* v1,
+	DataSet& ds2, double* v2)
+/** compute apparent Voltage range by extrapolating linear formula.
+ *  (y - y1)/(x - x1) = (y2 - y1)/(x2 - x1)
+ *
+ *  y = y1 + (x - x1)*(y2 - y1)/(x2 - x1)
+ *
+ *  In this case y is value in volts, x is raw value in bits,
+ *  we want to compute the range limits y.rmax, y.rmin
+ */
+{
+#define FMT_YY \
+"[%2d] %s %6.3f V = %6.3f V + (%6.0f - %6.0f)*(%6.3f V - %6.3f V)/(%6.0f - %6.0f)"
+	ChannelSelectionIterator it(ds1.getSelection());
+
+	int noput = getenv("ACQ216_CAL_NOPUT") != 0;
+
+	dbg(1, "01");
+
+	for (int ch; (ch = it.getNext()) != 0; ){
+
+		if (acq200_debug > 0){
+			fprintf(stderr, "\n\n");
+		}
+		dbg(1, "ch:%02d ...", ch);
+
+		double y1 = *v1;
+		double y2 = *v2;
+		double x1 = ds1.getMean(ch);
+		double x2 = ds2.getMean(ch);
+		Range x(Range::getCodeMin(), Range::getCodeMax());
+		Range y;
+
+		if (ds1.touchesRail() || ds2.touchesRail()){
+			err("ch %d TOUCHES RAIL: reduce input voltage", ch);
+			continue;	
+		}
+		checkEndstops(x1);
+		checkEndstops(x2);
+
+
+		y.rmax = y1 + (x.rmax - x1) * (y2 - y1) / (x2 - x1);
+		y.rmin = y1 + (x.rmin - x1) * (y2 - y1) / (x2 - x1);
+
+		if (acq200_debug){
+			dbg(1, FMT_YY, ch, "max",
+			    y.rmax, y1, x.rmax, x1, y2, y1, x2, x1);
+			dbg(1, FMT_YY, ch, "min",
+			    y.rmin, y1, x.rmin, x1, y2, y1, x2, x1);
+			    
+		}
+
+		if (noput) continue;
+		double vz = 0;
+
+		if (acq200_zero){
+			int zcode = 0x0000;
+			if (acq200_zcode_volts != 0.0f){
+				zcode = (int)straightLine(
+					y.rmin, y.rmax, x.rmin, x.rmax,
+					acq200_zcode_volts);
+			}
+
+			vz = straightLine(
+				x.rmin, x.rmax,
+				y.rmin, y.rmax,	zcode);
+
+			dbg(1, "Offset at zcode 0x%04x %6.4f V %6.4f V, "
+				"compensating ...",
+			    zcode, acq200_zcode_volts, vz);
+
+			y.rmin -= vz;
+			y.rmax -= vz;
+		}
+		printf("ch:%2d Raw: %6.0f,%6.0f => "
+		       "Volts %8.4f,%8.4f Vz %8.4f\n",
+		       	ch, x.rmin, x.rmax, 
+			y.rmin, y.rmax,
+			vz);
+		
+		inputblock.putCalibratedRange(ch, y);
+	}
+
+	dbg(1, "99");
+}
+
+static void calibrate(
+	InputBlock& inputBlock, 
+	ChannelSelection& selection,
+	struct Globs& GB
+	)
+{
+	int channel_count = getChannelCount();
+	if (channel_count){
+		inputBlock.setChannelCount(channel_count);
+	}
+	DataSet ds1(selection, GB.nmean);
+	DataSet ds2(selection, GB.nmean);
+	Range nominal = inputBlock.getNominalRange(selection);
+
+	GB.v1 = nominal.rmin * 0.9;
+	GB.v2 = nominal.rmax * 0.9;
+
+	dbg(3, "capture 01 set voltage %f.2V", GB.v1);
+	capture(inputBlock, ds1, &GB.v1, "V1");
+	dbg(3, "capture 02 set voltage %f.2V", GB.v2);
+	capture(inputBlock, ds2, &GB.v2, "V2");
+	dbg(3, "capture 03");
+
+	compute(inputBlock, ds1, &GB.v1, ds2, &GB.v2);
+	dbg(3, "99");
+}
+
+static void update(
+	InputBlock& inputBlock,
+	ChannelSelection& selection,
+	const char* config_file)
+{
+	char backup[80];
+	
+	dbg(3, "01");
+	snprintf(backup, 80, "%s.bak", config_file);
+	rename(config_file, backup);
+	
+	inputBlock.saveFile(config_file);
+	dbg(3, "99");
+}
+
+
+static void reportLine(
+	int istep,
+	double setv,
+	double actv,
+	DataSet& dataSet)
+{
+	fprintf(freport, "%5d,%9.5f,%9.5f", istep, setv, actv);
+
+	ChannelSelectionIterator it(dataSet.getSelection());	
+	int ch;
+
+	while((ch = it.getNext()) != 0){
+		fprintf(freport, ",%6d", (int)dataSet.getMean(ch));
+	}
+	fprintf(freport, "\n");
+}
+
+static void transferFunction(
+	InputBlock& inputBlock, 
+	ChannelSelection& selection,
+	struct Globs& GB,
+	int npoints)
+{
+	dbg(1, "01 npoints %d", npoints);
+
+	Range nominal = inputBlock.getNominalRange(selection);
+	double step = (nominal.rmax - nominal.rmin)/npoints;
+	double setv;
+	double actv;
+	int istep;
+	DataSet dataSet(selection, GB.nmean);
+	char prompt[32];
+
+	for (istep = 1, setv = nominal.rmin; istep != npoints;
+	     ++istep, setv += step){
+		actv = setv;
+		sprintf(prompt, "%.3V", actv);
+
+		dbg(1, "%d %9.5fV", istep, setv);
+
+		capture(inputBlock, dataSet, &actv, prompt);
+		reportLine(istep, setv, actv, dataSet);
+	}
+}
+
+
+int main( int argc, const char* argv[] )
+{
+	info(VERID);
+	InputBlock::setClientVersion(VERID);
+	InputBlock::setClientCmd(argc, argv);
+
+	static char *cs_def;
+	static char *outfile;
+	static struct Globs GB = {};
+	static struct poptOption opt_table[] = {
+		{ "channels",    'c', POPT_ARG_STRING, &cs_def,      'c' },
+		{ "nmean",      'm',  POPT_ARG_INT,    &GB.nmean,      0,
+		  "number of samples to take into mean [256]"
+		},
+		{ "verbose",    'd', POPT_ARG_INT,    &acq200_debug,   0 },
+		{ "obcoding",   'b', POPT_ARG_INT,     &GB.obcoding,   0,
+		  "offset binary coding hack for old FPGAs "
+		},
+		{ "v1   ",      'V', POPT_ARG_DOUBLE, &GB.v1, 0 },
+		{ "v2   ",      'V', POPT_ARG_DOUBLE, &GB.v2, 0 },
+		{ "version",    'v', POPT_ARG_NONE,        0, 'v' },
+		{ "output",     'o', POPT_ARG_STRING, &outfile, 'o' },
+		{ "zero", 'z', POPT_ARG_NONE, 0, 'z',
+		  "code 0x0000 is adjusted to be 0V" },
+		{ "zerovolts", 'Z', POPT_ARG_DOUBLE, &acq200_zcode_volts, 'Z',
+		  "code 0x0000 is adjusted to be X V"},
+		POPT_AUTOHELP
+		{ }
+	};
+
+	GB.nmean = getenv("CAL_NMEAN")? atoi(getenv("CAL_NMEAN")): 4096;	
+	const char *config_file = 
+		getenv("VIN_CONFIG")? getenv("VIN_CONFIG"): CONFIG_FILE;
+	poptContext opt_context = 
+		poptGetContext(argv[0], argc, argv, opt_table, 0 );
+	int rc;
+
+
+	while ((rc = poptGetNextOpt( opt_context )) > 0){
+		switch(rc){
+		case 'Z':
+		case 'z':
+			acq200_zero = 1;
+			break;
+		case 'o':
+			if (outfile[0] != '-'){
+				freport = fopen(outfile, "w");
+				if (!freport){
+					err("Failed to open \"%s\"", outfile);
+					exit(errno);
+				}
+			}
+			break;
+		case 'v':
+			return fprintf(stderr, VERID);
+		}
+	}
+
+	dbg(2, "GB.nmean %d", GB.nmean);
+	G_rawbuf = new short[GB.nmean];
+	InputBlock& inputBlock = InputBlock::getInstance(config_file);
+	ChannelSelection* selection = 
+		cs_def==0?
+		new ChannelSelection(inputBlock.getNumChannels(), ALL):
+		new ChannelSelection(inputBlock.getNumChannels(), cs_def);
+
+	dbg(1, "Calibration for %s last cal was %s", hostname(), date());
+	dbg(1, "inputBlock.getNumChannels() = %d\n", 
+	    inputBlock.getNumChannels());
+
+	const char *arg = poptGetArg(opt_context);
+
+	if (arg && strcmp(arg, "transfer-function") == 0){
+		int points = 100;
+
+		arg = poptGetArg(opt_context);
+		if (arg){
+			points = atoi(arg);
+		}
+		transferFunction(inputBlock, *selection, GB, points);
+	}else{
+		calibrate(inputBlock, *selection, GB);	
+		update(inputBlock, *selection, config_file);
+	}
+
+	VoltageSource::create(0.0f, "zero");
+
+	dbg(3, "99");
+	return 0;
+}

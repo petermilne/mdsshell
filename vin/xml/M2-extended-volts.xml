@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone="no" ?>
+<ACQ>
+<!-- M2-extended-volts.xml $Revision: 1.4 $
+     M2 with extended voltage range capability
+     add calibration data if available via <Calibrated> fields -->
+<!-- calibration data -->
+<AcqCalibration>
+    <Info>
+        <CalDate>20041225</CalDate>
+        <Version>$Revision: 1.4 $</Version>
+        <Model>ACQ216-M2</Model>
+	<Serialnum>d41000</Serialnum>
+    </Info>
+    <Data AICHAN="16" polarity="REVERSED" code_min="-32768" code_max="32764"
+    	SW="ADC_RANGE,M2/RANGE" >
+        <Range name="2.5" sw="0,0">
+		<Nominal min="-2.5" max="2.5" />
+        </Range>
+	<Range name="4" sw="1,0">
+		<Nominal min="-4" max="4" />
+	</Range>
+        <Range name="10" sw="0,1">
+            <Nominal min="-10" max="10" />
+        </Range>
+        <Range name="16" sw="1,1">
+            <Nominal min="-16" max="16" />
+        </Range>
+    </Data>
+</AcqCalibration>
+<ModelSpec>
+        <ChannelBlockMask>
+                <BlockWidth>4</BlockWidth>
+                <BlockSet>"1111","1110","1100","1000"</BlockSet>
+        </ChannelBlockMask>
+        <MaxAggregateRate>400 MB/sec</MaxAggregateRate>
+        <MaxDeviceRate>50 MS/sec</MaxDeviceRate>
+        <MinDeviceRate>1 MS/sec</MinDeviceRate>
+        <CalClock>10000000</CalClock>
+        <CalMeanN>1024000</CalMeanN>
+</ModelSpec>
+</ACQ>
+
+

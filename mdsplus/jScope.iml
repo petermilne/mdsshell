@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4" relativePaths="true" type="JAVA_MODULE">
+  <component name="ModuleRootManager" />
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/classes" />
+    <exclude-output />
+    <exclude-exploded />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/javaclient" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/javadispatcher" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/javascope" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/javatraverser" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntryProperties />
+  </component>
+</module>
+

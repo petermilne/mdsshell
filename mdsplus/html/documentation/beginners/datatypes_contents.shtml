@@ -1,0 +1,46 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en]C-CCK-MCD   (Windows NT 5.0; U) [Netscape]">
+</head>
+<body>
+
+<p>MDSplus supports numerous data types, from simple numeric or text types
+to composite entities which combine related information into a structure.
+Primitive data types include signed and unsigned integers of 1, 2, 4, 8
+and 16 bytes; single and double precision floats; single and double precision
+complex numbers; and character data. Arrays of these data types with up
+to 7 dimensions are supported. Some of the composite data types are used
+internally to represent, for example, data acquisition devices or compiled
+representations of expressions and data acquisition actions, and are not
+ordinarily accessed directly by users. Users will normally be accessing
+the primitive data types and several of the composite MDSplus data types
+such as SIGNALS, DIMENSIONS, WITH UNITS, WITH ERRORS and RANGES. The datatype
+of a given node can be determined by evaluating the expression
+<code>GETNCI(node_reference,"characteristic")</code>.
+
+<p>
+One of the more important data types provided by MDSplus is the signal.
+A signal is a structure which combines a value part, optionally a raw data
+part, and one or more dimension descriptions. Data from measurement devices
+as well as analysis results are often stored as signals. Many visualization
+applications will generate plots of signals by plotting the value portion
+versus the dimensions. The value part of a signal can be an expression
+which references the raw data part of the signal. Support for transient
+recorders often use this feature by storing the raw counts values as the
+raw data part and use an expression to convert this raw data to engineering
+units (such as voltage) in the value part of the signal. In the case of
+the support for a transient record, a representation of the time base would
+be stored in the first dimension part of the signal. The components of
+a signal can be accessed by evaluating the signal with the TDI functions
+DIM_OF, DATA, DATA_WITH_UNITS, RAW_OF.
+</p>
+
+<p>
+More details on datatypes can be found in the users manual; see <a href="../users/datatypes.shtml">DATATYPES</a>
+<p>
+<a href="expressions.shtml">next page</a>
+
+</body>
+</html>

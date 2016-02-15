@@ -1,0 +1,197 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Projects" -->
+<!--#include virtual="../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<H2>HDF5 Tools</H2>
+<p>The HDF5 file format was developed by <A HREF=http://www.ncsa.uiuc.edu>
+The National Center for Supercomputing Applications</a> at 
+<A href=http://www.uiuc.edu>University of Illinois at Urbana-Champaign</a> 
+for storing scientific data. </p>
+
+MDSplus includes tools for accessing and translating HDF5 files.  
+These tools were developed with support from <A href=http://www.txcorp.com/>Tech-X 
+Corporation</a>.  The translator is called hdf5ToMds.  This converter will 
+create an MDSplus tree that reflects the structure of the input HDF5 file and contains 
+its' data. The accessor/gateway is a set of tdi functions hdfopen, hdflist, hdfread, 
+and hdfclose.  These functions allow MDSplus aware applications to
+access HDF5 files directly.  When coupled with mdsip (mdsconnect) they provide
+remote access to data stored in HDF5 files.
+<p>
+ HDF5 datasets do not have restrictions on names whereas
+  MDSplus node names are limited to 12 alphanumeric case
+  insensitive characters. If the HDF5 name is a valid MDSplus
+  node name, this routine will attempt to add it as is. If
+  not, the non-alphanumeric characters will be replaced by
+  underscores and the name will be truncated. If this fixup
+  results in a duplicate node name, the last characters of the
+  name will be replaced with 1,2,3,4,.... until a unique name
+  is found. An additional node will be added under each node
+  called: "HDF5NAME" and the original HDF5 dataset name will
+  be loaded into this node.
+<p>
+HDF5 attributes and datasets are treated identically by the converter. The converter supports
+scalars and multidimentional arrays of:
+<table>
+<tr><td><b>Integer</b></td></tr>
+<tr><td>&nbsp;</td><td>unsigned byte</td><td>signed byte</td></tr>
+<tr><td>&nbsp;</td><td>unsigned word</td><td>signed word</td></tr>
+<tr><td>&nbsp;</td><td>unsigned long</td><td>signed long</td></tr>
+<tr><td>&nbsp;</td><td>unsigned quad</td><td>signed quad</td></tr>
+<tr><td><b>Floating</b></td></tr>
+<tr><td>&nbsp;</td><td>single</td></tr>
+<tr><td>&nbsp;</td><td>double</td></tr>
+<tr><td><B>String</B></td></tr>
+</table>
+<br>
+The HDF5 types which are not supported are HT5_COMPOUND, H5T_TIME, H5T_BITFIELD, H5T_OPAQUE, H5T_ARRAY and H5T_VLEN.
+
+<H3>Converting HDF5 to MDSplus </H3>
+The HDF5 to MDSplus converter is called hdf5ToMds.  It takes the following form:<br>
+<pre>
+hdf5Tomds hdf-file-spec treename shotnumber
+</pre>
+Note: the tree must be 'defined' prior invoking the converter.  This is done by
+creating an environment variable '<it>treename</it>_path' containing the name
+of the directory this trees file will be stored in.  For example:<br>
+<pre>
+$ mkdir /trees
+$ mkdir /trees/hdf
+$ export mdshdf_path=/trees/hdf
+</pre>
+Now the converter can be run to create an MDSplus pulse from an hdf5 file.<br>
+<pre>
+$ hdf5ToMds my-hdf-file.h5 mdshdf 1
+</pre>
+This will take the contents of the hdf5 file called my-hdf-file.h5 and
+translate them into an mdsplus tree which is shot 1 of the tree called mdshdf.
+This tree can be accessed using any of the standard MDSplus tools and APIs.<br>
+<p>
+  HDF5 datasets do not have restrictions on names whereas
+  MDSplus node names are limited to 12 alphanumeric case
+  insensitive characters. If the HDF5 name is a valid MDSplus
+  node name, this routine will attempt to add it as is. If
+  not, the non-alphanumeric characters will be replaced by
+  underscores and the name will be truncated. If this fixup
+  results in a duplicate node name, the last characters of the
+  name will be replaced with 1,2,3,4,.... until a unique name
+  is found. An additional node will be added under each node
+  called: "HDF5NAME" and the original HDF5 dataset name will
+  be loaded into this node.
+  
+<p>
+Note:  In order for the converter to operate, the hdf5 libraries must be in your LD_LIBRARY_PATH. 
+
+<H3>Accessing HDF5 files from MDSplus applications</H3>
+The HDF5 accessor functions allow MDSplus aware applications to access HDF5 files directly.
+There are four functions:<br>
+<OL>
+<LI>hdf5open(filename)</li>
+<li>hdf5list()</li>
+<li>hdf5read(name)</li>
+<li>hdf5close()</li>
+</ol>
+The examples are given here in <href=http://www.rsinc.com/>IDL</A> for brevity, but
+could be done using any of the MDSplus APIs, or applications.
+
+<h4>hdf5Open<h4>
+hdf5Open opens an existing HDF5 file for read access.  It iterates of the all of the datasets
+and attributes in it, saving away names and linkages.  From IDL it can be called:
+
+<pre>
+IDL> status=mdsvalue('hdf5open("/hdffiles/phi.h5")')
+IDL> if (status lt 0) then  print, "could not open HDF5 file"
+</pre>
+
+<h4>hdf5List</h4>
+hdf5list returns an array of strings containing the names of all of the data sets and
+attributes found the currently open HDF5 file.
+<pre>
+IDL> names = mdsvalue('hdf5list()') 
+IDL> help,names
+NAMES           STRING    = Array[3851]
+IDL> for i=20,30 do begin print,i,' ',names(i)
+      20 /GRID/j grid/units
+      21 /GRID/phi
+      22 /GRID/phi/units
+      23 /step_0000000/B/Step number
+      24 /step_0000000/B/time
+      25 /step_0000000/B/time units
+      26 /step_0000000/B/X
+      27 /step_0000000/B/X/independent variables
+      28 /step_0000000/B/X/units
+      29 /step_0000000/B/Y
+      30 /step_0000000/B/Z
+</pre>
+
+<h4>hdf5Read</h4>
+hdf5Read returns the data from one data set of attribute from the currently open hdf5 file.
+<pre>
+IDL> units = mdsvalue('hdf5Read("/GRID/phi/units")')
+IDL> help, units
+UNITS           STRING    = 'radians'
+
+IDL> x = mdsvalue('hdf5Read("/step_0000000/B/X")')    
+IDL> help, x
+X               FLOAT     = Array[101, 61, 101]
+
+</pre>
+<h4>hdf5Close</h4>
+hdf5Close closes the currently open hdf5 file.
+<pre>
+IDL> status = mdsvalue('hdf5Close()')
+IDL> help, status
+STATUS          LONG      =            0
+</pre>
+
+<h4> remote access </h4>
+If and mdsip server is running on the machine which has access to the files, suitably authorized users
+can execute an 'mdsconnect' call before issuing the commands above, and gain access to the file remotely.
+<pre>
+IDL> mdsconnect, 'hdf-file-server.corp.org'
+IDL> status = mdsvalue("hdf5Open('hdf-file.h5')")
+IDL> etc...
+</pre>
+
+<H3>Building the HDF5 tools</H3>
+The hdf5 tools are provided as part of the standard MDSplus distribution.  They
+are built by the top level makefile if the libraries and includes can be found
+at 'configure' time.  By default the MDSplus configure script decides to build
+the HDF5 tools if the file hdf5.h can be found in the system include directories.
+This can be overridden to compile against uninstalled HDF5 distributions by
+defining the environment variable HDF5_DIR prior to running configure at the 
+top of the MDSplus source tree.
+<pre>
+$ export HDF5_DIR=/usr/local/hdf5-1.6.1
+$ cd mdsplus
+$ ./configure
+$ cd hdf5
+$ make
+</pre>
+As mentioned above, if the includes and libraries are installed in the default
+places, no extra environment variables are needed.
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

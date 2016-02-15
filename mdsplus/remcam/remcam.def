@@ -1,0 +1,18 @@
+LIBRARY	RemCamShr
+EXPORTS
+;
+CamBytcnt
+CamError
+CamX
+CamQ
+CamGetStat
+CamXandQ
+CamFQrepw
+CamFQstopw
+CamFStopw
+CamQrepw
+CamQscanw
+CamQstopw
+CamStopw
+CamPiow
+CamPioQrepw

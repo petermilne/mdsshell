@@ -1,0 +1,14 @@
+# .mdsPutCh.nosh - variables with NO SHELL interpretation.
+# this is a comment. NB we need spaces around ':' because it is a valid tok char
+# generic digitizer timebase support - %T2 is end time
+%T0=(%S0*%XDT)
+%T2=((%S2-1)*%XDT)
+# timebase ... the Window takes the subrange into account 
+%win=Build_Window(0, %S2 - %S0 - 1, Build_With_Units(%T0, 's'))
+%axis=Build_With_Units(Build_Range(%T0, %T2, %XDT), 's')
+%tbase=Build_Dim(%win, %axis)
+# Build a raw to volts scaling expression
+%SCAL=Build_With_Units((%V1 + (%V2 - %V1)*($VALUE - %R1)/(%R2 - %R1)),'V')
+# top level expression is quoted to beat shell quoting on command line
+%calsig="Build_Signal(%SCAL,$,%tbase)"
+

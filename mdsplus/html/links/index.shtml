@@ -1,0 +1,167 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Links" -->
+<!--#include virtual="../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+There are many additional web sites which MDSplus users have put
+together for documenting the use of MDSplus at their sites. The table
+below contains links to other web pages that you might find useful.<br>
+<br>
+<table cellpadding="2" cellspacing="2" border="0"
+ style="text-align: left; width: 100%;">
+  <tbody>
+    <tr align="center">
+      <td
+ style="vertical-align: top; background-color: rgb(0, 204, 204);"
+ colspan="1"><span style="font-weight: bold;"><span
+ style="font-weight: bold;">MDSplus Mail, Newsgroups and Bug Report Links</span></span><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="https://www.mdsplus.org/mailman/listinfo/mdsplus">MDSplus mail
+list information</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="news://www.mdsplus.org/mdsplus.development">MDSplus development newsgroup</a><br>
+      </td>
+    </tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="news://www.mdsplus.org/mdsplus.implementation">MDSplus implementation newsgroup</a><br>
+      </td>
+    </tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="news://www.mdsplus.org/mdsplus.jet">MDSplus JET newsgroup</a><br>
+      </td>
+    </tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="news://www.mdsplus.org/mdsplus.wishlist">MDSplus wishlist newsgroup</a><br>
+      </td>
+    </tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://www.mdsplus.org/bugzilla">MDSplus Bug Report System</a><br>
+      </td>
+    </tr>
+    <tr align="center">
+      <td
+ style="vertical-align: top; background-color: rgb(0, 204, 204);"
+ colspan="1"><span style="font-weight: bold;">MDSplus User Sites</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://nstx.pppl.gov/nstx/Software/MDSplus/">PPPL/NSTX MDSplus
+Documentation</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://plasma.aa.washington.edu/mdsplus/index.html">University
+of Washington MDSplus Resource Page</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://fusion.gat.com/comp/analysis/mdsplus/">MDSplus at DIII-D</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://wwwrsphysse.anu.edu.au/%7Ebdb112/h-1nf/mdsplus/mdsplus.html">MDSplus
+at Autralia National University</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://www.ipp.mpg.de/%7EWolfgang.Suttrop/mdsplus/">MDSplus at
+ASDEX Upgrade</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://tokamak-profiledb.ukaea.org.uk/mdsplus.htm">ITER Profile
+Database</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://www.igi.pd.cnr.it/wwwexp/technologies/6tech_index.html">MDSplus
+at RFX in Padova</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://www.jet.efda.org/expert/jetdsp/manual/reading_mdsplus_data.shtml">MDSplus
+at JET</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://www.seas.columbia.edu/apam/hbtep/mdsplus.html">MDSplus at
+Columbia University</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://w3.pppl.gov/transp/">TRANSP Analysis Services</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://www.fusiongrid.org/">US National Fusion Collaboratory</a><br>
+      </td>
+    </tr>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 255, 255);"><a
+ href="http://nimrodteam.org/documentation/mdsplus/">NIMROD Analysis
+Code</a><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

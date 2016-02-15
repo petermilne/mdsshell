@@ -1,0 +1,55 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Software" -->
+<!--#include virtual="../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<p>To download a copy of MDSplus click on the "Downloads" link on the left. You will be asked to
+fill out a short form which will help us keep track of how MDSplus is being used. Currently you 
+will need to go through this process for each package that you wish to download. For the linux
+platform we have included OpenMotif kits which the MDSplus Motif applications are linked 
+against. You may need to use the --force option of rpm to install the OpenMotif kit if you
+already have another OpenMotif kit installed.<p>If you want to install the Globus enabled kits
+then you also need to install the <a href="http://www.globus.org/">Globus libraries </a> compatible
+with these kits. For additional instruction on installing the Globus enabled kits you should visit
+the <a href="http://w3.pppl.gov/transp/ComputeServerAccess.html">PPPL TRANSP pages </a>
+which have been created as part of the <a href="http://www.fusiongrid.org/">
+National Fusion Collaboratory project.</a><p>
+The MDSplus user community has also developed some MDSplus extensions which may be generally useful
+to other MDSplus users. As the number of these extensions grow we hope to provide a mechanism for
+users to advertise their packages and provide instructions for downloading, installing and using
+them. For now we will add url links on the "Shared Apps" page. If you have an application, utility,
+language interface or any other useful tool that you would like to share with the MDSplus user
+community and can provide a url to your tool please send an email to <a href="mailto:webmaster@mdsplus.org">
+webmaster@mdsplus.org</a>.
+<p>
+The MDSplus source code cvs repository can be from your browser by clicking <a href="/cgi-bin/MDSplusCVS">here</a> or downloaded using cvs as follows:
+<pre>
+   # cvs -d :pserver:MDSguest@www.mdsplus.org:/mdsplus/repos login
+   CVS password: MDSguest
+   # cvs -d :pserver:MDSguest@www.mdsplus.org:/mdsplus/repos checkout mdsplus
+</pre>
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

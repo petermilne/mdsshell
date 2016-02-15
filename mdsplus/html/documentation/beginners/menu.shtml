@@ -1,0 +1,70 @@
+  <!-- BEGIN MENU -->
+  <table>
+  <tr>
+    <td><b class="menu"><a class="small" href="../../intro/index.shtml">Introduction</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../index.shtml">Documentation</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../tutorial/index.shtml">- The MDSplus Tutorial</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="index.shtml">- Beginners' Guide</a></b></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="intro.shtml">What is MDSplus?</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="concepts.shtml">MDSplus Concepts</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="trees.shtml">Tree Structure<br>
+    &amp; Syntax</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="datatypes.shtml">Data Types</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="expressions.shtml">Expressions (TDI)</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="readwrite.shtml">Reading and<br>
+    Writing Data</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="graphictools.shtml">Graphical Tools</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="advanced.shtml">Advanced<br>
+    Features</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="tutorials.shtml">Tutorials</a></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../users/index.shtml">- Users' Guide</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../reference/index.shtml">- Reference</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="glossary.shtml">- Glossary</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../projects/index.shtml">Projects</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../software/index.shtml">Software</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../links/index.shtml">Links</a></b></td>
+  </tr>
+  <tr>
+    <td></td>
+  </tr>
+  <tr>
+    <td><!--#include virtual="../../search.shtml" --> </td>
+  </tr>
+  </table>
+  <!-- END MENU -->

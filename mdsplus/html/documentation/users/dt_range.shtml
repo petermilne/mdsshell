@@ -1,0 +1,83 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - DTYPE_RANGE</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>Range Data Type</b>
+<P>MDSplus provides a range data type which provides a compact mechanism for
+expressing series of values with fixed intervals. The range data type is a structure
+consisting of three parts; begin, end, and delta. This data type is used often in
+MDSplus for representing data such as the output of clock devices used in data
+acquisition. The following example shows three simple instances of ranges:
+<p>
+<pre>
+_range1 = 1 : 10
+_range1b = build_range(1,10,*)
+_range2 = 1 : 10 : .5
+_range2b = build_range(1,10,.5)
+_range3 = * : * : 1E-6
+_range3b = build_range(*,*,1E-6)
+</pre>
+In the above examples, we show two formats for creating ranges. The MDSplus expression evaluator has a built in syntax
+for specifying ranges which is:  begin : end [: delta]. In the first two examples (_range1 and _range1b) a range is
+created with a beginning of 1 and and ending of 10 with no delta specified. If the delta is missing, it defaults to a delta
+of 1. If these ranges were evaluated using data(_range1), for example, it would result in an integer array of ten
+values: [1,2,3,4,5,6,7,8,9,10]. The next examples (_range2 and _range2b) specify a delta of .5. In this case the result when
+evaluated would be an array of 19 values: [1., 1.5, 2., 2.5, 3., 3.5, 4., 4.5, 5., 5.5, 6., 6.5, 7., 7.5, 8., 8.5, 9.,
+9.5, 10.]. The last two examples (_range3 and _range3b) show a range with no beginning or end but with a delta of 1E-6.
+This represents an infinite ramp of values beginning at minus infinity and ending in positive infinity with each value being
+separated by 1E-6. Obviously you could not evaluate this range to get an array of values since the array would have an
+inifinite number of elements. This type of range can be used however as the axis part of a 
+<a href="dt_dimension.shtml" class="small">dimension data item</a> where the dimension's 
+<a href="dt_window.shtml" class="small">window part</a> is used to select a finite segment of this infinite list of values.
+<p>
+Ranges can be much more complex in MDSplus by specifying vectors for each of the fields. For example:
+<pre>
+_range = build_range([1.,100.],[5.,105.],[.5,1.])
+</pre>
+When you evaluate the above example using data(_range), you will get the following array of values:
+ [1., 1.5, 2., 2.5, 3., 3.5, 4., 4.5, 5., 100., 101., 102., 103., 104., 105.]. The range describes two ramp segments:
+1 : 5 : .5 and 100 : 105 : 1. The following might represent a two speed clock which shifts frequence at time 0:
+<pre>
+_clock = build_range([$ROPRAND,0.],[0.,$ROPRAND],[1E-3,1E-6])
+</pre>
+Like the example _range3 above, this range could not be evaluated independently and would need to be part of a dimension item
+with a window selecting a finite set of the values. The $ROPRAND value shown in this example is a mechanism for indicating
+missing values in arrays of floating point data. This example shows two range segments: * : 0. : 1E-3 and 0. : * : 1E-6. 
+
+<p>The following table lists some of the functions available for creating or accessing ranges:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00"><td><b>Function</b></td><td><b>Description</b></td></tr>
+
+<tr><td>BEGIN_OF</td><td>Return begin portion of a range</td></tr>
+<tr><td>BUILD_RANGE</td><td>Build a range structure</td></tr>
+<tr><td>END_OF</td><td>Build a signal structure</td></tr>
+<tr><td>MAKE_RANGE</td><td>Make a range structure</td></tr>
+<tr><td>SLOPE_OF</td><td>Return the delta field of a range structure</td></tr>
+</table>
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

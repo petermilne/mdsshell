@@ -1,0 +1,35 @@
+<?xml version="1.0" standalone="no" ?>
+<ACQ>
+    <!-- acq164-32.xml $Revision: 1.3 $ -->
+    <!-- calibration data Single, fixed range-->
+    <!-- FPGA Tue Nov 23 11:37:34 2010 switches to 24 bit, RJ coding -->    
+    <!-- previous  code_min="-2147483647" code_max="2147483647" -->
+    <AcqCalibration>
+        <Info>
+            <CalDate>20041225</CalDate>
+            <Version>B1007</Version>
+            <Model>ACQ164-32</Model>
+            <Serialnum>d32000</Serialnum>
+        </Info>
+        <Data AICHAN="32" SW="default" 
+        	code_min="-8388608" code_max="8388607">
+            <Range name="10" sw="default">
+                <Nominal min="-10" max="10"/>
+            </Range>
+        </Data>
+    </AcqCalibration>
+    <ModelSpec>
+        <ChannelBlockMask>
+            <BlockWidth>32</BlockWidth>
+            <BlockSet>10</BlockSet>
+        </ChannelBlockMask>
+        <MaxAggregateRate>128 MB/sec</MaxAggregateRate>
+        <MaxDeviceRate>128 kS/sec</MaxDeviceRate>
+        <!-- minclk=4M =>minrate=4M/256=16kS/sec -->
+        <MinDeviceRate>8 ks/sec</MinDeviceRate>
+        <CalClock>50</CalClock>
+        <CalMeanN>200000</CalMeanN>
+        <SampleClockMultiplier>256</SampleClockMultiplier>
+    </ModelSpec>
+</ACQ>
+

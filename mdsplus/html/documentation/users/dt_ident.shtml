@@ -1,0 +1,100 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - DTYPE_IDENT</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>Ident Data Type</b>
+<P>MDSplus expressions can contain private and public variables (often called
+"Ken Variables" after the person that implemented most of TDI, Ken Klare). When
+an expression is compiled containing these variables, the reference to the variable
+is stored as an DTYPE_IDENT distinguishing the name from a node reference or
+a text string. When an expression containing variable references are evaluated,
+the current contents of the variable is substituted for this reference. 
+<p>
+Care should be taken to not store variable references as data in nodes or return 
+them in TDI function unless they are guaranteed to be correctly defined when
+the expression is evaluated. The MAKE_structure built-in functions are provided
+to ensure that the variables are dereferenced. For example,
+if your TDI function looked something like:
+<P>
+<b>INCORRECT!
+</b><P>
+<PRE>
+Public Fun MYFUN(IN _X, IN _Y)
+{
+  return(BUILD_SIGNAL(_Y,*,_X));
+}
+</PRE>
+<p>
+You would get unexpected results. In this case when you try to plot the signal returned,
+you would get the current contents of the private variables _X and _Y if they are defined
+at all and not necessarily the values passed into the function. To avoid this you would
+use the MAKE_SIGNAL function instead of the BUILD_SIGNAL function. The MAKE_SIGNAL function
+replaces any of its arguments that are Identifiers with the contents of that identifier.
+<p>
+<b>CORRECT!
+</b><P>
+<PRE>
+Public Fun MYFUN(IN _X, IN _Y)
+{
+  return(MAKE_SIGNAL(_Y,*,_X));
+}
+</PRE>
+<p>The following table lists some of the functions used to create or access the ident datatype:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00"><td><b>Function</b></td><td><b>Description</b></td></tr>
+
+<tr><td>ALLOCATED</td><td>Test if variable is currently defined</td></tr>
+<tr><td>DEALLOCATE</td><td>Release variable</td></tr>
+<tr><td>EQUALS [=]</td><td>Load variable</td></tr>
+<tr><td>MAKE_ACTION</td><td>Make an action structure</td></tr>
+<tr><td>MAKE_CALL</td><td>Make a call structure</td></tr>
+<tr><td>MAKE_CONDITION</td><td>Make a condition structure</td></tr>
+<tr><td>MAKE_CONGLOM</td><td>Make a conglomerate structure</td></tr>
+<tr><td>MAKE_DEPENDENCY</td><td>Make a dependency structure</td></tr>
+<tr><td>MAKE_DIM</td><td>Make a dimension structure</td></tr>
+<tr><td>MAKE_DISPATCH</td><td>Make a dispatch structure</td></tr>
+<tr><td>MAKE_FUNCTION</td><td>Make a function structure</td></tr>
+<tr><td>MAKE_METHOD</td><td>Make a method structure</td></tr>
+<tr><td>MAKE_PARAM</td><td>Make a parameter structure</td></tr>
+<tr><td>MAKE_PROCEDURE</td><td>Make a procedure structure</td></tr>
+<tr><td>MAKE_PROGRAM</td><td>Make a program structure</td></tr>
+<tr><td>MAKE_RANGE</td><td>Make a range structure</td></tr>
+<tr><td>MAKE_ROUTINE</td><td>Make a routine structure</td></tr>
+<tr><td>MAKE_SIGNAL</td><td>Make a signal structure</td></tr>
+<tr><td>MAKE_SLOPE</td><td>Make a slope structure</td></tr>
+<tr><td>MAKE_WINDOW</td><td>Make a window structure</td></tr>
+<tr><td>MAKE_WITH_ERROR</td><td>Make a with_error structure</td></tr>
+<tr><td>MAKE_WITH_UNITS</td><td>Make a with_units structure</td></tr>
+<tr><td>RESET_PRIVATE</td><td>Deassign private variables and functions</td></tr>
+<tr><td>RESET_PUBLIC</td><td>Deassign public variables and functions</td></tr>
+<tr><td>SHOW_PRIVATE</td><td>List private variables and functions</td></tr>
+<tr><td>SHOW_PUBLIC</td><td>List public variables and functions</td></tr>
+<tr><td>VAR</td><td>Define or reference variable</td></tr>
+</table>
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

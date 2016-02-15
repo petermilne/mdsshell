@@ -1,0 +1,37 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+We have attempted to provide several layers of documenation beginning with the Beginners' Guide which provides some
+tutorial information about MDSplus. Next is the Users' Guide which provides more detailed tutorials on using MDSplus.
+The Reference section contains reference manuals for many of the MDSplus utilities and programming language interfaces.
+The Glossary is a list of MDSplus keywords and their definitions. The FAQ system is a searchable list of Frequently
+Asked Questions on MDSplus topics.
+<p>
+If you still can't find what you are looking for you might try looking at
+ <a href=../../old/index.html>the older version of the MDSplus documentation.</a>
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

@@ -1,0 +1,33 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<h3>Users's Guide to MDSplus</h3>
+This guide is currently under development.
+The older version of the MDSplus documentation can be found at: <a href=http://www.mdsplus.org/old/>
+http://www.mdsplus.org/old/</a>
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

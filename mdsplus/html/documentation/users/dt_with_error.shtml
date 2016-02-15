@@ -1,0 +1,56 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - DTYPE_WITH_ERROR</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>With Error Data Type</b>
+<P>MDSplus provides a with error data type which enables you to attach error
+information to a value. A with error data item is a structure containing two
+"fields". The first field is the value and the second is the error.
+Each part of a with error data type can be either
+missing or a value of any other supported data type. General applications
+available at your site may assume some convention on the type of data each field
+contains.
+<p>
+A with error item can be created using the BUILD_WITH_ERROR or MAKE_WITH_ERROR functions. For
+example:
+<p>
+<PRE>
+_mydata = BUILD_WITH_ERROR([42,43,40],[.5,.45,.6])
+</PRE>
+<p>The following table lists some of the functions available for creating or accessing with error items:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00"><td><b>Function</b></td><td><b>Description</b></td></tr>
+
+<tr><td>BUILD_WITH_ERROR</td><td>Build a with error structure</td></tr>
+<tr><td>DATA</td><td>Evaluates value portion of with error item converting to one of integer, float or text</td></tr>
+<tr><td>ERROR_OF</td><td>Return the error field of with error structure</td></tr>
+<tr><td>MAKE_WITH_ERROR</td><td>Make a with error structure</td></tr>
+<tr><td>VALUE_OF</td><td>Return the value field of with error structure</td></tr>
+</table>
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

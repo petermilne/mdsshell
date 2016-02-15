@@ -1,0 +1,628 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+
+<h1>Calling MDSplus from C Programs</h1>
+
+<font size="-2">Justin Burruss (<a href="mailto:burruss@fusion.gat.com">burruss@fusion.gat.com</a>)<br>
+Updated 2002-06-28</font>
+
+
+<p>&nbsp;</p>
+<h2>Introduction</h2>
+
+<p>This document explains the C API to MDSplus.  This guide is
+intended for users that are comfortable with programming in the
+C programming language.</p>
+
+<p>&nbsp;</p>
+<h2>Header Files & Libraries</h2>
+
+<p>C source code that calls the MDSplus API must include the
+MDSplus header file <code>mdslib.h</code>.  Also, you must link in
+the MDSplus libraries.
+<code>/usr/local/mdsplus/include</code> and 
+<code>/usr/local/mdsplus/lib</code> are the default directories for 
+header files and libraries for new installations of MDSplus (on UNIX).
+
+<p>Here is an example of a typical compile on an HP-UX UNIX
+machine:
+<pre>
+triton 114: /usr/bin/c89 -o mdsplus_example mdsplus_example.c
+ -I/usr/local/mdsplus/include -L/usr/local/mdsplus/lib
+ -lMdsLib
+</pre>
+</p>
+
+<p>&nbsp;</p>
+<h2>Descriptors</h2>
+
+<p>MDSplus uses <b>descriptors</b> to pass around data.  A
+descriptor is basically just a struct with the raw
+data and a description of that raw data.</p>
+
+<p>Use the <code>descr()</code> function to create a
+descriptor.  Here's the function declaration:
+<pre>
+  int descr (int *dtype, void *data, int *dim1, ...);
+</pre>
+The <code>...</code> indicates a variable number of
+arguments, terminated with a pointer to an int with
+value 0.  The dtype argument takes an int; use these
+<code>#define</code>d dtypes:
+<pre>
+  DTYPE_UCHAR
+  DTYPE_USHORT
+  DTYPE_ULONG
+  DTYPE_ULONGLONG
+  DTYPE_CHAR
+  DTYPE_SHORT
+  DTYPE_LONG
+  DTYPE_LONGLONG
+  DTYPE_FLOAT
+  DTYPE_DOUBLE
+  DTYPE_COMPLEX
+  DTYPE_COMPLEX_DOUBLE
+  DTYPE_CSTRING
+  DTYPE_EVENT_NOTIFY
+  DTYPE_EVENT
+</pre>
+Use dim1, etc. to specify the dimensions of the data.  
+Omit the dim argument for scalar quantities.</p>
+
+<p>So for example, to build a descriptor for
+a scalar float:
+<pre>
+  int null = 0;
+  int dtype_flt = DTYPE_FLOAT;
+  float data;
+  int flt_descr = descr(dtype_flt, &data, &null);
+</pre>
+To build a descriptor for a 1-dimensional signal
+with 1000 elements:
+<pre>
+  int null = 0;
+  int dtype_flt = DTYPE_FLOAT;
+  float data[1000];
+  int sig_descr = descr(dtype_flt, data, 1000, &null);
+</pre>
+</p>
+
+<p>One final note on descriptors: there can be no more than
+256 descriptors at any one time.  This is because the 
+descriptor numbers (the return value from the <code>descr()</code>
+function call) are actually indicies in a global array
+of descriptors.</p>
+
+<p>&nbsp;</p>
+<h2>Functions</h2>
+
+<h3>Function Status</h3>
+
+<p>The MDSplus functions return a status int.  The
+status is OK if the least significant bit (LSB) is
+set. So to check the status, do a bitwise AND on the
+LSB.  You may want to include the following 
+function in your code:
+<pre>
+  /*
+    status_ok
+
+    Description: 
+      Returns 1 if OK, 0 otherwise.  Status is OK if the
+      LSB is set.
+
+    Dependencies:
+      none.
+  */
+  int status_ok( int status )
+  {
+    return ( (status & 1) == 1 );
+  }
+</pre>
+Alternatively, you could define a macro:
+<pre>
+  #define status_ok(status) (((status) & 1) == 1)
+</pre>
+Note that testing the least significant bit is the same as
+testing to see if a number is odd or even.  If the LSB
+is set, then the status will be an odd number.  If the LSB
+is not set, then the status will be an even number.
+</p>
+
+<h3>Function Summary</h3>
+
+<p>Here's a summary of the MDSplus functions:</p>
+
+<dl>
+  <dt>MdsConnect</dt>
+  <dd>Use MdsConnect to connect to the MDSplus server.  
+  <br>Usage: <code>int socket = MdsConnect( const char *server
+  );</code>.</dd>
+  <dt>MdsOpen</dt>
+  <dd>Use MdsOpen to open an MDSplus tree.<br>Usage:
+  <code>int status = MdsOpen( const char *treename, int
+  *shotnumber );</code>.</dd>
+  <dt>MdsSetDefault</dt>
+  <dd>Use MdsSetDefault to set your location in
+  the MDSplus tree.<br>Usage: <code>int status = 
+  MdsSetDefault( const char *path );</code>.</dd>
+  <dt>MdsValue</dt>
+  <dd>MdsValue is used to evaluate TDI expressions.
+  <br>Usage: <code>int status = MdsValue(
+  char *expression, int *ptr_to_descriptor1, ... 
+  int *ptr_to_zero, int *ptr_to_len );</code>.</dd>
+  <dt>MdsClose</dt>
+  <dd>MdsClose is used to close an open tree.<br>Usage:
+  <code>int MdsClose( char *tree, int *shot );</code>.</dd>
+  <dt>MdsPut</dt>
+  <dd>MdsPut is used to put a TDI expression into an MDSplus
+  node.<br>Usage: <code>int MdsPut( char *node, char *expression,
+  int *ptr_to_descriptor1, ... int *ptr_to_zero );</code>.</dd>
+</dl>
+
+<h3>Using MDSplus Functions</h3>
+
+<p>You can first use <code>MdsConnect</code> to
+connect to a MDSplus server. (If no <code>MdsConnect</code> is performed
+the calls will use local direct access to the data.) Then use <code>
+MdsOpen</code> to open the tree you need to
+access.</p>
+
+<p>Since you need to know the size of the signal
+before you build a descriptor for it, you should
+first use <code>MdsValue</code> to get the 
+size of the signal, then build a descriptor
+using that size.  Here is a function for
+getting the length of a signal in MDSplus:
+<pre>
+/*
+  get_signal_length
+
+  Description:
+    Returns the length of the specified signal
+    if successful, -1 if not successful.  Assumes
+    the the user is already connected to the MDSplus
+    server, and that the tree is already open.  Uses
+    the tdi intrinsic function SIZE() to get the
+    signal length.
+
+  Dependencies:
+    stdio.h (for fprintf, sprintf)
+    mdslib.h (for MdsValue, descr)
+    string.h (for memset)
+*/
+int get_signal_length(const char *signal)
+{
+  /* local vars */
+  int dtype_long = DTYPE_LONG;
+  char buf[1024];
+  int size;
+  int null = 0;
+  int idesc = descr(&dtype_long, &size, &null);
+  int status;
+
+  /* init buffer */
+  memset(buf,0,sizeof(buf));
+
+  /* put SIZE() TDI function around signal name */
+  snprintf(buf,sizeof(buf)-1,"SIZE(%s)",signal);
+
+  /* use MdsValue to get the signal length */
+  status = MdsValue(buf, &idesc, &null, 0);
+  if ( !( (status & 1) == 1 ) )
+  {
+    fprintf(stderr,"Unable to get length of %s.\n",signal);
+    return -1;
+  }
+
+  /* return signal length */
+  return size;
+
+}
+</pre>
+
+<p>So for example, if we have a signal called PRESSURE in a
+tree called MYTREE on a server named atlas.gat.com,
+we could do something like this:
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;mdslib.h&gt;
+#include "myheaderfile.h" /* include status_ok() and
+                             get_signal_length() */
+
+int main(int argc, char *argv[])
+{
+   /* local vars */
+   int dtype_float = DTYPE_FLOAT;
+   int null = 0;    
+   int status;
+   int socket;     
+   float *data;     /* array of floats used for signal */
+   float *timebase; /* array of floats used for timebase */
+   int sigdesc;     /* signal descriptor */
+   int timedesc;    /* descriptor for timebase */
+   int size;        /* length of signal */
+   int i, len;
+   int shot = 100;  /* just an example shot number */
+
+   /* Connect to MDSplus */
+   socket = MdsConnect("atlas.gat.com");
+   if ( socket == -1 )
+   {
+     fprintf(stderr,"Error connecting to Atlas.\n");
+     return -1;
+   }
+
+   /* Open tree */
+   status = MdsOpen("MYTREE", &shot);
+   if ( !status_ok(status) )
+   {
+     fprintf(stderr,"Error opening tree for shot %l.\n",shot);
+     return -1;
+   }
+
+   /* use get_signal_length to get size of signal */
+   size = get_signal_length("PRESSURE");
+   if ( size &lt; 1 )
+   {
+     /* error */
+     fprintf(stderr,"Error retrieving length of signal\n");
+     return -1;
+   }
+
+   /* use malloc() to allocate memory for the signal */
+   data = (float *)malloc(size * sizeof(float));
+   if ( !data ) 
+   {
+     fprintf(stderr,"Error allocating memory for data\n");
+     return -1;
+   }
+
+   /* create a descriptor for this signal */
+   sigdesc = descr(&dtype_float, data, &size, &null);
+
+   /* retrieve signal */
+   status = MdsValue("PRESSURE", &sigdesc, &null, &len );
+   if ( !status_ok(status) )
+   {
+     /* error */
+     fprintf(stderr,"Error retrieving signal\n");
+     return -1;
+   }
+
+   /* use malloc() to allocate memory for the timebase */
+   timebase = (float *)malloc(size * sizeof(float));
+   if ( !timebase )
+   {
+     fprintf(stderr,"Error allocating memory for timebase\n");
+     free( (void *)data );
+     return -1;
+   }
+
+   /* create a descriptor for the timebase */
+   timedesc = descr(&dtype_float, timebase, &size, &null);   
+
+   /* retrieve timebase of signal */
+   status = MdsValue("DIM_OF(PRESSURE)", &timedesc, &null, 0);
+   if ( !status_ok(status) )
+   {
+     /* error */
+     fprintf(stderr,"Error retrieving timebase\n");
+     free( (void *)data );
+     free( (void *)timebase );
+     return -1;
+   }
+
+   /* do whatever with the data */
+   
+   /* example: print ALL the data */
+   for ( i = 0 ; i &lt; size ; i++ )
+     printf("%i  X:%f  Y:%f\n", i, timebase[i], data[i]);
+   
+   /* free the dynamically allocated memory when done */
+   free( (void *)data );
+   free( (void *)timebase );
+
+   /* done */
+   return 0;
+}        
+</pre>     
+
+<h3>Execute TCL Commands using MdsValue()</h3>
+
+<p>You can send TCL commands to the MDSplus server via
+the TDI function TCL().  Normally, output from the TCL
+commands executed through the TCL() function goes to 
+stdout.  Since the commands are executed on the server,
+your client program will not see the command output (which
+will end up in the server logfile).  However, it is possible
+to provide the TCL() function with an optional output argument
+in order to see any output from the TCL commands executed
+through the function.</p>
+
+<p>Like any TDI expression, evaluate the TDI function
+TCL() using MdsValue().  The following code demonstrates
+how to do this.</p>
+
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;mdslib.h&gt;
+
+/* Define a macro to check status of MDSplus functions */
+#define status_ok(status) (((status) & 1) == 1)
+
+int main()
+{
+
+  int dtype_long = DTYPE_LONG;
+  int dtype_cstring = DTYPE_CSTRING;
+  int status, tstat, len, shot=100, null=0, socket;
+  int bufsize = 1024;
+  char buf[1024];
+  int idesc = descr(&dtype_long, &tstat, &null);
+  int sdesc = descr(&dtype_cstring, buf, &null, &bufsize);
+
+  /* Connect to MDSplus server */
+  puts("Connecting to MDSplus server.");
+  socket = MdsConnect("atlas.gat.com");
+  if ( socket == -1 ) 
+  {
+    fprintf(stderr,"Error connecting to MDSplus server.\n");
+    return -1;
+  }
+  
+  /* Open tree */
+  puts("Opening tree.");
+  status = MdsOpen("MYTREE", &shot);
+  if ( !status_ok(status) ) 
+  {
+    fprintf(stderr,"Error opening tree for shot %l.\n",shot);
+    return -1;
+  }
+
+  /* Demonstrate use of the TDI function TCL() to send TCL commands
+     to the MDSplus server. */
+
+  /* First, send the TCL command to the server. */
+  puts("Demonstrating use of TCL() function.");
+  status = MdsValue("TCL(\"SHOW DEF\",_output)",&idesc,&null,&len);
+  if ( !status_ok(status) ) 
+  {
+    fprintf(stderr,"Error with SHOW DEF command.\n");
+    return -1;
+  }
+  printf("Status of TCL(\"SHOW DEF\") = %i\n",tstat);
+
+  /* If the command was successful, print its output. */
+  if ( status_ok(tstat) ) 
+  {
+    status = MdsValue("_output",&sdesc,&null,&len);
+    if ( !status_ok(status) ) 
+    {
+      fprintf(stderr,"Error getting _output from SHOW DEF command.\n");
+      return -1;
+    }
+    printf("Output of TCL(\"SHOW DEF\") = %s\n",buf);
+  }
+
+  return 0;
+}
+</pre>
+
+<p>&nbsp;</p>
+<h2>Sample Code for HP-UX</h2>
+
+<p>Here's some sample code for HP-UX.  This example works
+at DIII-D on Hydra (which is running HP-UX 11i).  It connects to
+Atlas, opens the EFIT01 tree for shot 107000, and prints
+the first 10 data points in the AMINOR signal.</p>
+
+<p>To run this example, copy the Makefile and the source
+file into a directory.  Use the command <code>make</code>
+to build the code.  Run the code with the command
+<code>./example</code>.  Note the use of <code>./</code>
+in front of <code>example</code>.  This is to make sure
+that you run the example code in the current directory, 
+not any programs called example that might be in a 
+directory in your $PATH environment variable.</p>
+
+<p>Note that the MDSplus header files and libraries used by this Makefile
+are not in the default area, 
+so you will most likely need to modify the Makefile
+to point to the right directories.</p>
+
+<p><b>Makefile</b></p>
+<pre>
+CC = /usr/bin/c89
+FLAGS = -I/f/mdsplus/hp/mdsplus/include -L/f/mdsplus/hp/mdsplus/lib \
+ -lMdsLib
+
+example: example.c
+        $(CC) $(FLAGS) example.c -o example
+
+debug_example: example.c
+        $(CC) $(FLAGS) -g example.c -o example
+
+clean:
+        rm -f *~ core example
+</pre>
+<p>Remember that makefiles require tabs (not spaces) in front of the
+commands.  If you cut and paste the above makefile, make sure that the file
+has tabs, not spaces.</p>
+
+<p>If you have trouble with the makefile and you're sure you're using
+tabs (not spaces), then use the command <code>which make</code> to
+see which version of make you are using.  The above makefile was tested with
+<code>/usr/bin/make</code>.</p>
+
+<p><b>example.c</b></p>
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;mdslib.h&gt;
+
+#define EXIT_FAILURE -1
+#define status_ok(status) (((status) & 1) == 1)
+
+int get_signal_length(const char *signal)
+{
+  /* local vars */
+  int dtype_long = DTYPE_LONG;
+  char buf[1024];
+  int size;
+  int null = 0;
+  int idesc = descr(&dtype_long, &size, &null);
+  int status;
+
+  /* init buffer */
+  memset(buf,0,sizeof(buf));
+
+  /* put SIZE() TDI function around signal name */
+  snprintf(buf,sizeof(buf)-1,"SIZE(%s)",signal);
+
+  /* use MdsValue to get the signal length */
+  status = MdsValue(buf, &idesc, &null, 0);
+  if ( !status_ok(status) )
+  {
+    fprintf(stderr,"Unable to get length of %s.\n",signal);
+    return EXIT_FAILURE;
+  }
+
+  /* return signal length */
+  return size;
+
+}
+
+int main(int argc, char *argv[])
+{
+   /* local vars */
+   int dtype_float = DTYPE_FLOAT;
+   int null = 0;
+   int shot = 107000;
+   int status;
+   int socket;
+   float *data;     /* array of floats used for signal */
+   float *timebase; /* array of floats used for timebase */
+   int sigdesc;     /* signal descriptor */
+   int timedesc;    /* descriptor for timebase */
+   int size;        /* length of signal */
+   int i, len;
+
+   /* Connect to MDSplus */
+   socket = MdsConnect("atlas.gat.com");
+   if ( socket == -1 )
+   {
+     fprintf(stderr,"Error connecting to Atlas.\n");
+     return EXIT_FAILURE;
+   }
+
+   /* Open tree */
+   status = MdsOpen("EFIT01", &shot);
+   if ( !status_ok(status) )
+   {
+     fprintf(stderr,"Error opening EFIT01 tree for shot %l.\n",shot);
+     return EXIT_FAILURE;
+   }
+
+   /* use get_signal_length to get size of signal */
+   size = get_signal_length("\\AMINOR");
+   if ( size &lt; 1 )
+   {
+     /* error */
+     fprintf(stderr,"Error retrieving length of signal\n");
+     return EXIT_FAILURE;
+   }
+
+   /* use malloc() to allocate memory for the signal */
+   data = (float *)malloc(size * sizeof(float));
+   if ( !data )
+   {
+     fprintf(stderr,"Error allocating memory for data\n");
+     return EXIT_FAILURE;
+   }
+
+   /* create a descriptor for this signal */
+   sigdesc = descr(&dtype_float, data, &size, &null);
+
+   /* retrieve signal */
+   status = MdsValue("\\AMINOR",&sigdesc, &null, &len );
+   if ( !status_ok(status) )
+   {
+     /* error */
+     fprintf(stderr,"Error retrieving signal\n");
+     free( (void *)data );
+     return EXIT_FAILURE;
+   }
+
+   /* use malloc() to allocate memory for the timebase */
+   timebase = (float *)malloc(size * sizeof(float));
+   if ( !timebase )
+   {
+     fprintf(stderr,"Error allocating memory for timebase");
+     free( (void *)data );
+     return EXIT_FAILURE;
+   }
+
+   /* create a descriptor for the timebase */
+   timedesc = descr(&dtype_float, timebase, &size, &null);
+
+   /* retrieve timebase of signal */
+   status = MdsValue("DIM_OF(\\AMINOR)", &timedesc, &null, 0);
+   if ( !status_ok(status) )
+   {
+     /* error */
+     fprintf(stderr,"Error retrieving timebase\n");
+     free( (void *)data );
+     free( (void *)timebase );
+     return EXIT_FAILURE;
+   }
+
+   /* do whatever with the data */
+
+   /* example: print first 10 data points */
+   for ( i = 0 ; i &lt; size && i &lt; 10 ; i++ )
+     printf("%i  X:%f  Y:%f\n", i, timebase[i], data[i]);
+
+   /* free the dynamically allocated memory when done */
+   free( (void *)data );
+   free( (void *)timebase );
+
+   /* done */
+   return 0;
+}
+</pre>
+
+<p>Note that it is necessary to quote the backslash character
+with another backslash when building the string \AMINOR.</p>
+
+<p>If you run into bugs while writing your own MDSplus code,
+try compiling with the -g option and use a debugger.</p>
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

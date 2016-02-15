@@ -1,0 +1,102 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>Working With Trees</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<H3>Working With Trees</H3>
+
+The trees which contain the data pertaining to an experiment or simulation are stored on an MDSplus server as files.  Each tree consists of a model (shot # -1) and one or more pulse files with positive shot numbers.
+
+Special shot numbers:
+
+<ul>
+<li> -1  - model </li>
+<li> &nbsp 0  - current shot </li> 
+<li>  >1  - pulse files </li>
+</ul>
+
+
+The MDSplus data system is based around hierarchical data stores called trees.  A tree is a collection of nodes which describe something.
+
+All data in MDSplus are stored in trees.
+
+Models vs  Shots
+
+Trees vs Subtrees
+
+<H4>Opening vs Editing</H4>
+
+<h4>Files and treenames </h4>
+
+What are the files called ?
+
+Where are they stored ?
+
+What is in them ?
+
+MDSplus trees are stored on disk in a set of three files.  Their base names 
+are <b><i>name-of-the-tree</i>_shot-specifier</b> where the shot-specifier is either a three or 10 digit shot number, or the string <b><i>model</i></b>.  
+
+For example the files for a tree called demo would be called: demo_001.* for shot 1, demo_1010000001.* for shot 1010000001 and demo_model for the model (shot -1).
+
+<Table CELLSPACING=3 >
+<tr><td VALIGN=TOP><b><i>treename</i>_nnn.tree<b></td>
+<td> This file contains the structure of the tree. 
+This file is opened readonly unless the tree is being edited. It contains the 
+names of the nodes, thier locations in the hierarchy, and their usages.</td></tr>
+
+<tr><td VALIGN=TOP>
+ <b><i>treename</i>_nnn.characteristics
+</td></b>
+<td> This file contains a set of fixed 
+length properties for each node.  This file is opened for shared read and 
+write access.  Including the datatype, data shape, when it  was last written, 
+who last wrote it, and the location of the data record  in the datafile.
+</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP><b><i>treename</i>_nnn.datafile</b></td> 
+<td> This file contains the actual data.  This file is opend for shared read and write access.</td></tr> </table>
+
+
+
+Environment variables define the location of the files which make up a given 
+The files for a each tree are located on disk by the translation of 
+a name <i>treename</i>_path.
+
+
+
+Organizing data
+
+Tags
+
+What they are, How to create them (tcl commands and traverser), environment variables/registry, model/pulse file concepts....
+
+You should also probably discuss local/thick/distributed trees and file name masks.
+
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

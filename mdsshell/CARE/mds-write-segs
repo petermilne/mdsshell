@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# example program writes N segments
+# usage:
+# ./mds-write-segs
+# ENV ./mds-write-segs NSEGS
+
+let NSEGS=${1:-9}		# first argument
+
+MDSIP=${MDSIP:-rhum4}		# MDSIP=myhost ./mds-write-segs 
+TREE=${TREE:-rtmt}		# TREE=mytree  ./mds-write-segs
+CARD=${CARD:-ACQ196_387}	# CARD=mycard ./mds-write-segs
+CHX=${CHX:-1:96}
+
+let T1=1000000		# Start time of segment
+let T2=1010000		# End time of segment
+let T3=1		# Intersample interval
+
+let TDEAD=100000	# Time betwen shots
+let shot=0
+
+EXPR='BeginSegment('$CARD'.CH%02d,$2,$3,make_dim(*,$2 : $3 : $4),$1)'
+
+mdsConnect $MDSIP
+mdsOpen $TREE
+
+while [ $shot -lt $NSEGS ]
+do
+# a real example would run a capture here..
+	mdsValuePut --ch1 $CHX --k234 $T1,$T2,$T3 "$EXPR"
+	
+	
+	let T1=$T1+$TDEAD
+	let T2=$T2+$TDEAD
+	let shot=$shot+1
+done
+
+mdsClose $TREE
+mdsDisconnect
+

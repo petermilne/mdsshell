@@ -1,0 +1,15 @@
+<br>&nbsp;
+<p><b>Scope of This Manual</b>
+<p>This guide is intended for new users of MDSplus. It contains a discussion
+of basic MDSplus concepts, basic commands for retrieving and storing data,
+an introduction to the built-in expression evaluator and instructions on
+the use of the graphical tools, SCOPE, JSCOPE, and TRAVERSER, which provide point
+and click access to MDSplus data and structures.
+<p>This guide does not include detailed information on installing MDSplus
+software or creating and editing MDSplus data structures. Nor does it explain
+how to set up data acquisition or automated analysis systems. Details on
+these and other advanced subjects can be found in the users manual and
+reference manuals.
+<p>
+
+<a href="intro.shtml">next page</a>

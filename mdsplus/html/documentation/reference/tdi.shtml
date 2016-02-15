@@ -1,0 +1,177 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+
+<h1>Understanding TDI Expressions</h1>
+
+<font size="-2">Updated 2001-07-15
+ by <a href="mailto:burruss@fusion.gat.com">burruss@fusion.gat.com</a></font>
+
+
+<p>&nbsp;</p>
+<h2>Introduction</h2>
+
+<p>This guide is intended to help the user with understanding TDI, 
+the language used for expressions stored in MDSplus nodes.  The
+ complete TDI reference is available 
+<a href="http://www.mdsplus.org/old/tdi/TDI_TOP.HTML">
+here</a>.</p>
+
+
+<p>&nbsp;</p>
+<h2>The Basics</h2>
+
+<p>TDI expressions are what you store in an MDSplus node.  A TDI
+expression can be a number, a variable, simple text, or a complex
+function.  That expression is evaluated by MDSplus.</p>
+
+<p>TDI is a programming language; it contains the sequential,
+repetition, and decision structures fundamental to any
+structured programming language.  This means that you can put
+programs into MDSplus nodes (although for tree design
+reasons you would probably not want to put everything into
+a single node).</p>
+
+<p>You can put multiple expressions into a node, with each expression
+separated by a comma.  In this case the node will be evaluated by
+the last expression in the comma delimited list.</p>
+
+<p>Use the TCL command <code>put</code> to put a TDI expression
+into a node.  The syntax is <code>put <i>nodename</i> "expression"
+</i></code>.</p>
+
+<p>The TDI expressions in a node can be viewed using the TCL command
+<code>decomp</code>.  The syntax is <code>decomp <i>nodename</i>
+</code>.</p>
+
+
+<p>&nbsp;</p>
+<h2>Numbers, variables, and arrays</h2>
+
+<p>Numbers are straightforward: just put the number into the node.
+Remember to use decimal points with floating point numbers (10.0 or
+10. rather than 10, for example).</p>
+
+<p>TDI variables always start with an underscore.  For example:
+<pre>
+  _alpha = 32.678
+</pre>
+</p>
+
+<p>Arrays are enclosed in brackets, with elements of an array
+separated by commas.  Example:
+<pre>
+  [12.1, 33.3, 0.003, 1.67]
+</pre>
+</p>
+
+
+<p>&nbsp;</p>
+<h2>Operators</h2>
+
+<p>TDI generally uses C style operators.  An exception is the string
+concatenation operator, which in TDI is two slashes (<code>//</code>).
+Example:
+<pre>
+  WRITE(*, "Hello," // " World!");
+</pre>
+
+
+<p>&nbsp;</p>
+<h2>Functions</h2>
+
+<p>There are two types of TDI functions: intrinsic TDI functions that
+are part of the TDI language, and user TDI functions that are written
+by users.  Both have exactly the same syntax: use the name of the
+function followed by the argument list enclosed within parentheses.
+Example:
+<pre>
+  ABS( -32.9 )
+</pre>
+Function arguments are delimited by commas.  If you omit a function 
+argument, use * as a placeholder.  Example:
+<pre>
+  BUILD_SIGNAL( [1., 2., 3., 4.], *, [0.1, 0.2, 0.3, 0.4] )
+</pre>
+</p>
+
+
+<p>&nbsp;</p>
+<h2>Sequence, repetition, and decision</h2>
+
+<p>You can build a sequence of TDI expressions using commas
+to delimit the TDI statements.  As mentioned above, if 
+multiple TDI expressions appear in a node, then the node
+is evaluated by the last TDI expression in the comma
+delimited list.</p>
+
+<p>You can repeat statements using the TDI intrinsic <code>
+FOR()</code>.  The syntax is <code>FOR( [init]; [test]; 
+[update];) <i>statement</i></code>.  For example:
+<pre>
+  FOR( _i=0; _i <= 5; _i++ ) WRITE(*,"Hi");
+</pre>
+You can also do compound statements using curly braces:
+<pre>
+  FOR( _i=0; _i <= 5; _i++ ) 
+  { 
+    WRITE( *, _i ); 
+    WRITE( *, "Hi" );
+  }
+</pre>
+</p>
+
+<p>You can use the TDI intrinsic <code>IF()</code> to make
+decisions.  The syntax is <code>IF( <i>test</i>, <i>statement
+</i> [,<i>else</i>] )</code>.  For example:
+<pre>
+  IF( _i < 10., _i = 10. )
+</pre>
+Surprisingly, when you put an <code>IF()</code> into a node,
+then decompile the node, you will get back a different
+statement.  The above example would come back as
+<pre>
+If ( _i < 10. )
+{
+  _i = 10;
+}
+</pre>
+The above statement doesn't work if you enter it directly--you
+must use <code>IF()</code> to build the statement.</p>
+
+<p>This behavior may lead to confusion, so consider using the
+ternary operator in lieu of an if-then-else block.  For example,
+the expression
+<pre>
+  (_i < 10) ? (_i = 10) : --_i
+</pre>
+says "if i is less than ten, then set i equal to 10, otherwise
+decrement i by 1."</p>
+
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

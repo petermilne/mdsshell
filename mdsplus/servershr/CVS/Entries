@@ -1,0 +1,27 @@
+/Makefile.in/1.7/Tue Apr  2 18:59:50 2002//
+/Makefile.old/1.1/Tue Oct 26 20:13:51 1999//
+/ServerAbortServer.c/1.5/Fri Feb 14 20:33:51 2003//
+/ServerBuildDispatchTable.c/1.11/Tue Apr  6 15:07:54 2004//
+/ServerCloseTrees.c/1.5/Fri Feb 14 20:33:51 2003//
+/ServerCreatePulse.c/1.6/Fri Feb 14 20:33:51 2003//
+/ServerDispatchAction.c/1.7/Wed Mar 12 16:42:49 2003//
+/ServerDispatchClose.c/1.4/Fri Feb 14 20:33:51 2003//
+/ServerDispatchCommand.c/1.6/Fri Feb 14 20:33:51 2003//
+/ServerDispatchPhase.c/1.33/Wed May 12 13:34:22 2004//
+/ServerFindServers.c/1.3/Wed Mar 12 16:50:24 2003//
+/ServerFreeDispatchTable.c/1.6/Fri Apr  2 17:48:32 2004//
+/ServerGetInfo.c/1.7/Thu Apr 12 15:37:21 2001//
+/ServerMonitorCheckin.c/1.5/Fri Feb 14 20:33:51 2003//
+/ServerQAction.c/1.47/Wed Mar 12 16:42:49 2003//
+/ServerSendMessage.c/1.47/Tue Nov  4 16:15:19 2003//
+/ServerSetDetailProc.c/1.2/Tue Feb  6 21:21:27 2001//
+/ServerSetLogging.c/1.5/Fri Feb 14 20:33:51 2003//
+/ServerStartServer.c/1.4/Tue Apr  4 15:31:55 2000//
+/ServerStopServer.c/1.5/Fri Feb 14 20:33:51 2003//
+/pthread_dummies.c/1.5/Tue May 16 13:49:11 2000//
+/servershr.def/1.6/Tue Sep 17 16:19:54 2002//
+/servershr.dsp/1.6/Mon Aug 21 19:08:30 2000//
+/servershr.export/1.1/Tue Apr  2 18:59:50 2002//
+/servershr.vcproj/1.2/Mon Jun 10 18:33:58 2002//
+/servershrp.h/1.13/Fri Apr  2 17:48:32 2004//
+D

@@ -1,0 +1,292 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en]C-CCK-MCD   (Windows NT 5.0; U) [Netscape]">
+</head>
+<body>
+
+
+<table BORDER=0 CELLPADDING=5 WIDTH="100%" BGCOLOR="#C6FFC6" >
+
+<tr>
+<td>ACTIONS</td>
+<td>Tasks which can be defined and executed by MDSplus.  Used for data
+acquisition or automatic analysis.</td>
+</tr>
+
+<tr>
+<td>API</td>
+<td>Application Program Interface</td>
+</tr>
+
+<tr>
+<td>CHILD</td>
+<td>A type of node which contains only structural information, it's USAGE is "structure"</td>
+</tr>
+
+<tr>
+<td>CURRENT SHOT</td>
+<td>The tree instance or shot accessed when the tree is opened using the special shot number specification 
+of 0. This is usually the most recent experiment cycle or analysis run. Automated analysis jobs or visualization
+tools can use shot number 0 to access the most recent data.
+</tr>
+
+<tr>
+<td>DEFAULT</td>
+<td>Can refer to the currently open tree (tree name and shot) or to the currently defined node default within that tree.</td>
+</tr>
+
+<tr>
+<td>DEVICE</td>
+<td>A collection of nodes which is used to associate setup parameters, actions (task descriptions), and data for data acquisition or automated analysis</td>
+</tr>
+
+<tr>
+<td>DIMENSION</td>
+<td>Independent axes for SIGNALS</td>
+</tr>
+
+<tr>
+<td>DISPATCHING</td>
+<td>The process of issuing ACTIONS to SERVERS for execution</td>
+</tr>
+
+<tr>
+<td>DISPATCH TABLE</td>
+<td>A collection of ACTIONS organized for execution by a SCHEDULER</td>
+</tr>
+
+<tr>
+<td>DISTRIBUTED TREES</td>
+<td>MDSplus client/server data access model where expression evaluation, data compression and decompression are
+performed by the client. Low level tree file access is performed by the mdsip server. This mode is activated by
+defining the tree paths using host[:port]::directory. This mode supports distributed subtrees (tree files residing
+on different hosts). This mode is not available for either client or server on OpenVMS.</td>
+</tr>
+ 
+<tr>
+<td>EVENT</td>
+<td>A global message issued by the MDSplus command SETEVENT.  Events are used to 
+synchronize data acquisition and analysis.</td>
+</tr>
+
+<tr>
+<td>EXPRESSION</td>
+<td>A text string containing commands in the TDI language.  All interfaces to MDSplus data are based on the evaluation of expressions</td>
+</tr>
+
+<tr>
+<td>EXTERNAL ROUTINES</td>
+<td>Routines written in standard programming languages, compiled and built into shared libraries.  These can be called in TDI expressions.</td>
+</tr>
+
+<tr>
+<td>FULL PATH</td>
+<td>A text string which specifies an absolute reference to a node from the top of it's tree</td>
+</tr>
+
+<tr>
+<td>FUNS</td>
+<td>TDI functions. Procedures written in the TDI language which can be called by name in any expression.</td>
+</tr>
+
+<tr>
+<td>GETNCI</td>
+<td>An important TDI function which allows users to retrieve metadata</td>
+</tr>
+
+<tr>
+<td>JSCOPE</td>
+<td>A Java version of SCOPE</td>
+</tr>
+
+<tr>
+<td>LOCAL ACCESS</td>
+<td>Access to tree files on a local file system or one on which files are directly accessible. Applications
+using local access do all tree file access, expression evaluation, data compression and decompression within
+the context of the application. No mdsip server is involved when using local access.</td>
+</tr>
+
+<tr>
+<td>MDSip</td>
+<td>MDSplus client/server data access protocol based on the Internet TCPIP protocol. Also the name of the
+MDSplus server daemon which receives connections from remote clients.</td>
+</tr>
+
+<tr>
+<td>MDSplus</td>
+<td WIDTH="85%">Model Data System</td>
+</tr>
+
+<tr>
+<td>MDSCLOSE</td>
+<td>Call to close MDSplus tree or trees</td>
+</tr>
+
+<tr>
+<td>MDSCONNECT</td>
+<td>Call to connect user process to MDSplus server</td>
+</tr>
+
+<tr>
+<td>MDSDISCONNECT</td>
+<td>Call to disconnect user process from MDSplus server</td>
+</tr>
+
+<tr>
+<td>MDSOPEN</td>
+<td>Call to open MDSplus tree</td>
+</tr>
+
+<tr>
+<td>MDSPUT</td>
+<td>Call to put data into MDSplus trees</td>
+</tr>
+
+<tr>
+<td>MDSVALUE</td>
+<td>Call to evaluate MDSplus expressions - the basic call to retrieve data</td>
+</tr>
+
+<tr>
+<td>MEMBER</td>
+<td>A type of node which can contain data.  (A confusing feature of MDSplus is that MEMBERS may have CHILDREN or other MEMBERS as subnodes.)</td>
+</tr>
+
+<tr>
+<td>METADATA</td>
+<td>Data about data.  In MDSplus this includes the size, shape, and type of arrays, when the data was stored, by who, the structural relations of the data etc.  This data is accessed through TDI functions.</td>
+</tr>
+
+<tr>
+<td>MODEL</td>
+<td>A special type of TREE used as a template for SHOT trees.  The model is always designated by shot = -1</td>
+</tr>
+
+<tr>
+<td>NID</td>
+<td>Numerical node ID.  A long word which uniquely identifies each node in a tree.</td>
+</tr>
+
+<tr>
+<td>NODE</td>
+<td>The basic constituent of MDSplus TREES.  Nodes come in two basic types; CHILDREN, which embody the structure of the tree and MEMBERS which contain data.</td>
+</tr>
+
+<tr>
+<td>NODE CHARACTERISTICS</td>
+<td>Metadata for each node including the size and type of data, when it was stored, by who, its structural relation to other nodes, etc.</td>
+</tr>
+
+<tr>
+<td>PARENT</td>
+<td>The next higher level NODE in the TREE hierarchy.</td>
+</tr>
+
+<tr>
+<td>RELATIVE PATH</td>
+<td>A text string which specifies a node reference relative to the current DEFAULT</td>
+</tr>
+
+<tr>
+<td>REMOTE ACCESS</td>
+<td>Access to tree files on a remote machine through the MDSplus client/server interface</td>
+</tr>
+
+<tr>
+<td>SCHEDULING</td>
+<td>The process of collection actions from an MDSplus TREE and organizing
+them into a DISPATCH TABLE for subsequent execution by SERVERS</td>
+</tr>
+
+<tr>
+<td>SCOPE</td>
+<td>An X-windows/motif based tool for quick plotting of X-Y data from MDSplus TREES</td>
+</tr>
+
+<tr>
+<td>SERVER</td>
+<td>Computer which interprets MDSplus instructions and interacts directly with data structures</td>
+</tr>
+
+<tr>
+<td>SHOT</td>
+<td>An instance of an MDSplus tree.  The shot number is incorporated into the tree file name</td>
+</tr>
+
+<tr>
+<td>SIGNAL</td>
+<td>A widely used composite data type consisting of multi-dimensional data and its independent axes.  </td>
+</tr>
+
+<tr>
+<td>STATUS CODES</td>
+<td>Most MDSplus calls return status codes where the lowest bit indicates success or failure.  The codes can be interpreted by the mdsgetmsg function</td>
+</tr>
+
+<tr>
+<td>SUBTREES</td>
+<td>MDSplus TREEs which are part of the hierarchy of another tree.  Subtrees are stored as three separate files just like standalone trees.</td>
+</tr>
+
+<tr>
+<td>TAG NAMES</td>
+<td>An alias or short pathname for an MDSplus node.  Tag names (or tags) can be up to 23 characters and must be unique within each tree.</td>
+</tr>
+
+<tr>
+<td>TCL</td>
+<td>Tree command language. A set of commands for viewing or changing the structure of MDSplus trees.</td>
+</tr>
+
+<tr>
+<td>TDI</td>
+<td>Tree Data Interface - the basic language for expressions in MDSplus</td>
+</tr>
+
+<tr>
+<td>TDI VARIABLES</td>
+<td>Data structures which cache the results of expressions in memory.  
+These variables always start with the underscore "_" character. </td>
+</tr>
+
+<tr>
+<td>THICK CLIENT</td>
+<td>MDSplus client/server data access model where all expression evaluation, data compression and decompression
+is performed by the client. Tree access is performed by the mdsip server. This mode is used when tree paths are
+defined as host[:port]::. This mode does not support distributed subtrees.</td>
+</tr>
+
+<tr>
+<td>THIN CLIENT</td>
+<td>MDSplus client/server data access model where all expression evaluation, data compression and decompression
+is performed by an mdsip server. The client code is a very thin layer which does nothing but send and receive
+messages to and from the server. This mode is entered when the client application issues an mdsconnect call.</td> 
+<tr>
+
+<td>TRAVERSER</td>
+<td>An X-windows/motif based tool for exploring and editing MDSplus TREES</td>
+</tr>
+
+<tr>
+<td>TREE</td>
+<td>The basic MDSplus data structure consisting of a hierarchical arrangement of NODES
+which contain data, metadata and structural information.  Trees are stored as three files, each containing one of these types of information. Trees are specified by a tree name and shot number</td>
+</tr>
+
+<tr>
+<td>USAGE</td>
+<td>Each node is assigned a usage when it is created.  This generally defines how a node may be used.  Common types are STRUCTURE, NUMERIC, SIGNAL, DEVICE, SUBTREE, and TEXT</td>
+</tr>
+
+
+
+<tr>
+<td></td>
+<td></td>
+</tr>
+
+</table>
+</body>
+</html>

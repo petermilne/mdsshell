@@ -1,0 +1,115 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en]C-CCK-MCD   (Windows NT 5.0; U) [Netscape]">
+<title> MDSplus Concepts </title>
+</head>
+<body>
+
+<p><b>MDSplus Concepts</b>
+<p><b>The Data Hierarchy - Trees, Nodes, and Models</b>
+<p>MDSplus is a suite of software for data acquisition and data management
+for pulsed or batch systems. While it was originally developed for experiments,
+it is now widely used for storing the results of physics codes as well.
+The basic data structure is a self-descriptive hierarchy called a TREE.
+The hierarchy consists of large numbers of named NODES which make up the
+branches (structure) and leaves (data) of each tree. MDSplus SHOTS are
+trees created from a special type of tree called a MODEL, a template which contains
+all of the structure and setup data for an experiment or code. SHOTS are
+copies of the model augmented by the stored data and correspond to particular
+runs of an experiment or code. For a typical experiment, data from various
+sources are grouped in some logical manner and divided into a number of
+trees which each form the top level of their respective hierarchies. These
+trees themselves can be organized into a hierarchy with a root tree and
+SUBTREES as in the following figure.
+</p>
+
+<img SRC="tree-with-caption.gif" height=626 width=686>
+<p><b>Node Characteristics - Self Description</b>
+<p>The MDSplus data structure is self descriptive: Beyond the data itself,
+a substantial amount of additional information is available for every node
+in each tree. These metadata, called node CHARACTERISTICS, include: the
+data type, array dimensions, data length, units, independent axes, the
+parents and children of the node, tag names, the date when the data was
+stored, the name of the user who wrote data, and so forth. Information
+on the place of each node in the overall hierarchy can be used by applications
+to TRAVERSE trees independent of reading data. A graphical tool called
+the TRAVERSER is included in the MDSplus distribution and is a convenient
+way to examine or edit the data structures. Node characteristics can be
+obtained by using the TDI function GETNCI.
+<p><b>Trees and Files</b>
+<p>Individual trees exist under an MDSplus SERVER's operating system as
+a collection of three files one of which defines the structure, a second
+contains the data, and the third contains the node characteristics. The
+naming convention for these files is
+<code>treename_shotnumber.filetype</code>;
+where filetype is either "tree", "datafile" or "characteristics" respectively
+for the three types of files. Under most circumstances knowledge of these
+details are not necessary or important to users.
+<p><b>Data Types</b>
+<p>A rich set of simple and composite data types are supported. The simple
+data types include signed and unsigned integers (1, 2, 4, and 8 Bytes),
+single and double precision real numbers, single and double precision complex
+numbers, and character data. Arrays of these data types with up to 7 dimensions
+can be represented. The most important composite types include: SIGNALS,
+which contain data plus associated independent axes (eg. temperature vs
+space and time); and DEVICES, which are used to associate setup parameters,
+actions (task descriptions), and data for data acquisition or automated
+analysis. Function calls are provided which can return particular components
+of the composite data types.
+<p><b>Expressions</b>
+<p>All interfaces to MDSplus data are based on the evaluation of expressions.
+These expressions are written in a language called TDI (tree data interface)
+which supports a large number of functions and commands. The simplest expressions
+are just node names and evaluation returns the data in that node. Simple
+mathematical and logical operations are supported, along with string manipulation,
+simple programming instructions and commands to analyze or create specific
+MDSplus constructs. External routines written in other programming languages
+can be called as well.
+<p><b>Access - Local and Remote</b>
+<p>In a typical installation, many users will access data from computers
+on the same local area network (LAN) as the MDSplus file server. For these
+users, the disks and directories with data may be configured to appear
+as local disks on the users systems. In this case, which we can call LOCAL
+access, each user's system will be running its own MDSplus server and handling
+expression evaluation, data compression and decompression and so forth.
+In other cases, the files will be on remote systems to which the user does
+not have direct file access. In this situation, which we will call REMOTE
+access, the local system will run an MDSplus client. For operation in this
+mode, the MDSplus commands in an application must be preceeded by a command
+to connect to a particular server.
+<p><b>First Look at the MDSplus API</b>
+<p>The MDSplus API (applications programming interface) consists of a small
+number of simple calls. The basic calls as they would be ordered in an
+application are:
+
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp; mdsconnect,'server_name'
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mdsopen,'tree_name',shot_number
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result = mdsvalue('expression')
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mdsput,'node_name','expression'
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mdsclose,[tree_name,shot]
+&nbsp;&nbsp;&nbsp;&nbsp; mdsdisconnect
+</pre>
+
+<i><font color="#006600">(Note: The syntax shown here&nbsp; and in examples
+below is general, details will depend on the programming language used 
+and are explained in
+the section on data access - this description is intended only to introduce
+basic concepts)</font></i>
+<p>
+In the example shown, a user issues commands to specify the server with
+<code>mdsconnect</code> and tree with <code>mdsopen</code>,&nbsp; then evaluates
+an EXPRESSION with <code>mdsvalue</code> to retrieve some data. <code>mdsput</code>
+is used to store data back into the opened tree. Finally <code>mdsclose</code>
+and <code>mdsconnect</code> close the tree and end the session. As discussed
+above, the expression evaluated by mdsvalue is most often simply a fully
+qualified node name.
+</p>
+
+<a href="trees.shtml">next page</a>
+
+
+</body>
+</html>

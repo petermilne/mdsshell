@@ -1,0 +1,32 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>The MDSplus tutorial</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<h3>The MDSplus tutorial</h3>
+<!--#include virtual="Devices.html" -->
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

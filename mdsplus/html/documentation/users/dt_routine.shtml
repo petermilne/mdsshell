@@ -1,0 +1,68 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - DTYPE_ROUTINE</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>Routine Data Type</b>
+<P>MDSplus provides a routine data type for describing an function call to be used as
+ the task portion of an 
+<a href="dt_action.shtml" class="small">action data item</a>. 
+<p>
+The routine data type is a structure consisting of three fields followed by optional arguments to the method
+being performed. 
+<p>The first field is a timeout value specified in seconds. When the routine is
+being executed and a timeout is specified, a timer is started when the operation
+is started and if the operation is not completed before the specified timeout, the operation
+will be aborted abruptly. This field can either be omitted or should contain a value or expression which
+when evaluated will result in a scalar numeric value.
+<p>
+The next field in the routine data type is the name of an image which contains the routine to be executed. This should contain
+a value or expression which when evaluated will result in a scalar text value indicating the name of the image or library
+where the routine can be found (case sensitive on Unix platforms). See the <a href="dt_call.shtml" class="small">description of the call data type</a> for
+additional information on how the library is located.
+<p>
+The next field is the routine name to execute. This should conatin a value or expression which when evaluated will result in
+a scalar text value indicating the name of the routine (case sensitive on Unix and Windows platforms) to be executed.
+<p>
+The following fields represent optional arguments to be passed to the routine. The arguments will be evaluated and converted to
+native data types before being passed to the routine.
+<p>
+This data type is rarely used since the task part of an action can be also be an expression. The call capabilities built into
+the expression evaluator provides much more flexibility in specifying how the arguments to the routine are to be passed.
+<p>
+The following table lists some of the functions available for creating and accessing routines:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00"><td><b>Function</b></td><td><b>Description</b></td></tr>
+
+<tr><td>BUILD_ROUTINE</td><td>Build a routine structure</td></tr>
+<tr><td>IMAGE_OF</td><td>Return the image name part of a routine</td></tr>
+<tr><td>MAKE_ROUTINE</td><td>Make a routine structure</td></tr>
+<tr><td>ROUTINE_OF</td><td>Return the object part of a routine</td></tr>
+<tr><td>TIME_OUT_OF</td><td>Return the timeout part of a routine</td></tr>
+</table>
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

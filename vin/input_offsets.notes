@@ -1,0 +1,7 @@
+make CROSS=NO DEBUG=YES
+./makelinks x86/bin
+
+
+ export LD_LIBRARY_PATH=$PWD/x86/lib:/home/pgm/PROJECTS/ACQ200/project/lib/x86/lib
+
+./x86/bin/load.input_offsets --config=/home/pgm/PROJECTS/ACQ200/project/vin/offset_test/etc/cal/acq196-default.xml --azfile=/home/pgm/PROJECTS/ACQ200/project/vin/offset_test/ffs/cal/autozero.0 222

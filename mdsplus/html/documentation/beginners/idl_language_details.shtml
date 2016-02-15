@@ -1,0 +1,431 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en]C-CCK-MCD   (Windows NT 5.0; U) [Netscape]">
+<title>IDL Language Details</title>
+</head>
+<body>
+
+<h3>IDL Language Details</h3>
+
+<p>MDSplus data access with the IDL language is particularly simple because
+of its flexibility in data typing and array allocation.&nbsp; The following
+MDSplus calls are supported in IDL.
+<br>&nbsp;
+<table BORDER=0 WIDTH="100%" >
+<tr>
+<td WIDTH="20%"><b><a href="#mdsconnect">mdsconnect</a></b></td>
+
+<td>Connect to MDSplus server</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdsdisconnect">mdsdisconnect</a></b></td>
+
+<td>Disconnect from MDSplus server</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdsopen">mdsopen</a></b></td>
+
+<td>Open an MDSplus experiment model or pulse file</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdsclose">mdsclose</a></b></td>
+
+<td>Close an open MDSplus experiment model or pulse file</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdsvalue">mdsvalue</a></b></td>
+
+<td>Return the evaluation on an MDS expression</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdsput">mdsput</a></b></td>
+
+<td>Store data into MDSplus tree node</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdsset_def">mdssetdefault</a></b></td>
+
+<td>Set default to a node in an MDSplus tree</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdsgetmsg">mdsgetmsg</a></b></td>
+
+<td>Decode status word</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdstcl">mdstcl</a></b></td>
+
+<td>Invokes the MDSplus Tree Command Language interpreter</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdsevent">mdsevent</a></b></td>
+
+<td>Establish an MDS Event Widget Event in an IDL Widgets application.</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdssetevent">mdssetevent</a></b></td>
+
+<td>Generates an MDSplus event</td>
+</tr>
+
+<tr>
+<td><b><a href="#mdswfevent">mdswfevent</a></b></td>
+
+<td>Wait for an MDSplus event</td>
+</tr>
+</table>
+<b></b>
+<p><a href="readwrite.shtml">(Back to Reading and Writing Data)</a>
+
+<p>
+<hr WIDTH="100%">
+<p><b>mdsconnect</b><a NAME="mdsconnect"></a>
+<p>&nbsp;<font color="#006600"><font size=-1>PURPOSE:</font></font>&nbsp;
+Open a connection to an MDSplus server
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSCONNECT, SERVER [,/QUIET,STATUS=ISTAT]
+<br><font color="#006600">&nbsp;<font size=-1>INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; server = name of server,
+as quoted string
+<br>&nbsp;<font color="#006600"><font size=-1>KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QUIET = prevents IDL error if
+TCL command fails
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br>&nbsp;<font color="#006600"><font size=-1>OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; None.
+<br><font color="#006600"><font size=-1>SIDE EFFECTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The system variable !mds_socket
+is set to the socket number.&nbsp; A subsequent calls to mdsconnect without
+a disconnect will make the new connection and reset !mds_socket but not
+break the previous connection.&nbsp; Users can select which connection
+to use by saving the socket values and setting !mds_socket appropriately.
+To set LOCAL access use !mds_socket = 0
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<pre>
+IDL> mdsconnect,'foo.mit.edu'
+
+</pre>
+<a href="#top">(top of page)</a>
+<p>
+<hr WIDTH="100%">
+<p><b>mdsclose</b><a NAME="mdsclose"></a>
+<p>&nbsp;<font color="#006600"><font size=-1>PURPOSE:</font></font>&nbsp;
+Close an open MDSplus experiment model or pulse file
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSCLOSE[,experiment,shot][,/QUIET,STATUS=ISTAT]
+<br><font color="#006600">&nbsp;<font size=-1>OPTIONAL INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; experiment = name of the
+experiment used in an invocation
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+of MDSOPEN, as quoted string
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; shot = shot number of the file.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If both experiment and shot are
+omitted, all files will be
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; closed.
+<br>&nbsp;<font color="#006600"><font size=-1>KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QUIET = prevents IDL error if
+TCL command fails
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br>&nbsp;<font color="#006600"><font size=-1>OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; None.
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<pre>
+IDL> mdsclose,'magnetics',100234
+
+IDL> mdsclose
+
+</pre>
+<a href="#top">(top of page)</a>
+<br>&nbsp;
+<p>
+<hr WIDTH="100%">
+<p><b>mdsdisconnect</b><a NAME="mdsdisconnect"></a>
+<p>&nbsp;<font color="#006600"><font size=-1>PURPOSE:</font></font>&nbsp;
+Close a connection to an&nbsp; MDSplus server
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSDISCONNECT, [STATUS=ISTAT]
+<br><font color="#006600">&nbsp;<font size=-1>KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br>&nbsp;<font color="#006600"><font size=-1>OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; None.
+<br><font color="#006600"><font size=-1>SIDE EFFECTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The system variable !mds_socket
+is set to -1.&nbsp; To restore LOCAL access set !mds_socket = 0
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<pre>
+IDL> mdsdisconnect
+
+</pre>
+<a href="#top">(top of page)</a>
+<br>
+<hr WIDTH="100%">
+<p><b>mdsgetmsg</b><a NAME="mdsgetmsg"></a>
+<p><font color="#006600"><font size=-1>&nbsp;PURPOSE:&nbsp;</font></font>&nbsp;&nbsp;
+Decode MDSplus status word
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result = MDSGETMSG(ISTAT)
+<br>&nbsp;<font color="#006600"><font size=-1>INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ISTAT = status word from
+MDSplus call
+<br>&nbsp;<font color="#006600"><font size=-1>KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; none
+<br><font color="#006600"><font size=-1>&nbsp;RETURNS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Text of status message
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<br><pre><br>
+IDL> mdsopen,'magnetics',960116024
+<br>IDL> x = mdsvalue('foo',status=stat1)
+<br>IDL> print,mdsgetmsg(stat1)
+<br>%TREE$-W-NNF, node not found
+<br>% Error getting or putting data
+<br>IDL> mdsclose,status=stat2
+<br>IDL> print,mdsgetmsg(stat2)
+<br>%SYSTEM-S-NORMAL, normal successful completion<br>
+</pre>
+<p><a href="#top">(top of page)</a>
+<br>
+<hr WIDTH="100%">
+<p><b>mdsopen</b><a NAME="mdsopen"></a>
+<p>&nbsp;<font color="#006600"><font size=-1>PURPOSE:&nbsp;</font></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Open an MDSplus experiment model or pulse file
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSOPEN,experiment,shot[,/QUIET][,STATUS=ISTAT]
+<br>&nbsp;<font color="#006600"><font size=-1>INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; experiment = name of the
+experiment whose model or pulse
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+file you want to open, as quoted string
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; shot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= shot number of the file.
+<br>&nbsp;<font color="#006600"><font size=-1>KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QUIET = prevents IDL error if
+TCL command fails
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br>&nbsp;<font color="#006600"><font size=-1>OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; istat = return status, low bit
+set = success
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<pre>
+IDL> mdsopen,'magnetics',1002346
+
+IDL> mdsopen,'magnetics',1002345,/quiet,status=status
+
+</pre>
+<a href="#top">(top of page)</a>
+<br>
+<hr WIDTH="100%">
+<p><b>mdsput</b><a NAME="mdsput"></a>
+<p>&nbsp;<font color="#006600"><font size=-1>PURPOSE:</font></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Store data into MDSplus tree node.
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSPUT,nodename,expression[,arg1,...,argn][,/QUIET][STATUS=stat]
+<br><font color="#006600"><font size=-1>&nbsp;INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nodename = character string containing
+a valid tree node specifier
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; expression = character string
+containing a valid MDSplus expression
+<br><font color="#006600"><font size=-1>&nbsp;OPTIONAL INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; arg1,...,argn = values to
+substitute into the expression
+<br>&nbsp;<font color="#006600"><font size=-1>KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QUIET = prevents IDL error if
+procedure fails
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br>&nbsp;<font color="#006600"><font size=-1>OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; None.
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<pre>
+IDL> mdsput,'\calibration','$', 2.67
+
+IDL> mdsput,'\magnetics::ip','make_signal($,*,$)', ip_values, time_values,status=status
+
+</pre>
+<a href="#top">(top of page)</a>
+<br>
+<hr WIDTH="100%">
+<p><b>mdssetevent</b><a NAME="mdssetevent"></a>
+<p>&nbsp;<font color="#006600"><font size=-1>PURPOSE:</font></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Generates an MDSplus event
+<br><font color="#006600"><font size=-1>&nbsp;CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSSETEVENT,event[,/QUIET][,STATUS=STATUS][,DATA=data]
+<br>&nbsp;<font color="#006600"><font size=-1>INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; event = Name of MDSplus
+event to generate.
+<br>&nbsp;<font color="#006600"><font size=-1>KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QUIET = prevents IDL error if
+TCL command fails
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DATA = bytarr(12) to send with
+event
+<br>&nbsp;<font color="#006600"><font size=-1>OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; istat = return status, low bit
+set = success
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<pre>
+IDL> mdssetevent, 'analysis_done'
+
+</pre>
+<a href="#top">(top of page)</a>
+<hr WIDTH="100%">
+<p><b>mdssetdefault</b><a NAME="mdsset_def"></a>
+<p>&nbsp;<font color="#006600"><font size=-1>PURPOSE:</font></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Set default to a node in an MDSplus tree
+<br><font color="#006600"><font size=-1>&nbsp;CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSSETDEFAULT,NODE
+<br><font color="#006600"><font size=-1>&nbsp;INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; node = Node specification.
+<br><font color="#006600"><font size=-1>&nbsp;KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QUIET = prevents IDL error if
+TCL command fails
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br><font color="#006600"><font size=-1>&nbsp;OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; istat = return status, low bit
+set = success
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<pre>
+IDL> mdssetdefault, '\magnetics::top.processed'
+
+</pre>
+<a href="#top">(top of page)</a>
+<br>
+<hr WIDTH="100%">
+<p><b>mdstcl</b><a NAME="mdstcl"></a>
+<p><font color="#006600"><font size=-1>&nbsp;PURPOSE:&nbsp;</font></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Invokes the MDSplus Tree Command Language interpreter
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSTCL[,command [,/QUIET],[STATUS=istat]
+<br><font color="#006600"><font size=-1>&nbsp;INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; command = A valid TCL command.
+If omitted, TCL will prompt
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+for input.
+<br>&nbsp;<font color="#006600"><font size=-1>KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QUIET = prevents IDL error if
+TCL command fails
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br>&nbsp;<font color="#006600"><font size=-1>OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; istat = return status, low bit
+set = success
+<p><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<pre>
+IDL> mdstcl, 'dir'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (for the magnetics tree example returns)</pre>
+
+<pre>\MAGNETICS::TOP
+
+&nbsp;:CHECK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :INIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :STORE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :TRIGGER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :TSTART
+
+
+&nbsp; BP_COILS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CAMAC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CIRCUITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DIAMAG_COILS&nbsp; DISRUPTIONS
+&nbsp; FLUC_COILS&nbsp;&nbsp;&nbsp; FLUX_FULL&nbsp;&nbsp;&nbsp;&nbsp; FLUX_PARTIAL&nbsp; HALOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PROCESSED
+&nbsp; RF_LIM_COILS&nbsp; RF_LIM_FLUCT&nbsp; ROGOWSKIS
+
+IDL>
+</pre>
+
+<p><a href="#top">(top of page)</a>
+<br>
+<hr WIDTH="100%">
+<p><b>mdsvalue</b><a NAME="mdsvalue"></a>
+<p><font color="#006600"><font size=-1>&nbsp;PURPOSE:</font></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Return the evaluation on an MDS expression
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; answer = MDSVALUE(expression[,arg1,...,argn][,/QUIET][STATUS=stat])
+<br>&nbsp;<font color="#006600"><font size=-1>INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; expression = character string
+containing a valid MDSplus expression
+<br>&nbsp;<font color="#006600"><font size=-1>OPTIONAL INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; arg1,...,argn = values to
+substitute into the expression
+<br><font color="#006600"><font size=-1>&nbsp;KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QUIET = prevents IDL error if
+procedure fails
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br><font color="#006600"><font size=-1>&nbsp;OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evaluation of expression
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<br><pre><br>
+IDL> ip = mdsvalue, '_ip = \magnetics::ip',status=status
+<br>IDL> t = mdsvalue, 'dim_of(_ip), status=status<br>
+</pre>
+<p><a href="#top">(top of page)</a>
+<br>
+<hr WIDTH="100%">
+<p><b>mdswfevent</b><a NAME="mdswfevent"></a>
+<p><font color="#006600"><font size=-1>&nbsp;PURPOSE:&nbsp;</font></font>&nbsp;&nbsp;
+Wait for an MDSplus event
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSWFEVENT,event[,/QUIET][,STATUS=istat][,DATA=data]
+<br>&nbsp;<font color="#006600"><font size=-1>INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; event = name of an MDSplus
+event to wait for.
+<br>&nbsp;<font color="#006600"><font size=-1>KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QUIET = prevents IDL error if
+TCL command fails
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS = return status, low bit
+set = success
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DATA = return event data
+<br><font color="#006600"><font size=-1>&nbsp;OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; istat = return status, low bit
+set = success
+<br><font color="#006600"><font size=-1>EXAMPLES:</font></font>
+<br><pre><br>
+IDL> mdswfevent,'analysis_done'<br>
+</pre>
+<p><a href="#top">(top of page)</a>
+<br>
+<hr WIDTH="100%">
+<p><b>mdsevent</b><a NAME="mdsevent"></a>
+<p><font color="#006600"><font size=-1>&nbsp;PURPOSE:&nbsp;</font></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Establish an MDS Event Widget Event in an IDL Widgets application.
+<br>&nbsp;<font color="#006600"><font size=-1>CALLING SEQUENCE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSEVENT,id,event-name
+<br>&nbsp;<font color="#006600"><font size=-1>INPUT PARAMETERS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; id = widget id of base widget
+in widget hierarchy
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; event-name = name of event
+<br><font color="#006600"><font size=-1>&nbsp;KEYWORDS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; None.
+<br>&nbsp;<font color="#006600"><font size=-1>OUTPUTS:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; None.
+<br><font color="#006600"><font size=-1>&nbsp;PROCEDURE:</font></font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MDSEVENT will establish
+an MDS Event watch such that an Widget event will
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; be generated whenever the named
+event occurs. The widget event generated
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; will be a structure called defined
+as follows:
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{mds_event,id:0L,top:0L,handler:0L,event_info:mds_event_info_struct}
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; where the event_info structure
+is defined as follows:
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{mds_event_info,stub_id:0L,base_id:0L,event_id:0L,pid:0L,name:event-name,
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+data:bytarr(12),event_ptr:0l}
+<br>&nbsp;
+<p><a href="#top">(top of page)</a>
+
+</body>
+</html>

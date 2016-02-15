@@ -1,0 +1,59 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - DTYPE_PARAM</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>Parameter Data Type</b>
+<P>MDSplus provides a parameter data type which enables you to attach help and
+ validation information to a value. A parameter is a structure containing three
+"fields". The first field is the value, the second is the help information and
+the third is the validation information. Each part of a parameter can be either
+missing or a value of any other supported data type. General applications
+available at your site may assume some convention on the type of data each field
+contains (i.e. a help field that when evaluated returns DTYPE_T, a string).
+<p>
+A parameter can be created using the BUILD_PARAM or MAKE_PARAM functions. For
+example:
+<p>
+<PRE>
+_myparam = BUILD_PARAM(42,"This is some helpful information",-1)
+_myparam2 = BUILD_PARAM(BUILD_WITH_UNITS(42,"volts"),"some voltage",1)
+</PRE>
+<p>The following table lists some of the functions available for creating or accessing parameters:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00"><td><b>Function</b></td><td><b>Description</b></td></tr>
+
+<tr><td>BUILD_PARAM</td><td>Build a parameter structure</td></tr>
+<tr><td>DATA</td><td>Evaluates value portion of parameter converting to one of integer, float or text</td></tr>
+<tr><td>DATA_WITH_UNITS</td><td>Same as DATA but preserves units</td></tr>
+<tr><td>HELP_OF</td><td>Returns the help field of a parameter</td></tr>
+<tr><td>MAKE_PARAM</td><td>Make a parameter structure</td></tr>
+<tr><td>VALIDATION</td><td>Evalute validition field of parameter</td></tr>
+<tr><td>VALIDATION_OF</td><td>Return the validation field of parameter</td></tr>
+</table>
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

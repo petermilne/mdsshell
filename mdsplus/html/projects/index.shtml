@@ -1,0 +1,41 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Projects" -->
+<!--#include virtual="../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<p>MDSplus provides mechanisms to access data stored in 'non-native' file formats.  These mechanisms have been used to create MDSplus bridges to:<br>
+<OL>
+<LI>MDS (original) data sets </li>
+<li>TFTR data</li>
+<li>PT data - DIIID</li>
+<li>JPF/PPF data - JET</li>
+<li>HDF5 files</li>
+</ol>
+among many others.  Using these gateways, the mdsip network protocalls can be used to provide remote access to 
+almost any data source.  In addtion, all of the MDSplus data display and access tools can be used on these data. 
+
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

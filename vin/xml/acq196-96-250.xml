@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no" ?>
+<ACQ>
+<!-- acq196-96-250.xml $Revision: 1.1 $ -->
+<!-- calibration data -->
+<AcqCalibration>
+	<Info>
+       		<CalDate>20041225</CalDate>
+        	<Version>B1007</Version>
+        	<Model>ACQ196</Model>
+		<Serialnum>d30000</Serialnum>
+	</Info>
+	<Data AICHAN="96" SW="default">
+        	<Range name="10" sw="default">
+            		<Nominal min="-10" max="10" />
+		</Range>
+	</Data>
+</AcqCalibration>
+<ModelSpec>
+        <ChannelBlockMask>
+                <BlockWidth>32</BlockWidth>
+                <BlockSet>"111","110","101","011","100","010","001"</BlockSet>
+        </ChannelBlockMask>
+        <MaxAggregateRate>80 MB/sec</MaxAggregateRate>
+        <MaxDeviceRate>500 kS/sec</MaxDeviceRate>
+	<MinDeviceRate>1 kS/sec</MinDeviceRate>
+	<CalClock>250000</CalClock>
+	<CalMeanN>16384</CalMeanN>
+</ModelSpec>
+</ACQ>
+

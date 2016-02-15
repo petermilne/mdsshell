@@ -1,0 +1,57 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en]C-CCK-MCD   (Windows NT 5.0; U) [Netscape]">
+</head>
+<body>
+
+<p>A number of graphical tools are provided with the MDSplus distribution
+which allow users to explore the data structures. For some simple applications,
+these may be the only tools required, but in general they are meant to
+supplement user provided tools written in a standard programming language.
+
+<p><a href="traverser.html"><b>Traverser</b></a>: The traverser is an X-windows 
+application which allows users to explore and modify MDSplus tree structures. Data can be examined or modified (though it is not an appropriate application to view large data arrays) and metadata - node characteristics - can be viewed.
+
+<p><a href="scope.html"><b>Scope</b></a> and <a href="http://www.mdsplus.org/javascope/ReadMe.html"><b>JScope</b></a>:
+These tools, the first written for X-windows, the second for java, allow
+users to create and manipulate arrays of simple X-Y plots for any MDSplus data.
+Traces can be updated automatically after every shot.  The user can pan or zoom; obtain
+numeric values represented on a trace; and rescale the axes in a variety of ways.
+SCOPES can display up to 64 traces or panels at one time.  The SCOPE setup 
+can be saved for future use as a simple ascii file.
+
+<p><b>Pad:</b>&nbsp; 
+This is an application for storing panel settings from one or more SCOPEs.  
+These settings can then be copied into scope panels (or other pads) 
+for easy set up.  Because the PAD interface displays only a label for each setup, 
+a large number can 
+be shown at once.  Users will typically choose from among these when setting up a 
+new SCOPE or customizing an existing one. The panel definition is identical to the 
+SCOPE application.
+Like the SCOPE, users may store as many sets of PAD setups as they want.
+
+<p>
+The X applications can be invoked by:
+
+<pre>
+traverser [-tree treename> -shot shotnumber [{-edit  | -readonly}]]
+<br>
+dwscope [-default scope_file_name]
+<br>
+dwpad [-default pad_file_name]
+<br>
+Note 1: For VMS, these commands must be prepended with "mcr" as in:
+mcr dwscope [-default scope_file_name]
+
+Note 2: For Win32, these applications, along with the JScope, are available 
+from the MDSplus menu after installation.
+</pre>
+
+<br>
+
+<p><a href="advanced.shtml">next page</a>
+
+</body>
+</html>

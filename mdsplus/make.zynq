@@ -1,0 +1,3 @@
+#!/bin/bash
+
+make CC=arm-xilinx-linux-gnueabi-gcc LD=arm-xilinx-linux-gnueabi-ld

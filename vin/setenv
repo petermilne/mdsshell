@@ -1,0 +1,24 @@
+#!/bin/bash
+export VIN_DEVROOT=$PWD/dev/acq216
+mkdir -p dev/acq216/M5
+for file in ADC_RANGE "M5/GAIN.01-08" "M5/GAIN.09-16" M2/RANGE
+do
+	if [ ! -d $VIN_DEVROOT/$file ];
+	then
+		mkdir -p $VIN_DEVROOT/$file
+		echo 0000 >$VIN_DEVROOT/$file/write
+		ln -s $VIN_DEVROOT/$file/write $VIN_DEVROOT/$file/read
+	fi
+done
+export VIN_CONFIG=M5-default.xml
+
+for file in get.vin set.vin
+do
+	if [ ! -e $file ];
+	then
+		ln -s vin $file
+	fi
+done
+
+export LD_LIBRARY_PATH=../lib
+

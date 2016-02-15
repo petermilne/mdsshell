@@ -1,0 +1,30 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>Summary of Advanced Features</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<!--#include virtual="menu.shtml" -->
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<h3>Summary of Advanced Features</h3>
+<!--#include virtual="advanced_contents.shtml" -->
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

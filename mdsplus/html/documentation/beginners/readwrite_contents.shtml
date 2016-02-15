@@ -1,0 +1,100 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en]C-CCK-MCD   (Windows NT 5.0; U) [Netscape]">
+</head>
+<body>
+
+<p><b>Introduction</b>
+<p>The MDSplus API (applications programming interface) consists of a small
+number of simple calls. The basic calls as they would be ordered in an
+application are:
+
+<p><pre>
+mdsconnect,'server_name'<br>
+&nbsp;&nbsp; mdsopen,'tree_name',shot_number<br>
+&nbsp;&nbsp;&nbsp;&nbsp; result= mdsvalue('expression')<br>
+&nbsp;&nbsp;&nbsp;&nbsp; mdsput,'node_name','expression'<br>
+&nbsp;&nbsp; mdsclose,[tree_name,shot]<br>
+mdsdisconnect
+</pre>
+
+<p><b><i><font color="#006600">Details of the syntax will be, to some extent,
+language specific.&nbsp; At the end of this section you will find links
+with more information and examples.</font></i></b>
+
+<p><b>Connecting and Disconnecting to Servers</b><b></b>
+
+<p>MDSplus operates under the client/server model.&nbsp; The commands&nbsp;<code>mdsconnect</code>
+and&nbsp;<code>mdsdisconnect</code> are used to control which MDSplus server
+is being used. In a typical installation, many users will access data from
+computers on the same local area network (LAN) as the MDSplus file server.
+For these users, the disks and directories with data may be configured
+to appear as local disks on the users systems. In this case, which we can
+call LOCAL access, each user's system will be running its own MDSplus server
+and handling expression evaluation, data compression and decompression
+and so forth. In other cases, the files will be on remote systems to which
+the user does not have direct file access. In this situation, which we
+will call REMOTE access, the local system will run an MDSplus client. For
+operation in this mode, the MDSplus commands in an application must be
+preceeded by a command to connect to a particular server.
+<br>&nbsp;
+<p><b>Opening and Closing trees</b>
+<p>While some TDI expressions can be evaluated without any reference to
+MDSplus trees, in almost all cases a user will want to have a particular
+tree (or trees) open for data access.&nbsp; The commands&nbsp;&nbsp;<code>mdsopen</code>
+and&nbsp;<code>mdsclose</code> carry out this function.&nbsp;&nbsp;<code>mdsopen</code>
+takes a tree name and shot number as arguments. Up to eight trees may be
+open at once.&nbsp; A stack is maintained and subsequent commands refer
+to the most recently opened tree.&nbsp;&nbsp; With the same tree name and
+shot number arguments,&nbsp;&nbsp;<code>mdsclose</code> will close specific
+trees (and pop the stack as appropriate.)&nbsp; Without arguments,&nbsp;<code>mdsclose</code>
+will close all open trees.
+<br>&nbsp;
+<p><b>Reading Data - Evaluating Expressions</b>
+<p>Data is read from trees with the&nbsp;<code>mdsvalue</code> call.&nbsp;
+This call evaluates a TDI expression and returns the result.&nbsp; In many
+cases the expression will simply be the name of a node in the data hierarchy.&nbsp;
+Simple TDI functions allow the components of composite data types, like
+signals to be returned.
+<p>Expressions may also be stored in nodes of a tree. When these nodes
+are referenced, the expressions are evaluated returning the results of
+the TDI commands. This feature can be used to give users transparent access
+to data which is processed as the commands are issued rather than calculated
+ahead of time and stored. For example raw data can be corrected for offsets
+and calibrations (all of which are stored in the trees) providing users
+with calibrated data without storing essentially redundant information.
+Further, if the calibrations were to be corrected, they would apply automatically
+whenever the data were accessed.&nbsp; A common source of error is confusion
+over whether the actual data or the expression that defines it are being
+used and some care must be taken.
+<br>&nbsp;
+<p><b>Writing data</b>
+<p>Data is written into trees with the&nbsp;<code>mdsput</code> command.&nbsp;
+This command takes two principal arguments; the first specifies which node
+is being written to and the second is the data which will be put into that
+node.&nbsp; In many cases, efficiencies or consistency can be obtained
+by writing expressions rather than numeric data.&nbsp; Uniform time bases
+can be efficiently represented by a composite variable containing the offset,
+delta time and number of samples.&nbsp; See the users guide for details.
+<br>&nbsp;
+<p><b>Status codes</b>
+<p>Most MDSplus commands return optional status codes.&nbsp; Success or
+failure is indicated by the lowest bit.&nbsp; That is, odd numbered status
+codes denote success and even ones denote failure.&nbsp; The command&nbsp;<code>mdsgetmsg(status_code)</code>
+will return a text string containing the actual error message.
+<br>&nbsp;
+<p><b><a href="http://web.gat.com/comp/analysis/mdsplus/f_api.html">Fortran
+Language Details</a></b>
+<p><b><a href="../reference/c.shtml">C Language
+Details</a></b>
+<p>
+<p><a href="idl_language_details.shtml"><b>IDL Language Details</b></a>
+
+<p><b>Matlab Language Details</b>
+
+<p><a href="graphictools.shtml">next page</a>
+
+</body>
+</html>

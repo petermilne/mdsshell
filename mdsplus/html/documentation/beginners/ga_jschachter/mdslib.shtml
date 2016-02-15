@@ -1,0 +1,326 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>mdslib for Unix</title>
+  </head>
+
+  <body BGCOLOR=#FFFFFF>
+    <h1 align=center>mdslib for Unix</h1>
+
+<HR width=75%>
+
+<UL>
+<P><LI><A href="#vararg">Variable Length Argument Lists</A>
+<P><LI><A href="#descr">descr</A>
+<P><LI><A href="#mdsclose">MdsClose</A>
+<P><LI><A href="#mdsconnect">MdsConnect</A>
+<P><LI><A href="#mdsdisconnect">MdsDisconnect</A>
+<P><LI><A href="#mdsopen">MdsOpen</A>
+<P><LI><A href="#mdsput">MdsPut</A>
+<P><LI><A href="#mdssetdefault">MdsSetDefault</A>
+<P><LI><A href="#mdsvalue">MdsValue</A>
+</UL>
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+<DL>
+<DT><A name="vararg"><H2>Variable length argument lists</H2></A>
+
+<P><DD>The following mdslib functions accept variable length argument lists:
+  <UL>
+  <LI><A href="#descr">descr</A>
+  <LI><A href="#mdsput">MdsPut</A>
+  <LI><A href="#mdsvalue">MdsValue</A>
+  </UL>
+
+<P><DD>For all these functions, the variable length argument list MUST be terminated
+by the integer value 0 passed by reference.  In fortran, this means:
+
+<PRE>
+        result = function(arg1, arg2, ..., argN, 0)
+</PRE>
+
+<DD>whereas in C this means:
+
+<PRE>
+
+        int null = 0;
+        int status = function(arg1, arg2, ..., argN, &null);
+
+</PRE>
+
+<DD>Note that there may be arguments before <I>or after</I> the variable
+length argument list.  In this case (for fortran):
+
+<PRE>
+        result = function(expression, arg1, arg2, ..., argN, 0, length)
+</PRE>
+
+<DD><P>The integer value 0 is referred to as "NULL" in the declarations listed below.
+
+</DL>
+
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+
+<DL>
+<DT><A name="descr"><H2>descr</H2></A>
+
+<PRE> 
+     <B>int descr(int *data_type, void *data, [int *dim1, int *dim2, ..., int *dimN], NULL, [int *length])</B>
+
+
+</PRE>
+
+<P><DD>This function returns a descriptor number for use in 
+<A href="#mdsvalue">MdsValue</A> and <A href="#mdsput">MdsPut</A>. It has a
+<A href="#vararg">variable length argument list</A>.
+
+<P><DD>Note that there are a maximum of 256 descriptors available for use at any
+one time.  This is because the descriptor numbers are indecies into a global 
+struct descriptor array with 256 elements.  If a 257th descriptor is requested,
+the 1st descriptor will be freed and reassigned.
+
+<P><DD>If creating a descriptor for a scalar, do not specify any dimN.  Just use NULL:
+
+<PRE>
+        idesc = descr(IDTYPE_FLOAT, scalar, 0)  
+</PRE>
+
+<DD><P>Creating a descriptor for a 1D array (npts = size of array):
+
+<PRE>
+        idesc = descr(IDTYPE_FLOAT, array, npts, 0)  
+</PRE>
+
+<DD><P>Creating a descriptor for a 2D array (n1d = size of 1st dimension, n2d = size of 2nd dimension):
+
+<PRE>
+        idesc = descr(IDTYPE_FLOAT, array, n1d, n2d, 0)  
+</PRE>
+
+<P><DD>Creating a descriptor for a string (length = space allocated for the string):
+
+<PRE>
+        character string*length
+        idesc = descr(IDTYPE_CSTRING, string, 0, length)  
+</PRE>
+
+<P><DD>Creating a descriptor for a string array (length = space allocated for the string, 
+ npts = number of elements in array):
+
+<PRE>
+        character*length string(npts)
+        idesc = descr(IDTYPE_CSTRING, string, npts, 0, length)  
+</PRE>
+
+
+<B>A complete list of the data types is in MDSLIB.INC</B>
+
+</DL>
+
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+
+<DL>
+<DT><A name="mdsclose"><H2>MdsClose</H2></A>
+
+<PRE> 
+     <B>int MdsClose(char *tree, int *shot)</B>
+
+
+</PRE>
+
+<P><DD>Close connection to a tree.  Note that shot is passed by reference.  Return
+value is status: odd if ok, even if error.
+
+</DL>
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+
+<DL>
+<DT><A name="mdsconnect"><H2>MdsConnect</H2></A>
+
+<PRE> 
+     <B>SOCKET MdsConnect(char *host)</B>
+
+
+</PRE>
+
+<P><DD>Establishes a socket connection to remote MDSplus server at host.  To connect
+to a specific port number, <B>host</B> should look like <B>birch.pppl.gov:8501</B>
+
+<P><DD>SOCKET is defined in $MDSPLUS/include/ipdesc.h as an int for unix.  The return
+value is the socket number, or INVALID_SOCKET if there is a problem.  INVALID_SOCKET
+is defined in $MDSPLUS/mdstcpip/mdsip.h as -1.
+
+<P><DD>If the system is currently connected to a socket when MdsConnect is called, 
+MdsConnect will first disconnect from that socket.
+
+</DL>
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+
+<DL>
+<DT><A name="mdsdisconnect"><H2>MdsDisconnect</H2></A>
+
+<PRE> 
+     <B>void MdsDisconnect()</B>
+
+
+</PRE>
+
+<P><DD>Disconnect from currently connected socket.  As this socket is stored as a global
+variable, there is no need to pass the socket number as an argument.
+
+</DL>
+
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+
+<DL>
+<DT><A name="mdsopen"><H2>MdsOpen</H2></A>
+
+<PRE> 
+     <B>int MdsOpen(char *tree, int *shot)</B>
+
+
+</PRE>
+
+<P><DD>Open connection to a tree.  Note that shot is passed by reference.  Return
+value is status: odd if ok, even if error.
+
+</DL>
+
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+
+<DL>
+<DT><A name="mdsput"><H2>MdsPut</H2></A>
+
+<PRE> 
+     <B>int MdsPut(char *node, char *expression, [int *descr1, int *descr2, ... int *descrN], NULL)</B>
+
+
+</PRE>
+
+<P><DD>Put <B>expression</B> into tree in node reference <B>node</B>.  If <B>expression</B>
+contains parameter place-holders (<B>$</B>), pass in a <A href="#descr">descriptor</A> number for each parameter.
+This is a <A href="#vararg">variable length argument list</A>.  Note that there are a <A href="#descr">maximum</A> 
+of 256  descriptor arguments that can be passed in the variable length argument list.
+Return value is status: odd if ok, even if error.
+In fortran:
+
+<PRE>
+
+     status = MdsPut("SOMENODE","BUILD_SIGNAL(BUILD_WITH_UNITS($,$),,$)",
+  *                  descr(IDTYPE_FLOAT,dataarray,npts,0), 
+  *                  descr(IDTYPE_CSTRING,"units",0), 
+  *                  descr(IDTYPE_FLOAT,dim0array,npts,0),0)
+
+</PRE>
+
+
+<P><DD>Note that the <B>length</B> argument was not needed on the string
+descriptor as the string is being passed in already known.  
+
+</DL>
+
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+
+<DL>
+<DT><A name="mdssetdefault"><H2>MdsSetDefault</H2></A>
+
+<PRE> 
+     <B>int MdsSetDefault(char *node)</B>
+
+
+</PRE>
+
+<P><DD>Change the default node to <B>node</B>. Return value is status: odd if ok, even if error.
+ 
+
+</DL>
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+
+<DL>
+<DT><A name="mdsvalue"><H2>MdsValue</H2></A>
+
+<PRE> 
+     <B>int MdsValue(char *expression, [int *descr1, int *descr2, ... int *descrN], int *descrAnswer, NULL, [int *length])</B>
+
+
+</PRE>
+
+<P><DD>Return the value of <B>expression</B> in the <A href="#descr">descriptor</A> <B>descrAnswer</B>.  
+The value is converted to the type of <B>descrAnswer</B> and fit within <B>descrAnswer</B>'s size
+
+<P><DD>If there are parameter place-holders in <B>expression</B> (<B>$</B>), pass in a 
+<A href="#descr">descriptor</A> number for each parameter.
+This is a <A href="#vararg">variable length argument list</A>.  Note that <B>descrAnswer</B> is
+considered to be part of the variable length argument list (as it comes before <B>NULL</B>), so
+there is always at least one argument in the list --- a return descriptor <B>descrAnswer</B>
+is <I>required</I> as the means of passing back the value of <B>expression</B>.  There is therefore
+a <A href="#descr">limit</A> of 255 descriptor numbers available for passing in parameters.
+
+<P><DD><B>length</B> will contain the number of elements in the
+resulting value of <B>expression</B> (1 if scalar), or the number of
+characters if the the result is a DTYPE_CSTRING.  If the result is a
+string array, <B>length</B> will be the number of elements.  
+
+<P><DD>This
+parameter is optional.  However, if it is not desired, it is still
+necessary to reserve a place for it by adding an extra comma in
+fortran:
+
+<PRE>
+
+     real result
+     status = MdsValue("1.", descr(IDTYPE_FLOAT,result,0), 0, )
+
+</PRE>
+
+If the length is desired, then call MdsValue as follows:
+
+<PRE>
+
+     real result
+     int length
+     status = MdsValue("1.", descr(IDTYPE_FLOAT,result,0), 0, length)
+
+</PRE>
+
+
+
+<P><DD>Return value of MdsValue is status: odd if ok, even if error.
+
+
+</DL>
+
+
+
+<!---------------------------------------------------------------------------->
+<P><HR>
+
+<H5 ALIGN=CENTER><A HREF="http://www.ga.com">GA Corporate Website</A> |
+<A HREF="http://fusioned.gat.com">Fusion Educational Server</A> | 
+<A HREF="/">Fusion Technical Server</A></H5>
+
+<H5 ALIGN=CENTER>
+
+Last updated April 19, 1999<BR>
+Email questions or comments to <A HREF="mailto:schacht@gav.gat.com">Jeff Schachter</A><BR>
+</H5>
+	
+</BODY>
+</HTML>

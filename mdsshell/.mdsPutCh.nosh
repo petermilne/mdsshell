@@ -1,0 +1,9 @@
+# this is a comment. NB we need spaces around ':' because it is a valid tok char
+%BS=BUILD_SIGNAL
+%PI=3.1415926
+# generic digitizer timebase support
+%realdata=Build_With_Units(%CAL),'volts')
+%raw=Build_With_Units(Word(Set_Range(%S0 : %S2, $)), 'counts')
+%tbase=Build_With_Units(Build_Dim(Build_Window(%S0, %S2, %T2), * : * : %DT), 'seconds')
+%all=Build_Signal(%realdata,%raw,%tbase) 
+

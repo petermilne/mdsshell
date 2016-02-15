@@ -1,0 +1,109 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en]C-CCK-MCD   (Windows NT 5.0; U) [Netscape]">
+</head>
+<body>
+
+<p>Nodes in a tree are arranged into multi-branched structures as in the
+following example, which shows a partially expanded tree from a typical
+experiment. (An experimental tree may contain over 30,000 nodes, so
+obviously only a very small portion is shown in the figure.) The text in
+each box is the NODE NAME which is used to identify the node. Node names
+are limited to 12 characters.
+<br>&nbsp;
+<p><img SRC="tree-example.gif" height=342 width=516>
+<br>&nbsp;
+<p>The top of the hierarchy is a node whose name is the name of the tree;
+"Magnetics" in this example. Under the top node are a number of CHILD nodes.
+This type of node embodies the structural relationships of the tree and
+cannot contain data. There is essentially no limit on the number of levels
+which can be created with child nodes. The node on the far right "Ip" is
+an example of a MEMBER, a type of node used to contain data. It may be
+useful to think of child and member nodes as analogous to the directories
+and files on a typical operating system. A complication in MDSplus is that
+member nodes may have their own children or members underneath them.
+<p>Each node in a tree has a unique numerical node id or NID. These are
+4 byte integers used by MDSplus code and not commonly referred to by users.
+However, there are special cases where these are useful, see for example
+the section below - TDI:Getting MDSplus Metadata.
+<p>Each node is assigned a USAGE when it is created. This node characteristic
+defines and limits how a particular node
+can be used. Some common node usage types are:
+<pre>DEVICE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a composite node used for data acquisition or
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; automated analysis
+NUMERIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; contains simple numerical data (including arrays)
+SIGNAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; contains the composite datatype signal, which
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stores data along with its independent axis
+STRUCTURE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nodes used for tree structure - a "child" node
+SUBTREE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; the top node of an MDSplus tree
+TEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; contains simple character data (including arrays)</pre>
+<b>Specifying Nodes In A Tree</b>
+<p>In order to access information from an MDSplus tree, a user must specify
+a unique, "fully qualified" name or reference pointing to the node which
+contains the information. Note that unqualified node names may not be unique
+in a particular tree. For example, there may be many nodes with the node
+name "channel_1". There are three ways to uniquely specify a node in a
+tree; the FULL PATH NAME (also called an absolute node reference), a RELATIVE
+PATH NAME (or relative node reference), and a TAG NAME. In the example
+shown, the full path for the node labeled "Ip" can be written as:
+<pre>\magnetics::top.processed.current_data:ip</pre>
+The syntax for MDSplus node specifications is
+<code>\treename::top.child1.child2:member</code>.
+The tree name is preceded by a backwards slash ("\") and followed by two
+colons ("::") and the string "top". Each child node in the path is preceded
+by a dot (".") and each member node preceded by a single colon (":"). To
+ensure that nodes can be uniquely specified, fully qualified names must
+be unique - that means that no node may have two child nodes or member
+nodes with the same name. We can see that the 12 character limitation on
+node names does not prevent the creation of meaningful node specifications,
+since these will use the full path designations.
+<p>Right after a tree has been opened (with <code>mdsopen</code>), the DEFAULT
+is set to the top node of the tree. So in our example, the same node could
+be accessed using a relative path name (relative to the top node in this
+case):
+<pre>'.processed.current_data:ip'</pre>
+A new default may be specified with the command like <code>mdsset_def,'node_specification'</code>
+(the precise syntax will depend on the programming language being used.)
+For example, if the default is set by the command,
+<code>mdsset_def,'.processed'</code>,
+data in the node labeled "Ip" can be accessed using the relative path name:
+<pre>'.current_data:ip'</pre>
+The same node can also be specified by its TAG name. These names, limited
+to 23 characters, are associated with a node when it is first created in
+a model tree. A given node may have more than one tag name. To ensure that
+nodes can be uniquely specified, every tag name in a particular tree must
+be unique. Tag names allow a shorthand method for specifying paths which
+could otherwise get long and difficult to type. They also allow users point
+to data in a hierarchy-independent way. This can be useful for quantities
+which have a persistent meaning to users but whose place in the hierarchy
+may evolve over time. The following syntax specifies a node by its tag
+name, which is "Ip" in this case, the same as the node name.
+<pre>'\magnetics::ip'&nbsp; or&nbsp;
+'\ip'</pre>
+That is tags are referred to with a backslash followed by their name or
+qualified with their tree name. The double colon is used to indicate that
+the name that follows is a tag. Tags need not point to the "leaves" of
+trees; they also provide a useful shorthand for intermediate nodes which
+are frequently referred to. Note in the full path example, magnetics::top,
+"top" is a reserved tag name which always points to the top of a tree,
+so another way to specify the node in question is:
+<pre>'\top.processed.current_data:ip'</pre>
+In which the tag name is followed by an explicit path name. Tag names are
+limited to 23 characters.
+<p>[Note: in the documentation that follows, the term "node name" may refer
+to either the label of a particular node or to one of the fully qualified
+path names as described above. Which term is meant should generally be
+clear from the context.]
+</p>
+
+<p>
+More details on tree structures and syntax, including a description of the use of wild card characters in path names, can be found in the users manual; see 
+<a href="../users/tree_syntax.shtml">TREE SYNTAX</a>
+<p>
+<a href="datatypes.shtml">next page</a>
+
+
+</body>
+</html>

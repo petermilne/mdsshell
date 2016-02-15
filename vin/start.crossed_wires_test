@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ ! -e /dev/mean ]; then
+	load.mean
+fi
+
+set.sys /sys/module/acq200_mean/parameters/skip 1
+set.channelBlockMask 111
+acqcmd setInternalClock 100000
+set.pre_post_mode 100000 0
+acqcmd setArm
+
+

@@ -1,0 +1,426 @@
+<?xml version="1.0" standalone="no" ?>
+<ACQ>
+    <!-- 
+acq196-default.xml $Revision: 1.3 $
+this is the default acq196 range config file.
+since ACQ196 has only one range, this file is very simple :-). 
+however, it is possible to have per-channel factory range setttings,
+also, if calibration data is available it will be stored in clone of this file
+add calibration data if available via <Calibrated> fields -->
+    <!-- calibration data -->
+    <AcqCalibration>
+        <Info>
+            <CalDate>20041225</CalDate>
+            <Version>B1007</Version>
+            <Model>ACQ196</Model>
+            <Serialnum>d30000</Serialnum>
+        </Info>
+        <Data AICHAN="96" SW="default">
+            <Range name="10" sw="default">
+                <Nominal min="-10" max="10" />
+            </Range>
+        </Data>
+    </AcqCalibration>
+    <ModelSpec>
+        <ChannelBlockMask>
+            <BlockWidth>32</BlockWidth>
+            <BlockSet>&quot;111&quot;,&quot;110&quot;,&quot;101&quot;,&quot;011&quot;,&quot;100&quot;,&quot;010&quot;,&quot;001&quot;</BlockSet>
+        </ChannelBlockMask>
+        <MaxAggregateRate>80 MB/sec</MaxAggregateRate>
+        <MaxDeviceRate>500 kS/sec</MaxDeviceRate>
+    </ModelSpec>
+    <AcqZero>
+        <Offsets sr="222">
+            <Offset ch="1" dac="552" dac2="551" mean="0.000000" stat="GOOD" />
+            <Offset ch="2" dac="247" dac2="248" mean="-0.000000" stat="GOOD" />
+            <Offset ch="3" dac="493" dac2="493" mean="0.000000" stat="GOOD" />
+            <Offset ch="4" dac="349" dac2="349" mean="-0.000000" stat="GOOD" />
+            <Offset ch="5" dac="559" dac2="559" mean="0.000000" stat="GOOD" />
+            <Offset ch="6" dac="451" dac2="452" mean="-0.000000" stat="GOOD" />
+            <Offset ch="7" dac="524" dac2="522" mean="0.001000" stat="GOOD" />
+            <Offset ch="8" dac="436" dac2="436" mean="0.000000" stat="GOOD" />
+            <Offset ch="9" dac="502" dac2="506" mean="-0.001000" stat="GOOD" />
+            <Offset ch="10" dac="385" dac2="386" mean="-0.000000" stat="GOOD" />
+            <Offset ch="11" dac="476" dac2="474" mean="0.001000" stat="GOOD" />
+            <Offset ch="12" dac="417" dac2="417" mean="-0.000000" stat="GOOD" />
+            <Offset ch="13" dac="457" dac2="459" mean="-0.001000" stat="GOOD" />
+            <Offset ch="14" dac="445" dac2="445" mean="0.000000" stat="GOOD" />
+            <Offset ch="15" dac="528" dac2="528" mean="0.000000" stat="GOOD" />
+            <Offset ch="16" dac="460" dac2="459" mean="0.000000" stat="GOOD" />
+            <Offset ch="17" dac="415" dac2="415" mean="0.000000" stat="GOOD" />
+            <Offset ch="18" dac="461" dac2="461" mean="-0.000000" stat="GOOD" />
+            <Offset ch="19" dac="476" dac2="476" mean="0.000000" stat="GOOD" />
+            <Offset ch="20" dac="316" dac2="316" mean="0.000000" stat="GOOD" />
+            <Offset ch="21" dac="488" dac2="488" mean="0.000000" stat="GOOD" />
+            <Offset ch="22" dac="315" dac2="316" mean="-0.000000" stat="GOOD" />
+            <Offset ch="23" dac="464" dac2="464" mean="0.000000" stat="GOOD" />
+            <Offset ch="24" dac="278" dac2="278" mean="-0.000000" stat="GOOD" />
+            <Offset ch="25" dac="669" dac2="669" mean="0.000000" stat="GOOD" />
+            <Offset ch="26" dac="422" dac2="422" mean="-0.000000" stat="GOOD" />
+            <Offset ch="27" dac="593" dac2="594" mean="-0.000000" stat="GOOD" />
+            <Offset ch="28" dac="488" dac2="488" mean="0.000000" stat="GOOD" />
+            <Offset ch="29" dac="444" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="30" dac="437" dac2="438" mean="-0.000000" stat="GOOD" />
+            <Offset ch="31" dac="478" dac2="479" mean="-0.000000" stat="GOOD" />
+            <Offset ch="32" dac="475" dac2="476" mean="-0.001000" stat="GOOD" />
+            <Offset ch="33" dac="550" dac2="552" mean="-0.001000" stat="GOOD" />
+            <Offset ch="34" dac="299" dac2="300" mean="-0.000000" stat="GOOD" />
+            <Offset ch="35" dac="520" dac2="518" mean="0.001000" stat="GOOD" />
+            <Offset ch="36" dac="518" dac2="518" mean="-0.000000" stat="GOOD" />
+            <Offset ch="37" dac="558" dac2="559" mean="-0.000000" stat="GOOD" />
+            <Offset ch="38" dac="509" dac2="509" mean="0.000000" stat="GOOD" />
+            <Offset ch="39" dac="524" dac2="522" mean="0.001000" stat="GOOD" />
+            <Offset ch="40" dac="410" dac2="410" mean="0.000000" stat="GOOD" />
+            <Offset ch="41" dac="561" dac2="560" mean="0.001000" stat="GOOD" />
+            <Offset ch="42" dac="375" dac2="375" mean="-0.000000" stat="GOOD" />
+            <Offset ch="43" dac="608" dac2="607" mean="0.000000" stat="GOOD" />
+            <Offset ch="44" dac="407" dac2="408" mean="-0.000000" stat="GOOD" />
+            <Offset ch="45" dac="584" dac2="584" mean="-0.000000" stat="GOOD" />
+            <Offset ch="46" dac="388" dac2="387" mean="0.000000" stat="GOOD" />
+            <Offset ch="47" dac="560" dac2="559" mean="0.001000" stat="GOOD" />
+            <Offset ch="48" dac="423" dac2="423" mean="-0.000000" stat="GOOD" />
+            <Offset ch="49" dac="516" dac2="515" mean="0.000000" stat="GOOD" />
+            <Offset ch="50" dac="324" dac2="324" mean="0.000000" stat="GOOD" />
+            <Offset ch="51" dac="493" dac2="493" mean="0.000000" stat="GOOD" />
+            <Offset ch="52" dac="397" dac2="397" mean="-0.000000" stat="GOOD" />
+            <Offset ch="53" dac="618" dac2="618" mean="-0.000000" stat="GOOD" />
+            <Offset ch="54" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="55" dac="489" dac2="489" mean="0.000000" stat="GOOD" />
+            <Offset ch="56" dac="443" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="57" dac="521" dac2="521" mean="0.000000" stat="GOOD" />
+            <Offset ch="58" dac="440" dac2="440" mean="0.000000" stat="GOOD" />
+            <Offset ch="59" dac="529" dac2="529" mean="-0.000000" stat="GOOD" />
+            <Offset ch="60" dac="447" dac2="448" mean="-0.000000" stat="GOOD" />
+            <Offset ch="61" dac="568" dac2="567" mean="0.000000" stat="GOOD" />
+            <Offset ch="62" dac="423" dac2="424" mean="-0.000000" stat="GOOD" />
+            <Offset ch="63" dac="473" dac2="473" mean="0.000000" stat="GOOD" />
+            <Offset ch="64" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="65" dac="513" dac2="513" mean="-0.000000" stat="GOOD" />
+            <Offset ch="66" dac="503" dac2="504" mean="-0.001000" stat="GOOD" />
+            <Offset ch="67" dac="540" dac2="541" mean="-0.000000" stat="GOOD" />
+            <Offset ch="68" dac="467" dac2="468" mean="-0.000000" stat="GOOD" />
+            <Offset ch="69" dac="522" dac2="522" mean="-0.000000" stat="GOOD" />
+            <Offset ch="70" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="71" dac="462" dac2="462" mean="-0.000000" stat="GOOD" />
+            <Offset ch="72" dac="469" dac2="469" mean="0.000000" stat="GOOD" />
+            <Offset ch="73" dac="546" dac2="548" mean="-0.001000" stat="GOOD" />
+            <Offset ch="74" dac="460" dac2="460" mean="0.000000" stat="GOOD" />
+            <Offset ch="75" dac="554" dac2="554" mean="-0.000000" stat="GOOD" />
+            <Offset ch="76" dac="409" dac2="409" mean="-0.000000" stat="GOOD" />
+            <Offset ch="77" dac="550" dac2="550" mean="0.000000" stat="GOOD" />
+            <Offset ch="78" dac="432" dac2="432" mean="0.000000" stat="GOOD" />
+            <Offset ch="79" dac="572" dac2="571" mean="0.000000" stat="GOOD" />
+            <Offset ch="80" dac="519" dac2="520" mean="-0.000000" stat="GOOD" />
+            <Offset ch="81" dac="556" dac2="556" mean="0.000000" stat="GOOD" />
+            <Offset ch="82" dac="413" dac2="413" mean="-0.000000" stat="GOOD" />
+            <Offset ch="83" dac="462" dac2="462" mean="-0.000000" stat="GOOD" />
+            <Offset ch="84" dac="392" dac2="392" mean="0.000000" stat="GOOD" />
+            <Offset ch="85" dac="513" dac2="513" mean="-0.000000" stat="GOOD" />
+            <Offset ch="86" dac="460" dac2="459" mean="0.000000" stat="GOOD" />
+            <Offset ch="87" dac="528" dac2="528" mean="0.000000" stat="GOOD" />
+            <Offset ch="88" dac="396" dac2="396" mean="0.000000" stat="GOOD" />
+            <Offset ch="89" dac="537" dac2="537" mean="-0.000000" stat="GOOD" />
+            <Offset ch="90" dac="438" dac2="439" mean="-0.000000" stat="GOOD" />
+            <Offset ch="91" dac="461" dac2="461" mean="-0.000000" stat="GOOD" />
+            <Offset ch="92" dac="475" dac2="476" mean="-0.001000" stat="GOOD" />
+            <Offset ch="93" dac="536" dac2="536" mean="0.000000" stat="GOOD" />
+            <Offset ch="94" dac="436" dac2="436" mean="-0.000000" stat="GOOD" />
+            <Offset ch="95" dac="443" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="96" dac="477" dac2="477" mean="0.000000" stat="GOOD" />
+        </Offsets>
+        <Offsets sr="345">
+            <Offset ch="1" dac="552" dac2="551" mean="0.000000" stat="GOOD" />
+            <Offset ch="2" dac="247" dac2="248" mean="-0.000000" stat="GOOD" />
+            <Offset ch="3" dac="493" dac2="493" mean="0.000000" stat="GOOD" />
+            <Offset ch="4" dac="349" dac2="349" mean="-0.000000" stat="GOOD" />
+            <Offset ch="5" dac="559" dac2="559" mean="0.000000" stat="GOOD" />
+            <Offset ch="6" dac="451" dac2="452" mean="-0.000000" stat="GOOD" />
+            <Offset ch="7" dac="524" dac2="522" mean="0.001000" stat="GOOD" />
+            <Offset ch="8" dac="436" dac2="436" mean="0.000000" stat="GOOD" />
+            <Offset ch="9" dac="502" dac2="506" mean="-0.001000" stat="GOOD" />
+            <Offset ch="10" dac="385" dac2="386" mean="-0.000000" stat="GOOD" />
+            <Offset ch="11" dac="476" dac2="474" mean="0.001000" stat="GOOD" />
+            <Offset ch="12" dac="417" dac2="417" mean="-0.000000" stat="GOOD" />
+            <Offset ch="13" dac="457" dac2="459" mean="-0.001000" stat="GOOD" />
+            <Offset ch="14" dac="445" dac2="445" mean="0.000000" stat="GOOD" />
+            <Offset ch="15" dac="528" dac2="528" mean="0.000000" stat="GOOD" />
+            <Offset ch="16" dac="460" dac2="459" mean="0.000000" stat="GOOD" />
+            <Offset ch="17" dac="415" dac2="415" mean="0.000000" stat="GOOD" />
+            <Offset ch="18" dac="461" dac2="461" mean="-0.000000" stat="GOOD" />
+            <Offset ch="19" dac="476" dac2="476" mean="0.000000" stat="GOOD" />
+            <Offset ch="20" dac="316" dac2="316" mean="0.000000" stat="GOOD" />
+            <Offset ch="21" dac="488" dac2="488" mean="0.000000" stat="GOOD" />
+            <Offset ch="22" dac="315" dac2="316" mean="-0.000000" stat="GOOD" />
+            <Offset ch="23" dac="464" dac2="464" mean="0.000000" stat="GOOD" />
+            <Offset ch="24" dac="278" dac2="278" mean="-0.000000" stat="GOOD" />
+            <Offset ch="25" dac="669" dac2="669" mean="0.000000" stat="GOOD" />
+            <Offset ch="26" dac="422" dac2="422" mean="-0.000000" stat="GOOD" />
+            <Offset ch="27" dac="593" dac2="594" mean="-0.000000" stat="GOOD" />
+            <Offset ch="28" dac="488" dac2="488" mean="0.000000" stat="GOOD" />
+            <Offset ch="29" dac="444" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="30" dac="437" dac2="438" mean="-0.000000" stat="GOOD" />
+            <Offset ch="31" dac="478" dac2="479" mean="-0.000000" stat="GOOD" />
+            <Offset ch="32" dac="475" dac2="476" mean="-0.001000" stat="GOOD" />
+            <Offset ch="33" dac="550" dac2="552" mean="-0.001000" stat="GOOD" />
+            <Offset ch="34" dac="299" dac2="300" mean="-0.000000" stat="GOOD" />
+            <Offset ch="35" dac="520" dac2="518" mean="0.001000" stat="GOOD" />
+            <Offset ch="36" dac="518" dac2="518" mean="-0.000000" stat="GOOD" />
+            <Offset ch="37" dac="558" dac2="559" mean="-0.000000" stat="GOOD" />
+            <Offset ch="38" dac="509" dac2="509" mean="0.000000" stat="GOOD" />
+            <Offset ch="39" dac="524" dac2="522" mean="0.001000" stat="GOOD" />
+            <Offset ch="40" dac="410" dac2="410" mean="0.000000" stat="GOOD" />
+            <Offset ch="41" dac="561" dac2="560" mean="0.001000" stat="GOOD" />
+            <Offset ch="42" dac="375" dac2="375" mean="-0.000000" stat="GOOD" />
+            <Offset ch="43" dac="608" dac2="607" mean="0.000000" stat="GOOD" />
+            <Offset ch="44" dac="407" dac2="408" mean="-0.000000" stat="GOOD" />
+            <Offset ch="45" dac="584" dac2="584" mean="-0.000000" stat="GOOD" />
+            <Offset ch="46" dac="388" dac2="387" mean="0.000000" stat="GOOD" />
+            <Offset ch="47" dac="560" dac2="559" mean="0.001000" stat="GOOD" />
+            <Offset ch="48" dac="423" dac2="423" mean="-0.000000" stat="GOOD" />
+            <Offset ch="49" dac="516" dac2="515" mean="0.000000" stat="GOOD" />
+            <Offset ch="50" dac="324" dac2="324" mean="0.000000" stat="GOOD" />
+            <Offset ch="51" dac="493" dac2="493" mean="0.000000" stat="GOOD" />
+            <Offset ch="52" dac="397" dac2="397" mean="-0.000000" stat="GOOD" />
+            <Offset ch="53" dac="618" dac2="618" mean="-0.000000" stat="GOOD" />
+            <Offset ch="54" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="55" dac="489" dac2="489" mean="0.000000" stat="GOOD" />
+            <Offset ch="56" dac="443" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="57" dac="521" dac2="521" mean="0.000000" stat="GOOD" />
+            <Offset ch="58" dac="440" dac2="440" mean="0.000000" stat="GOOD" />
+            <Offset ch="59" dac="529" dac2="529" mean="-0.000000" stat="GOOD" />
+            <Offset ch="60" dac="447" dac2="448" mean="-0.000000" stat="GOOD" />
+            <Offset ch="61" dac="568" dac2="567" mean="0.000000" stat="GOOD" />
+            <Offset ch="62" dac="423" dac2="424" mean="-0.000000" stat="GOOD" />
+            <Offset ch="63" dac="473" dac2="473" mean="0.000000" stat="GOOD" />
+            <Offset ch="64" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="65" dac="513" dac2="513" mean="-0.000000" stat="GOOD" />
+            <Offset ch="66" dac="503" dac2="504" mean="-0.001000" stat="GOOD" />
+            <Offset ch="67" dac="540" dac2="541" mean="-0.000000" stat="GOOD" />
+            <Offset ch="68" dac="467" dac2="468" mean="-0.000000" stat="GOOD" />
+            <Offset ch="69" dac="522" dac2="522" mean="-0.000000" stat="GOOD" />
+            <Offset ch="70" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="71" dac="462" dac2="462" mean="-0.000000" stat="GOOD" />
+            <Offset ch="72" dac="469" dac2="469" mean="0.000000" stat="GOOD" />
+            <Offset ch="73" dac="546" dac2="548" mean="-0.001000" stat="GOOD" />
+            <Offset ch="74" dac="460" dac2="460" mean="0.000000" stat="GOOD" />
+            <Offset ch="75" dac="554" dac2="554" mean="-0.000000" stat="GOOD" />
+            <Offset ch="76" dac="409" dac2="409" mean="-0.000000" stat="GOOD" />
+            <Offset ch="77" dac="550" dac2="550" mean="0.000000" stat="GOOD" />
+            <Offset ch="78" dac="432" dac2="432" mean="0.000000" stat="GOOD" />
+            <Offset ch="79" dac="572" dac2="571" mean="0.000000" stat="GOOD" />
+            <Offset ch="80" dac="519" dac2="520" mean="-0.000000" stat="GOOD" />
+            <Offset ch="81" dac="556" dac2="556" mean="0.000000" stat="GOOD" />
+            <Offset ch="82" dac="413" dac2="413" mean="-0.000000" stat="GOOD" />
+            <Offset ch="83" dac="462" dac2="462" mean="-0.000000" stat="GOOD" />
+            <Offset ch="84" dac="392" dac2="392" mean="0.000000" stat="GOOD" />
+            <Offset ch="85" dac="513" dac2="513" mean="-0.000000" stat="GOOD" />
+            <Offset ch="86" dac="460" dac2="459" mean="0.000000" stat="GOOD" />
+            <Offset ch="87" dac="528" dac2="528" mean="0.000000" stat="GOOD" />
+            <Offset ch="88" dac="396" dac2="396" mean="0.000000" stat="GOOD" />
+            <Offset ch="89" dac="537" dac2="537" mean="-0.000000" stat="GOOD" />
+            <Offset ch="90" dac="438" dac2="439" mean="-0.000000" stat="GOOD" />
+            <Offset ch="91" dac="461" dac2="461" mean="-0.000000" stat="GOOD" />
+            <Offset ch="92" dac="475" dac2="476" mean="-0.001000" stat="GOOD" />
+            <Offset ch="93" dac="536" dac2="536" mean="0.000000" stat="GOOD" />
+            <Offset ch="94" dac="436" dac2="436" mean="-0.000000" stat="GOOD" />
+            <Offset ch="95" dac="443" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="96" dac="477" dac2="477" mean="0.000000" stat="GOOD" />
+        </Offsets>
+        <Offsets sr="300">
+            <Offset ch="1" dac="552" dac2="551" mean="0.000000" stat="GOOD" />
+            <Offset ch="2" dac="247" dac2="248" mean="-0.000000" stat="GOOD" />
+            <Offset ch="3" dac="493" dac2="493" mean="0.000000" stat="GOOD" />
+            <Offset ch="4" dac="349" dac2="349" mean="-0.000000" stat="GOOD" />
+            <Offset ch="5" dac="559" dac2="559" mean="0.000000" stat="GOOD" />
+            <Offset ch="6" dac="451" dac2="452" mean="-0.000000" stat="GOOD" />
+            <Offset ch="7" dac="524" dac2="522" mean="0.001000" stat="GOOD" />
+            <Offset ch="8" dac="436" dac2="436" mean="0.000000" stat="GOOD" />
+            <Offset ch="9" dac="502" dac2="506" mean="-0.001000" stat="GOOD" />
+            <Offset ch="10" dac="385" dac2="386" mean="-0.000000" stat="GOOD" />
+            <Offset ch="11" dac="476" dac2="474" mean="0.001000" stat="GOOD" />
+            <Offset ch="12" dac="417" dac2="417" mean="-0.000000" stat="GOOD" />
+            <Offset ch="13" dac="457" dac2="459" mean="-0.001000" stat="GOOD" />
+            <Offset ch="14" dac="445" dac2="445" mean="0.000000" stat="GOOD" />
+            <Offset ch="15" dac="528" dac2="528" mean="0.000000" stat="GOOD" />
+            <Offset ch="16" dac="460" dac2="459" mean="0.000000" stat="GOOD" />
+            <Offset ch="17" dac="415" dac2="415" mean="0.000000" stat="GOOD" />
+            <Offset ch="18" dac="461" dac2="461" mean="-0.000000" stat="GOOD" />
+            <Offset ch="19" dac="476" dac2="476" mean="0.000000" stat="GOOD" />
+            <Offset ch="20" dac="316" dac2="316" mean="0.000000" stat="GOOD" />
+            <Offset ch="21" dac="488" dac2="488" mean="0.000000" stat="GOOD" />
+            <Offset ch="22" dac="315" dac2="316" mean="-0.000000" stat="GOOD" />
+            <Offset ch="23" dac="464" dac2="464" mean="0.000000" stat="GOOD" />
+            <Offset ch="24" dac="278" dac2="278" mean="-0.000000" stat="GOOD" />
+            <Offset ch="25" dac="669" dac2="669" mean="0.000000" stat="GOOD" />
+            <Offset ch="26" dac="422" dac2="422" mean="-0.000000" stat="GOOD" />
+            <Offset ch="27" dac="593" dac2="594" mean="-0.000000" stat="GOOD" />
+            <Offset ch="28" dac="488" dac2="488" mean="0.000000" stat="GOOD" />
+            <Offset ch="29" dac="444" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="30" dac="437" dac2="438" mean="-0.000000" stat="GOOD" />
+            <Offset ch="31" dac="478" dac2="479" mean="-0.000000" stat="GOOD" />
+            <Offset ch="32" dac="475" dac2="476" mean="-0.001000" stat="GOOD" />
+            <Offset ch="33" dac="550" dac2="552" mean="-0.001000" stat="GOOD" />
+            <Offset ch="34" dac="299" dac2="300" mean="-0.000000" stat="GOOD" />
+            <Offset ch="35" dac="520" dac2="518" mean="0.001000" stat="GOOD" />
+            <Offset ch="36" dac="518" dac2="518" mean="-0.000000" stat="GOOD" />
+            <Offset ch="37" dac="558" dac2="559" mean="-0.000000" stat="GOOD" />
+            <Offset ch="38" dac="509" dac2="509" mean="0.000000" stat="GOOD" />
+            <Offset ch="39" dac="524" dac2="522" mean="0.001000" stat="GOOD" />
+            <Offset ch="40" dac="410" dac2="410" mean="0.000000" stat="GOOD" />
+            <Offset ch="41" dac="561" dac2="560" mean="0.001000" stat="GOOD" />
+            <Offset ch="42" dac="375" dac2="375" mean="-0.000000" stat="GOOD" />
+            <Offset ch="43" dac="608" dac2="607" mean="0.000000" stat="GOOD" />
+            <Offset ch="44" dac="407" dac2="408" mean="-0.000000" stat="GOOD" />
+            <Offset ch="45" dac="584" dac2="584" mean="-0.000000" stat="GOOD" />
+            <Offset ch="46" dac="388" dac2="387" mean="0.000000" stat="GOOD" />
+            <Offset ch="47" dac="560" dac2="559" mean="0.001000" stat="GOOD" />
+            <Offset ch="48" dac="423" dac2="423" mean="-0.000000" stat="GOOD" />
+            <Offset ch="49" dac="516" dac2="515" mean="0.000000" stat="GOOD" />
+            <Offset ch="50" dac="324" dac2="324" mean="0.000000" stat="GOOD" />
+            <Offset ch="51" dac="493" dac2="493" mean="0.000000" stat="GOOD" />
+            <Offset ch="52" dac="397" dac2="397" mean="-0.000000" stat="GOOD" />
+            <Offset ch="53" dac="618" dac2="618" mean="-0.000000" stat="GOOD" />
+            <Offset ch="54" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="55" dac="489" dac2="489" mean="0.000000" stat="GOOD" />
+            <Offset ch="56" dac="443" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="57" dac="521" dac2="521" mean="0.000000" stat="GOOD" />
+            <Offset ch="58" dac="440" dac2="440" mean="0.000000" stat="GOOD" />
+            <Offset ch="59" dac="529" dac2="529" mean="-0.000000" stat="GOOD" />
+            <Offset ch="60" dac="447" dac2="448" mean="-0.000000" stat="GOOD" />
+            <Offset ch="61" dac="568" dac2="567" mean="0.000000" stat="GOOD" />
+            <Offset ch="62" dac="423" dac2="424" mean="-0.000000" stat="GOOD" />
+            <Offset ch="63" dac="473" dac2="473" mean="0.000000" stat="GOOD" />
+            <Offset ch="64" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="65" dac="513" dac2="513" mean="-0.000000" stat="GOOD" />
+            <Offset ch="66" dac="503" dac2="504" mean="-0.001000" stat="GOOD" />
+            <Offset ch="67" dac="540" dac2="541" mean="-0.000000" stat="GOOD" />
+            <Offset ch="68" dac="467" dac2="468" mean="-0.000000" stat="GOOD" />
+            <Offset ch="69" dac="522" dac2="522" mean="-0.000000" stat="GOOD" />
+            <Offset ch="70" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="71" dac="462" dac2="462" mean="-0.000000" stat="GOOD" />
+            <Offset ch="72" dac="469" dac2="469" mean="0.000000" stat="GOOD" />
+            <Offset ch="73" dac="546" dac2="548" mean="-0.001000" stat="GOOD" />
+            <Offset ch="74" dac="460" dac2="460" mean="0.000000" stat="GOOD" />
+            <Offset ch="75" dac="554" dac2="554" mean="-0.000000" stat="GOOD" />
+            <Offset ch="76" dac="409" dac2="409" mean="-0.000000" stat="GOOD" />
+            <Offset ch="77" dac="550" dac2="550" mean="0.000000" stat="GOOD" />
+            <Offset ch="78" dac="432" dac2="432" mean="0.000000" stat="GOOD" />
+            <Offset ch="79" dac="572" dac2="571" mean="0.000000" stat="GOOD" />
+            <Offset ch="80" dac="519" dac2="520" mean="-0.000000" stat="GOOD" />
+            <Offset ch="81" dac="556" dac2="556" mean="0.000000" stat="GOOD" />
+            <Offset ch="82" dac="413" dac2="413" mean="-0.000000" stat="GOOD" />
+            <Offset ch="83" dac="462" dac2="462" mean="-0.000000" stat="GOOD" />
+            <Offset ch="84" dac="392" dac2="392" mean="0.000000" stat="GOOD" />
+            <Offset ch="85" dac="513" dac2="513" mean="-0.000000" stat="GOOD" />
+            <Offset ch="86" dac="460" dac2="459" mean="0.000000" stat="GOOD" />
+            <Offset ch="87" dac="528" dac2="528" mean="0.000000" stat="GOOD" />
+            <Offset ch="88" dac="396" dac2="396" mean="0.000000" stat="GOOD" />
+            <Offset ch="89" dac="537" dac2="537" mean="-0.000000" stat="GOOD" />
+            <Offset ch="90" dac="438" dac2="439" mean="-0.000000" stat="GOOD" />
+            <Offset ch="91" dac="461" dac2="461" mean="-0.000000" stat="GOOD" />
+            <Offset ch="92" dac="475" dac2="476" mean="-0.001000" stat="GOOD" />
+            <Offset ch="93" dac="536" dac2="536" mean="0.000000" stat="GOOD" />
+            <Offset ch="94" dac="436" dac2="436" mean="-0.000000" stat="GOOD" />
+            <Offset ch="95" dac="443" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="96" dac="477" dac2="477" mean="0.000000" stat="GOOD" />
+        </Offsets>
+        <Offsets sr="999">
+            <Offset ch="1" dac="552" dac2="551" mean="0.000000" stat="GOOD" />
+            <Offset ch="2" dac="247" dac2="248" mean="-0.000000" stat="GOOD" />
+            <Offset ch="3" dac="493" dac2="493" mean="0.000000" stat="GOOD" />
+            <Offset ch="4" dac="349" dac2="349" mean="-0.000000" stat="GOOD" />
+            <Offset ch="5" dac="559" dac2="559" mean="0.000000" stat="GOOD" />
+            <Offset ch="6" dac="451" dac2="452" mean="-0.000000" stat="GOOD" />
+            <Offset ch="7" dac="524" dac2="522" mean="0.001000" stat="GOOD" />
+            <Offset ch="8" dac="436" dac2="436" mean="0.000000" stat="GOOD" />
+            <Offset ch="9" dac="502" dac2="506" mean="-0.001000" stat="GOOD" />
+            <Offset ch="10" dac="385" dac2="386" mean="-0.000000" stat="GOOD" />
+            <Offset ch="11" dac="476" dac2="474" mean="0.001000" stat="GOOD" />
+            <Offset ch="12" dac="417" dac2="417" mean="-0.000000" stat="GOOD" />
+            <Offset ch="13" dac="457" dac2="459" mean="-0.001000" stat="GOOD" />
+            <Offset ch="14" dac="445" dac2="445" mean="0.000000" stat="GOOD" />
+            <Offset ch="15" dac="528" dac2="528" mean="0.000000" stat="GOOD" />
+            <Offset ch="16" dac="460" dac2="459" mean="0.000000" stat="GOOD" />
+            <Offset ch="17" dac="415" dac2="415" mean="0.000000" stat="GOOD" />
+            <Offset ch="18" dac="461" dac2="461" mean="-0.000000" stat="GOOD" />
+            <Offset ch="19" dac="476" dac2="476" mean="0.000000" stat="GOOD" />
+            <Offset ch="20" dac="316" dac2="316" mean="0.000000" stat="GOOD" />
+            <Offset ch="21" dac="488" dac2="488" mean="0.000000" stat="GOOD" />
+            <Offset ch="22" dac="315" dac2="316" mean="-0.000000" stat="GOOD" />
+            <Offset ch="23" dac="464" dac2="464" mean="0.000000" stat="GOOD" />
+            <Offset ch="24" dac="278" dac2="278" mean="-0.000000" stat="GOOD" />
+            <Offset ch="25" dac="669" dac2="669" mean="0.000000" stat="GOOD" />
+            <Offset ch="26" dac="422" dac2="422" mean="-0.000000" stat="GOOD" />
+            <Offset ch="27" dac="593" dac2="594" mean="-0.000000" stat="GOOD" />
+            <Offset ch="28" dac="488" dac2="488" mean="0.000000" stat="GOOD" />
+            <Offset ch="29" dac="444" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="30" dac="437" dac2="438" mean="-0.000000" stat="GOOD" />
+            <Offset ch="31" dac="478" dac2="479" mean="-0.000000" stat="GOOD" />
+            <Offset ch="32" dac="475" dac2="476" mean="-0.001000" stat="GOOD" />
+            <Offset ch="33" dac="550" dac2="552" mean="-0.001000" stat="GOOD" />
+            <Offset ch="34" dac="299" dac2="300" mean="-0.000000" stat="GOOD" />
+            <Offset ch="35" dac="520" dac2="518" mean="0.001000" stat="GOOD" />
+            <Offset ch="36" dac="518" dac2="518" mean="-0.000000" stat="GOOD" />
+            <Offset ch="37" dac="558" dac2="559" mean="-0.000000" stat="GOOD" />
+            <Offset ch="38" dac="509" dac2="509" mean="0.000000" stat="GOOD" />
+            <Offset ch="39" dac="524" dac2="522" mean="0.001000" stat="GOOD" />
+            <Offset ch="40" dac="410" dac2="410" mean="0.000000" stat="GOOD" />
+            <Offset ch="41" dac="561" dac2="560" mean="0.001000" stat="GOOD" />
+            <Offset ch="42" dac="375" dac2="375" mean="-0.000000" stat="GOOD" />
+            <Offset ch="43" dac="608" dac2="607" mean="0.000000" stat="GOOD" />
+            <Offset ch="44" dac="407" dac2="408" mean="-0.000000" stat="GOOD" />
+            <Offset ch="45" dac="584" dac2="584" mean="-0.000000" stat="GOOD" />
+            <Offset ch="46" dac="388" dac2="387" mean="0.000000" stat="GOOD" />
+            <Offset ch="47" dac="560" dac2="559" mean="0.001000" stat="GOOD" />
+            <Offset ch="48" dac="423" dac2="423" mean="-0.000000" stat="GOOD" />
+            <Offset ch="49" dac="516" dac2="515" mean="0.000000" stat="GOOD" />
+            <Offset ch="50" dac="324" dac2="324" mean="0.000000" stat="GOOD" />
+            <Offset ch="51" dac="493" dac2="493" mean="0.000000" stat="GOOD" />
+            <Offset ch="52" dac="397" dac2="397" mean="-0.000000" stat="GOOD" />
+            <Offset ch="53" dac="618" dac2="618" mean="-0.000000" stat="GOOD" />
+            <Offset ch="54" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="55" dac="489" dac2="489" mean="0.000000" stat="GOOD" />
+            <Offset ch="56" dac="443" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="57" dac="521" dac2="521" mean="0.000000" stat="GOOD" />
+            <Offset ch="58" dac="440" dac2="440" mean="0.000000" stat="GOOD" />
+            <Offset ch="59" dac="529" dac2="529" mean="-0.000000" stat="GOOD" />
+            <Offset ch="60" dac="447" dac2="448" mean="-0.000000" stat="GOOD" />
+            <Offset ch="61" dac="568" dac2="567" mean="0.000000" stat="GOOD" />
+            <Offset ch="62" dac="423" dac2="424" mean="-0.000000" stat="GOOD" />
+            <Offset ch="63" dac="473" dac2="473" mean="0.000000" stat="GOOD" />
+            <Offset ch="64" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="65" dac="513" dac2="513" mean="-0.000000" stat="GOOD" />
+            <Offset ch="66" dac="503" dac2="504" mean="-0.001000" stat="GOOD" />
+            <Offset ch="67" dac="540" dac2="541" mean="-0.000000" stat="GOOD" />
+            <Offset ch="68" dac="467" dac2="468" mean="-0.000000" stat="GOOD" />
+            <Offset ch="69" dac="522" dac2="522" mean="-0.000000" stat="GOOD" />
+            <Offset ch="70" dac="445" dac2="445" mean="-0.000000" stat="GOOD" />
+            <Offset ch="71" dac="462" dac2="462" mean="-0.000000" stat="GOOD" />
+            <Offset ch="72" dac="469" dac2="469" mean="0.000000" stat="GOOD" />
+            <Offset ch="73" dac="546" dac2="548" mean="-0.001000" stat="GOOD" />
+            <Offset ch="74" dac="460" dac2="460" mean="0.000000" stat="GOOD" />
+            <Offset ch="75" dac="554" dac2="554" mean="-0.000000" stat="GOOD" />
+            <Offset ch="76" dac="409" dac2="409" mean="-0.000000" stat="GOOD" />
+            <Offset ch="77" dac="550" dac2="550" mean="0.000000" stat="GOOD" />
+            <Offset ch="78" dac="432" dac2="432" mean="0.000000" stat="GOOD" />
+            <Offset ch="79" dac="572" dac2="571" mean="0.000000" stat="GOOD" />
+            <Offset ch="80" dac="519" dac2="520" mean="-0.000000" stat="GOOD" />
+            <Offset ch="81" dac="556" dac2="556" mean="0.000000" stat="GOOD" />
+            <Offset ch="82" dac="413" dac2="413" mean="-0.000000" stat="GOOD" />
+            <Offset ch="83" dac="462" dac2="462" mean="-0.000000" stat="GOOD" />
+            <Offset ch="84" dac="392" dac2="392" mean="0.000000" stat="GOOD" />
+            <Offset ch="85" dac="513" dac2="513" mean="-0.000000" stat="GOOD" />
+            <Offset ch="86" dac="460" dac2="459" mean="0.000000" stat="GOOD" />
+            <Offset ch="87" dac="528" dac2="528" mean="0.000000" stat="GOOD" />
+            <Offset ch="88" dac="396" dac2="396" mean="0.000000" stat="GOOD" />
+            <Offset ch="89" dac="537" dac2="537" mean="-0.000000" stat="GOOD" />
+            <Offset ch="90" dac="438" dac2="439" mean="-0.000000" stat="GOOD" />
+            <Offset ch="91" dac="461" dac2="461" mean="-0.000000" stat="GOOD" />
+            <Offset ch="92" dac="475" dac2="476" mean="-0.001000" stat="GOOD" />
+            <Offset ch="93" dac="536" dac2="536" mean="0.000000" stat="GOOD" />
+            <Offset ch="94" dac="436" dac2="436" mean="-0.000000" stat="GOOD" />
+            <Offset ch="95" dac="443" dac2="444" mean="-0.000000" stat="GOOD" />
+            <Offset ch="96" dac="477" dac2="477" mean="0.000000" stat="GOOD" />
+        </Offsets>
+    </AcqZero>
+</ACQ>

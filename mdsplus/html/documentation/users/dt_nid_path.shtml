@@ -1,0 +1,86 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - DTYPE_NID/DTYPE_PATH</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>NID and Path Data Types</b>
+<P>When a node specification is encountered during compilation of an MDSplus
+expression, the node is located in the currently open tree and if found the
+node reference is represented by a NID, node identifier. A NID is a 32-bit value
+representing a combination of tree/subtree index and node index in that tree.
+When a NID is encountered in an expression during evaluation, the contents of the
+node can be accessed directly without doing a node lookup at evaluation time.
+This saves time during evaluation and storage space when storing node references
+in a tree. If the node is not found when the expression is compiled, the node
+reference is replaced by a full node path stored as a DTYPE_PATH item.
+<p>
+There are some good and bad side effects of the replacement of node references
+with NID's when expressions are compiled (and possibly stored in a tree node)
+that you should be aware of. When nodes are renamed in a tree, they retain the
+same node index. If you have expressions stored containing NID's, those node
+references will remain intact even if you rename the nodes that are being
+referenced. This would not be true if expression contained DTYPE_PATH data
+items. MDSplus does not make any attempt to "fix up" node references in existing
+stored expressions when a tree is editted.
+<p>
+This same "feature" can also cause unexpected behavior if a node referenced by
+an expression was subsequently deleted. When a node is deleted, the space used
+by that node is recycled. The addition of another node in the tree could end up
+with the same node identification as the one deleted. The expression containing
+a reference to this node identification would now be referencing this new node
+which could exist logically anywhere in the tree structure.
+<p>
+Another place where it may be undersirable to resolve a tree specification to
+a node identification is within TDI functions, "FUN's". A TDI function is
+compiled the first time it is referenced and if that function had a node
+reference in it, the node reference would be replaced by a NID data type. If
+you opened another tree and executed the same TDI function, it would use the
+NID reference instead of looking up the node again which might lead to erroneous
+behavior. To avoid this, you should always use the BUILD_PATH builtin function
+within TDI functions instead of referencing a node directory. For example:
+<p>
+<b>Always use this</b>
+<p>
+<PRE>
+Public FUN MYFUN()
+{
+  return(BUILD_PATH("\\TOP:MYNODE")+1);
+}
+</PRE>
+<p>
+<b>Instead of</b>
+<p>
+<PRE>
+Public FUN MYFUN()
+{
+  return(\TOP:MYNODE+1);
+}
+</PRE>
+<p>
+In the above example, the BUILD_PATH call will force the node to be looked up
+during evaluation of the function instead at compile time.
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

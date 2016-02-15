@@ -1,0 +1,7 @@
+
+  <!-- BEGIN SEARCH FORM -->
+  <FORM METHOD="GET" ACTION="http://www.mdsplus.org/cgi-bin/MDSplusSearch">
+    <b class="menu">Site Search</b><br>
+    <INPUT TYPE=text SIZE=10 NAME=q> 
+  </form>
+  <!-- END SEARCH FORM -->

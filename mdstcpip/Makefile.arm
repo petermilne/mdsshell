@@ -1,0 +1,25 @@
+CC=arm-xilinx-linux-gnueabi-gcc
+
+MDS=..
+INC=-I. -I$(MDS)/include
+
+SOURCES=\
+adler32.c   infblock.c  inflate.c   mdsipshr.c         mdsiputil.c  uncompr.c\
+compress.c  infcodes.c  inftrees.c  mdsip_socket_io.c  t.c          vmshpwd.c\
+deflate.c   inffast.c   infutil.c   trees.c      zutil.c
+
+all: lib mdsiptest
+
+lib:
+	$(CC) -fPIC -o libMdsIp.so --shared \
+	-Dbool=int -DTCP_NODELAY=1 -DPASSWD $(INC) \
+	$(SOURCES)
+	
+
+
+mdsiptest: t.c
+	$(CC) $(INC) t.c libMdsIp.so  -o mdsiptest	
+
+
+mdsshell: mdsshell.c
+	  $(CC) $(INC) mdsshell.c -L../mdsplus/lib -lMdsIpShr  -o mdsshell

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ "$1" = "" ]
+then
+	echo getshot tree
+	exit
+else
+	TREE=$1
+fi
+
+echo "show current $TREE" | mdstcl | awk '{print $4}'
+
+
+
+

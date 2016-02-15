@@ -1,0 +1,17 @@
+#!/bin/sh
+
+DEVROOT=${VIN_DEVROOT:-/dev/acq216}
+
+for file in `find $DEVROOT -name write -print`
+do
+	echo -n 0000 >$file
+done
+
+for file in `find $DEVROOT -type l -print`
+do
+        if [ -f $file/write ];then
+               echo -n 0000 >$file/write
+	fi
+done
+
+

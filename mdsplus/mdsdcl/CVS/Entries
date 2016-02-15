@@ -1,0 +1,24 @@
+/Makefile.in/1.12/Tue Apr  2 18:58:36 2002//
+/Makefile.old/1.1/Tue Oct 26 20:10:46 1999//
+/mdsdcl.c/1.12/Thu Aug 28 15:48:47 2003//
+/mdsdcl.dsp/1.6/Mon Aug 21 19:05:26 2000//
+/mdsdcl.h/1.1/Thu Feb 19 19:08:12 1998//
+/mdsdcl.vcproj/1.2/Mon Jun 10 18:34:18 2002//
+/mdsdcl_dcl_parse.c/1.4/Fri Nov  1 13:51:39 2002//
+/mdsdcl_do_command.c/1.10/Tue Feb 25 19:02:52 2003//
+/mdsdcl_dummy.c/1.2/Wed Apr 11 16:33:27 2001//
+/mdsdcl_general.c/1.4/Fri Apr  6 20:35:01 2001//
+/mdsdcl_get_input.c/1.9/Fri Apr 13 19:37:59 2001//
+/mdsdcl_initialize.c/1.2/Tue Apr 28 19:06:17 1998//
+/mdsdcl_insert_symbols.c/1.2/Tue Apr 28 19:06:17 1998//
+/mdsdcl_macros.c/1.8/Tue Apr 22 19:23:29 2003//
+/mdsdcl_set_command.c/1.8/Fri May 31 14:27:42 2002//
+/mdsdcl_show_vm.c/1.3/Wed Jun 13 14:44:33 2001//
+/mdsdcl_spawn.c/1.9/Wed Jan 10 15:33:14 2001//
+/mdsdcl_tables.ocld/1.3/Fri Apr 13 19:38:00 2001//
+/mdsdcl_wait.c/1.9/Thu Oct  3 19:02:35 2002//
+/mdsdclshr.def/1.6/Thu Apr 12 15:40:08 2001//
+/mdsdclshr.dsp/1.7/Thu Apr 12 15:40:08 2001//
+/mdsdclshr.export/1.2/Tue Apr  2 18:58:36 2002//
+/mdsdclshr.vcproj/1.2/Mon Jun 10 18:34:18 2002//
+D

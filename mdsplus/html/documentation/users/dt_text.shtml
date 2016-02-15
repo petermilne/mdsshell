@@ -1,0 +1,83 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - DTYPE_T</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>Text Data Type in MDSplus</b><b></b>
+<p>MDSplus supports scalars or arrays of text strings. Text strings are limited
+to lengths of 64K characters.
+<p><b>Expression evaluator (TDI) operations used on Text Data Type</b><b></b>
+<p>The following table lists some of the more common operations performed
+on the text datatype:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00"><td><b>Function</b></td><td><b>Description</b></td></tr>
+
+<tr><td>ADJUSTL</td><td>Adjust string left</td></tr>
+<tr><td>ADJUSTR</td><td>Adjust string right</td></tr>
+<tr><td>BSEARCH</td><td>Binary search</td></tr>
+<tr><td>BUILD_PATH</td><td>Convert string to node reference</td></tr>
+<tr><td>BUILD_WITH_UNITS</td><td>Attach units to value</td></tr>
+<tr><td>COMPILE</td><td>Compile string into TDI expression</td></tr>
+<tr><td>CONCAT</td><td>Concatenate strings</td></tr>
+<tr><td>DATE_TIME</td><td>Convert quadword internal time to string</td></tr>
+<tr><td>DECOMPILE</td><td>Convert compiled expression or value to string</td></tr>
+<tr><td>ELEMENT</td><td>Extract element of string</td></tr>
+<tr><td>EQ [==]</td><td>Test for equality</td></tr>
+<tr><td>EXECUTE</td><td>Compile and evaluate string</td></tr>
+<tr><td>EXTRACT</td><td>Extract portion of string</td></tr>
+<tr><td>FOPEN</td><td>Open a file</td></tr>
+<tr><td>GE [>=]</td><td>Test for greater or equal</td></tr>
+<tr><td>GT [>]</td><td>Test for greater</td></tr>
+<tr><td>INDEX</td><td>Locate substring in string</td></tr>
+<tr><td>LE [<=]</td><td>Test for less or equal</td></tr>
+<tr><td>LEN</td><td>Length of string</td></tr>
+<tr><td>LEN_TRIM</td><td>Length of string without trailing white space</td></tr>
+<tr><td>LGE</td><td>Test for greater or equal</td></tr>
+<tr><td>LGT</td><td>Test for greater</td></tr>
+<tr><td>LLE</td><td>Test for less or equal</td></tr>
+<tr><td>LLT [<=]</td><td>Test for less</td></tr>
+<tr><td>LT [<]</td><td>Test for less</td></tr>
+<tr><td>MAKE_WITH_UNITS</td><td>Attach units to value</td></tr>
+<tr><td>NE [!=]</td><td>Test for not equal</td></tr>
+<tr><td>REPEAT [>]</td><td>Concatenate copies of string</td></tr>
+<tr><td>SCAN</td><td>Scan a string for character in set</td></tr>
+<tr><td>SORT</td><td>Make index list of sorted elements in array</td></tr>
+<tr><td>SORTVAL</td><td>Sort elements in array</td></tr>
+<tr><td>TEXT</td><td>Convert to text</td></tr>
+<tr><td>TRANSLATE</td><td>Replace matching characters</td></tr>
+<tr><td>TRIM</td><td>Remove trailing white space</td></tr>
+<tr><td>UNION</td><td>Reduce array to unique values</td></tr>
+<tr><td>UNITS</td><td>Get the units</td></tr>
+<tr><td>UNITS_OF</td><td>Get the units</td></tr>
+<tr><td>UPCASE</td><td>Convert to uppercase</td></tr>
+<tr><td>VERIFY</td><td>Verify that a set of characters in string</td></tr>
+
+
+</table>
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

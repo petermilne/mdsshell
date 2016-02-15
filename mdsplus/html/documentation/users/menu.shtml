@@ -1,0 +1,67 @@
+  <tr>
+    <td><b class="menu"><a class="small" href="../../intro/index.shtml">Introduction</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../index.shtml">Documentation</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../tutorial/index.shtml">- The MDSplus Tutorial</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../beginners/index.shtml">- Beginners' Guide</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="index.shtml">- Users' Guide</a></b></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="datatypes.shtml">Data Types</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="tree_syntax.shtml">Tree Syntax</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="3.shtml">Data Access</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="4.shtml">TDI</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="trees.shtml">Working<br>
+    with Trees</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="6.shtml">Data<br>
+    Acquisition</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="7.shtml">Dispatching<br>
+    and Events</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="8.shtml">Automated<br>
+    Analysis</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="9.shtml">Tools</a></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../reference/index.shtml">- Reference</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="glossary.shtml">- Glossary</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="smallmissing" xhref="../../projects/index.shtml">Projects</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../../software/index.shtml">Software</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../../links/index.shtml">Links</a></b></td>
+  </tr>
+  <tr>
+    <td></td>
+  </tr>
+  <tr>
+    <td><!--#include virtual="../../search.shtml" --> </td>
+  </tr>

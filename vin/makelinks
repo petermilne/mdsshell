@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ "$1" != "" ]
+then
+	cd $1
+fi
+
+LN() {
+	if [ ! -L $2 ] 
+	then
+		ln -s $1 $2
+	fi
+}
+
+
+LN xml_lookup get.caldef
+LN xml_lookup get.modelspec
+
+LN cbm set.channelBlockMask
+LN cbm get.channelBlockMask
+
+LN input_offsets load.input_offsets
+LN input_offsets store.input_offsets
+
+LN set_nacc get_nacc

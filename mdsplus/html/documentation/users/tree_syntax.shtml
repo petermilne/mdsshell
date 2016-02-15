@@ -1,0 +1,184 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Tree Node Reference Syntax</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<p>MDSplus provides a data storage mechanism for recording a wide variety of information
+pertaining to experiments or simulations including, but not limited to,
+data acquisition settings, comments, physical measurements, data acquisition and analysis
+task information and analysis results. Keeping all this information organized can be difficult
+especially with large experiments or codes where there may be many thousands of data items.
+MDSplus provides a hierarchical tree structure in its data storage so that users can organize
+their data much like one would organize files in a file system with directories and subdirectories.
+<p>Their are two different kinds of nodes in the MDSplus tree structure called members and children.
+One could consider members to be similar to files in a file system while children are similar to
+directories. Members normally contain data, (i.e. a measurement, a calibration coefficient, a comment)
+while a child node, used for structure only, cannot contain data. However, unlike a file system,
+both members and children nodes can have subnodes of either members or children.
+<p>When accessing a node in an MDSplus tree, you will need to specify a node reference. Before we get
+into the details of how one specifies a node in MDSplus, we must discuss one more concept used in MDSplus
+called a tagname. Since an MDSplus tree can contain a large number of nodes organized in a potentially deep
+hierarchical structure, a full node specification could become quite long. A tagname is a shortcut
+to a particular node in a tree. Tagnames must be unique within the tree in which the node exists. All
+trees have a reserved tagname called "TOP" which points to the top node of the tree structure.
+<p>To reference a node in an MDSplus tree, it is possible to make either an absolute node reference or
+a relative node reference. Let us first look at the absolute node reference.
+<p>
+<H3>Absolute Node References</H3><p>
+An absolute node reference will refer to a single node in the tree structure and will always begin with a
+tagname reference. Tagname references begins with a backslash character and is followed by an optional tree
+specifier and then followed by the tagname. A tree specifier is the tree name followed by two colons. The
+tagname reference could then be followed by a mixed list of member or child node references (or a special
+"up one level" specifier) which traverse
+through the tree structure similar to the way you would specify a file name in a file system directory structure.
+A member node reference must begin with a colon delimiter while a child node reference begins with a period.
+An absolute node reference could be represented as follows:<p>
+
+   \[treename::]tagname[:member|.child |.-]+
+<p>Where square brackets denotes optional parts, the vertical bar denotes or and the plus sign denotes zero or
+more occurrences of the items in the square brackets.
+<p>The following are some examples of absolute node references:
+<PRE>
+\TOP
+\ELECTRONS::TOP.ECE.CAMAC:MYDIGITIZER:INPUT_1
+\MAGNETICS::MAG_HARDWARE:A12_1:CLOCK
+\MAGNETICS::MAG_HARDWARE:A12_1:CLOCK.-:INPUT_1
+</PRE>
+Let's look at the above examples one by one. The first example, \TOP, is a very simple tag reference and will
+refer to the top node of an MDSplus tree. In MDSplus there is the concept of a "current default" node which we'll
+discuss more when we look at relative node references. I mention it here because of how tagnames are searched.
+When you specify a tagname reference which does not contain an explicit treename as is the case in this example,
+MDSplus will attempt to locate the tagname within the same tree as your current default node. If it cannot resolve
+the tagname in the tree determined by your current default, MDSplus will search for that tagname beginning with
+the tree at the top of the node structure and continue searching throughout all the subtrees until it finds a
+match. It is always safer to specify a treename in a tag reference to avoid ambiguity.
+<p>The next example above, \ELECTRONS::TOP.ECE.CAMAC:MYDIGITIZER:INPUT_1, again begins with the \TOP tagname but
+uses the fully qualified tagname and is followed by a list of children and member nodes. This node reference is
+referencing the INPUT_1 node which is a member node under the MYDIGITIZER member node which in turn is under 
+the CAMAC child node which is under the ECE child node which is under the top node of the ELECTRONS tree.
+<p>The next example, \MAGNETICS::MAG_HARDWARE:A12_1:CLOCK, is referencing the CLOCK member node under the A12_1
+member node which is under the node pointed to by the MAG_HARDWARE tagname in the MAGNETICS tree.
+<p>The last example above shows the use of the "up one level" syntax which is normally used in the relative node
+references described below. This node absolute node reference is referencing the INPUT_1 member node but in a
+very strange way which you would probably not normally do. It does this by refering to the CLOCK member node
+of the A12_1 member node under the tagname MAG_HARDWARE in the MAGNETICS tree. Starting from the CLOCK node it
+goes up one level (equivalent to \MAGNETICS::MAG_HARDWARE:A12_1) and then down to the INPUT_1 member node.<p>
+<p><H3>Relative Node References</H3><p>
+A relative node reference is similar to an absolute node reference except that it does not begin with a tagname.
+The node is found relative to your current default node position in the tree. When you first open an MDSplus
+tree, you are positioned at the \TOP, or top node, of that tree. You can change your current default by using
+various commands, procedures or functions depending on the programming interface you are using. In TCL, this is
+done using the "SET DEFAULT node-spec" command. Relative node references behave exactly as absolute node references
+except instead of beginning at the tagname specified it begins at your current default. The syntax for a
+relative node references is :<p>
+
+  ([:]member | .child | .- ) [:member|.child |.-]+
+<p>
+If the first part of the path is a member node then the leading colon is optional. Here are some examples of
+relative node references:
+<PRE>
+INPUT_1
+A12_1:INPUT_1
+.ECE:A12_1:INPUT_1
+.-:INPUT_1
+</PRE>
+The first example would use your current default node as a starting point and look for the member node called
+INPUT_1 directly below. The next example would look for the A12_1 member node under your current default and then
+the INPUT_1 member node under that. The next example would look for the ECE child node under your current default node 
+then the A12_1 member node under that and then the INPUT_1 node under that. The last example would look for the
+INPUT_1 node under the node one level up from your current default.
+<p><H3>Wildcard Node Specifications</H3><p>
+In many contexts it may be possible to specify a wild card specification for locating a node or collection of
+nodes in a tree. There are four special wildcarding characters or sequences which can be used in node
+specifications: an asterisk, a percent sign, a series of three periods or a series of three asterisks. An
+asterisk can be used to match zero or more characters in a member or child node name. For example:
+<PRE>
+TCL> DIRECTORY INPUT_*
+</PRE>
+The wildcarded relative node specifier "INPUT_*" would match all member nodes in the current default node which
+begin in the characters "INPUT_". It would not match any children nodes nor would it match any nodes that were
+not immediately below the current default node.
+<p>
+The percent sign can be used to match one character in a member or child node name. For example:
+<PRE>
+TCL> DIRECTORY INPUT_%%
+</PRE>
+This wildcard specification would only match member nodes with a name consisting of the characters "INPUT_" 
+followed by two characters. This command would list the node INPUT_10 but not the node INPUT_1 for example.
+<p>
+The wildcarding sequence of three periods will match any child nodes descending down in the tree structure.
+For example:
+<PRE>
+TCL> DIR ...
+TCL> DIR \TOP...:*:INPUT_*
+</PRE>
+The first example will list all the child nodes found in any level under the current default node. The second
+example will list all member nodes with names beginning with the characters "INPUT_" which are members of a
+member node that is member of a child node in any level under the \TOP node.
+<p>
+The wildcarding sequence of three asterisks will match all nodes descending down in the tree structure.
+For example:
+<PRE>
+TCL> DIR ***
+TCL> DIR \TOP***:INPUT_*
+</PRE>
+The first example would list all nodes in any level under the current default node. The second example would
+list all member nodes in the tree which have the node name beginning with the characters "INPUT_".
+<p><H3>Node Spec or Character String?</H3><p>
+One thing that often can cause confusion is how MDSplus differentiates between text strings and node
+specifications. Generally when specifying a TDI expression, node references are not quoted and text strings are.
+Some built in functions such as GETNCI can accept either a node specification or a text string. Wild card
+node specifications should always be formatted as text string (enclosed in single or double quotes). If you
+are passing a node specification as an argument to functions such as MdsValue you must include a build_path
+in the expression to ensure that the node specification gets treated as a node specification instead of as a
+text string. When using the backslash character in text strings within TDI expressions you will need to
+include two backslashes because TDI treats a backslash as an escape character in text strings. Here are some
+examples:
+<p>
+<B>Wrong!</B>
+<PRE>
+GETNCI(\TOP***:A14_1,"NID_NUMBER")
+GETNCI("\TOP***:A14_1","NID_NUMBER")
+MDSVALUE("DIM_OF($)","INPUT_1")
+</PRE>
+The first example is trying to use a wildcard node specification without enclosing it in quotes. TDI would
+not be able to parse this expression as written. The second example is almost correct but since the wildcard
+specification is in quotes the leading backslash needs to be doubled. The third example is incorrect because
+the argument, "INPUT_1", would be treated as a character string instead of a node specification.
+<p>
+<B>Correct!</b>
+<PRE>
+GETNCI("\\TOP***:A14_1","NID_NUMBER")
+MDSVALUE("DIM_OF(BUILD_PATH($))","INPUT_1")
+</PRE>
+The first example shows the correct way to use a wildcard node specification
+in the TDI language. The wildcard is passed as a text string since it is
+enclosed in quotes. Since TDI is treating it as a text string two backslashes
+are required since a single backslash would be interpreted as an special
+character (for example the sequence \n would represent a newline). The second
+example shows the string "INPUT_1" being converted to a node reference using
+the BUILD_PATH function.
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

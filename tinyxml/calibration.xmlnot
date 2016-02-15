@@ -1,0 +1,19 @@
+<?xml version="1.0" standalone="no" ?>
+<!-- calibration data -->
+<AcqCalibration>
+    <Info>
+        <CalDate>20041225</CalDate>
+        <Version>B1007</Version>
+        <Model>ACQ216-M5</Model>
+    </Info>
+    <Data AICHAN=16 SW="ADC_RANGE,M5/GAINA,M5/GAINB">
+        <Range sw="0,0,0">
+            <Nominal min="-2.5," max="2.5" />
+            <Calibrated ch="1" min="-2.2," max="2.2" />
+        </Range>
+        <Range sw="1,0,0">
+            <Nominal min="-5," max="5" />
+            <Calibrated ch="1" min=-4.2 max=4.6 />
+        </Range>
+    </Data>
+</AcqCalibration>

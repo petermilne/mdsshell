@@ -1,0 +1,512 @@
+<html>
+
+<head>
+<title>Create a MDSPlus tree</title>
+<meta name="Microsoft Theme" content="none">
+<meta name="Microsoft Border" content="none">
+</head>
+
+<body>
+
+<p align="center"><font face="Arial"><big><big><big>How to create and populate a MDSplus
+tree</big></big></big></font></p>
+
+<p align="left"><font face="Arial">In this first lesson we shall build a very simple
+MDSplus tree. A MDSPlus tree is a database which contains several types of data. A data
+item may be a number, a string, a signal or, more generally an <em>expression</em> i.e. a
+combination of data (possibly stored in the same tree) and operators. <br>
+Besides data, the nodes of a MDSplus tree may contain other kind of information, but we
+shall discuss about it in the following tutorials.</font></p>
+
+<p align="left"><font face="Arial">The MDSplus tree represents the core of&nbsp; MDSplus,
+and there are many ways for interacting with it. Here, we shall use two tools: </font></p>
+
+<p align="left"><font face="Arial">1) The Tree Command Language (TCL, not to be confused
+with TCL/TK) for creating and editing a tree;</font></p>
+
+<p align="left"><font face="Arial">2) The jTraverser tool for providing a graphical
+interface to the tree.</font></p>
+
+<hr>
+
+<p align="center"><font face="Arial"><big><big>The creation of a sample tree</big></big></font></p>
+
+<p align="left"><font face="Arial">Before starting we need to define an environment
+variable which indicates to MDSplus the location of the tree. Let's call the new tree <strong>my_tree</strong>,
+so we need to define the environment variable <strong>my_tree_path</strong>&nbsp; to the
+directory which will contain the database (the general rule for the variable name is <em>&lt;tree
+name&gt;_path</em>). <br>
+On Linux (using bash)&nbsp; we define the environment variable as follow:</font></p>
+
+<p align="left"><font face="Arial"><strong>export my_tree_path = &lt;directory&gt;</strong></font></p>
+
+<p align="left"><font face="Arial">On windows, things are a bit more complicated, since we
+need to define&nbsp; the variable in the registry. These are the required steps:</font></p>
+
+<p align="left"><font face="Arial">1) Start a registry editor program, e.g. <strong>regedt32</strong>;<br>
+2) Select <strong>HKEY_CURRENT_USER</strong> window;<br>
+3) Double click in <strong>Software</strong> folder;<br>
+4) If the folder <strong>MIT</strong> is not already present in the folder <strong>Software</strong>,
+then create it with edit-&gt;add Key... (ignore class field);<br>
+5) In the folder <strong>MIT</strong>, if the folder <strong>MDSPLUS</strong> is not
+already present, create it (again, with&nbsp; edit-&gt;Add Key...)<br>
+6) In the folder <strong>MDSPLUS</strong>, create my_tree_path variable (edit-&gt;Add
+Value...; fill the <em>Value name:</em> field with the variable name; click Ok; and
+finally fill the <em>String:</em> field with the name of the directory to contain the
+tree).</font></p>
+
+<p align="left"><font face="Arial">Note that on Windows, the variable is defined forever,
+while on Linux you need to define it for each session, therefore it is convenient to put
+the definition in a shell script, such as .bashrc.</font></p>
+
+<p align="left"><font face="Arial">Now, we shall create a tree containing three nodes:<br>
+<br>
+&nbsp;&nbsp;&nbsp; NUM1 containing a number<br>
+&nbsp;&nbsp;&nbsp; NUM2 containing an array<br>
+&nbsp;&nbsp;&nbsp; NUM3 containing an expression<br>
+&nbsp;&nbsp;&nbsp; TXT containing a string</font></p>
+
+<p align="left"><font face="Arial">Let's do it using TCL (a complete reference to the
+language is available <a
+href="http://www.mdsplus.org/documentation/pppl_tcl/TCL_index.html">here</a>):</font></p>
+
+<p align="left"><font face="Arial">1) Start TCL<br>
+2) Create a new tree:&nbsp;&nbsp;&nbsp;&nbsp; TCL&gt;<strong>edit my_tree/new<br>
+</strong>3) Add node NUM1:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCL&gt;<strong>add node
+NUM1/usage=numeric<br>
+</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This command creates a new node named
+NUM. It will contain numeric data, but currently is empty.<br>
+4) Fill node NUM1:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCL&gt;<strong>put NUM1
+&quot;2&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>This command fills node NUM1 with the
+number 2.<br>
+3) Add node NUM2:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCL&gt;<strong>add node
+NUM2/usage=numeric<br>
+</strong>4) Fill node NUM2:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCL&gt;<strong>put
+NUM2 &quot;[1,2,3,4,5,6,7<sup>]</sup>&quot;<br>
+</strong>5) Add node NUM3:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCL&gt;<strong>add node
+NUM3/usage=numeric<br>
+</strong>6) Fill node NUM3:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCL&gt;<strong>put
+NUM3 &quot;NUM1 + 3 * NUM2&quot;<br>
+</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Node NUM3 now contains an expression
+involving the contents of nodes NUM1 and NUM2<br>
+7) Add node TXT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCL&gt;<strong>add
+node TXT/usage=text</strong><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This command creates a new node named TXT. It will contain
+text, but currently is empty.<br>
+8) Fill node TXT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+TCL<strong>&gt;put TXT &quot; 'This is a text string' &quot;<br>
+</strong>9) Write the current tree:TCL&gt;<strong>write</strong><br>
+10)Close the tree&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TCL&gt;<strong>close</strong></font></p>
+
+<p align="left"><font face="Arial">It is worth noting that the values we have just
+inserted into the nodes of my_tree represent different things, such as the number 2, an
+array of integer values, &nbsp; the string 'This is a text string'. Nevertheless, within
+MDSplus, they all represent <em>expressions</em>. The expression is a central concept in
+MDSplus: every datum is an expression. An expression can be something as simple as a
+simple number, or a node reference, but may represent also a very long combination of
+numbers, references and operators. Expressions are defined in a human-readable form using
+an appropriate matlab-like syntax, called TDI (for a more complete introduction to the TDI
+language, see <a href="http://www.mdsplus.org/documentation/reference/tdi.shtml">here</a>).
+For example, the expression <strong>NUM1 + 3 * NUM2 </strong>defining the content of node
+NUM3 evaluates to 2 + 3* [1,2,3,4,5,6,7]=[5,8,11,14,17,20,23]. Note that what is stored in
+the tree is the expression definition, not its evaluated value. Evaluation is done on the
+flight every time it will be required.</font></p>
+
+<hr>
+
+<p align="center"><font face="Arial"><big><big>Looking at what we have created</big></big></font></p>
+
+<p align="left"><font face="Arial">Now we are ready to look at what we have just created.
+However, before presenting the graphical interface to the tree, it is worth&nbsp;
+introducing the concept of <em><strong>shot number</strong></em>.&nbsp; The tree we have
+just created is a database (by the way, look at the files created in the directory
+specified by my_tree_path, and you will discover that the database is implemented by means
+of three files) and therefore it is possible to insert, modify and retrieve the contents
+of its nodes. However, in nuclear fusion research, as well as in every other shot-based
+experiment or application, we need to create a description of each experimental shot,
+which is naturally described by a shot number. This means that we shall create a separate
+instance of the tree for each shot. Moreover, every experiment will define a set of
+pre-defined set-up parameters, and will produce some data. <br>
+The MDSplus approach is therefore the creation of a template database (called <em><strong>experiment
+model</strong></em>), containing all the required set-up values, as well as defining the
+places (represented by empty nodes in the tree) where acquired data will be stored by the
+data acquisition routines.</font></p>
+
+<p align="left"><font face="Arial">The usual approach is therefore the creation of the
+template experiment model (by convention, represented by the shot number -1) whose actual
+content (i.e. the set-up parameters) are likely to change from shot to shot. Just before
+the experiment sequence, the experiment model is copied into a pulse file (i.e. a tree
+with an associated shot number). Data acquisition routines will read the stored parameters
+for the proper set-up before the experiment, and will write acquired data into the tree
+just after the experiment. </font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><font face="Arial">Note we are ready to look at our newly created tree
+(experiment model). Let's do it using the jTraverser tool:</font></p>
+
+<p align="left"><font face="Arial">1) start jTraverser;<br>
+2) Give the command <strong>File-&gt;Open</strong><br>
+3) Write <strong>my_tre</strong>e in the <em>Tree:</em> field and <strong>-1</strong> in
+the <em>Shot:</em> field of the popup window.</font></p>
+
+<p align="left"><font face="Arial">Now we have a graphical view of our tree:</font></p>
+
+<p align="center"><font face="Arial">&nbsp;<img src="jTraverser1.jpg" width="223"
+height="344" alt="jTraverser1.jpg (10485 byte)"></font></p>
+
+<p align="left"><font face="Arial">You can see the nodes just created, whose associated
+icon indicates the usage for that node. When data is inserted in a node, the data access
+layer of MDSplus checks whether the type of data being inserted matches with the usage for
+that node. <br>
+Using jTraverser, by pressing MB3 button over a node,&nbsp; you can perform the following
+operations on the node content:</font></p>
+
+<p align="center"><font face="Arial"><img src="jTraverser2.jpg" width="223" height="344"
+alt="jTraverser2.jpg (17054 byte)"></font></p>
+
+<p align="left"><font face="Arial">The commands we are interested in, for now, are:</font></p>
+
+<p align="left"><font face="Arial">- Display Data:&nbsp;&nbsp;&nbsp;&nbsp; displays the
+content (if any of the selected node);<br>
+- Display NCI:&nbsp;&nbsp;&nbsp;&nbsp; displays accessory node information such as size of
+contained data, and insertion date;<br>
+- Modify Data:&nbsp;&nbsp;&nbsp;&nbsp; modify the content of the node;</font></p>
+
+<p align="left"><font face="Arial">When modifying data for node NODE3, jTraverser displays
+the following dialog: </font></p>
+
+<p align="center"><font face="Arial"><img src="ModifyData.jpg" width="414" height="279"
+alt="ModifyData.jpg (16166 byte)"></font></p>
+
+<p align="left"><font face="Arial">You can type any expression (remember the MDSplus
+mantra: <em>everything is an expression</em>) which replaces the content of the node. <br>
+To experience the check performed on the node usage when inserting data, try to change the
+content of the node NUM3 to 'This another string' and to save it. You will receive the
+following error message:</font></p>
+
+<p align="center"><font face="Arial"><img src="UsageError.jpg" width="457" height="117"
+alt="UsageError.jpg (11435 byte)"></font></p>
+
+<p align="left"><font face="Arial">clearly indicating that the usage of that node is not
+the correct one (it must be an expression returning a numeric value).</font></p>
+
+<hr>
+
+<p align="center"><font face="Arial"><big><big>Defining a tree structure</big></big></font></p>
+
+<p align="left"><font face="Arial">Up to now,&nbsp; we have created a flat collection of
+nodes, possibly containing data. As their name suggests, MDSplus trees allow data to be
+organized in a hierarchical (tree)structure. Let's do it using TCL, by adding a subtree
+called SUB1 containing a numeric node SUB_NODE1 and another subtree called SUB2,
+containing a text node SUB_NODE2.</font></p>
+
+<p align="left"><font face="Arial">TCL&gt;<strong>edit my_tree</strong><br>
+&nbsp;&nbsp;&nbsp; Open tree my_tree for editing (i.e. adding/removing nodes). The default
+shot number is -1 (the experiment model)<br>
+TCL&gt;<strong>add node .SUB1</strong><br>
+&nbsp;&nbsp;&nbsp; Creates a new subtree. Note that the name is preceded by a dot.<br>
+TCL&gt;<strong>set def .SUB1</strong><br>
+&nbsp;&nbsp;&nbsp; moves into SUB1 subtree. Much like the UNIX cd command.<br>
+TCL&gt;<strong>add node SUB_NODE1/usage=numeric</strong><br>
+&nbsp;&nbsp;&nbsp; add empty node SUB_NODE1 to subtree SUB1.<br>
+TCL&gt;<strong>add node.SUB2</strong><br>
+&nbsp;&nbsp;&nbsp; Creates subtree SUB2<br>
+TCL&gt;<strong>set def .SUB2</strong><br>
+&nbsp;&nbsp;&nbsp; Move into SUB2 subtree<br>
+TCL&gt;<strong>add node SUB_NODE2/usage=text</strong><br>
+TCL&gt;<strong>write</strong><br>
+&nbsp;&nbsp;&nbsp; Write the newli created tree<br>
+TCL&gt;<strong>close </strong>&nbsp; <br>
+&nbsp;&nbsp;&nbsp; Close the tree.</font></p>
+
+<p align="left"><font face="Arial">Now, when we open my_tree with jTraverser, and explode
+subtrees, we get the following image(you can explode/implode subtrees by clocking on the
+associated handles, or double clicking the subtree):</font></p>
+
+<p align="center"><font face="Arial"><img src="jTraverser3.jpg" width="285" height="407"
+alt="jTraverser3.jpg (16111 byte)"></font></p>
+
+<p align="left"><font face="Arial">In the case you are allergic to graphical interfaces,
+you can nevertheless navigate into the tree structure of the tree using the TCL commands <strong>set
+def &lt;node name&gt;</strong> (for moving into a subtree), <strong>set def &quot;.-&quot;
+</strong>(for moving one level up) and <strong>dir</strong> (for showing the content of
+the current subtree). </font></p>
+
+<hr>
+
+<p align="center"><font face="Arial"><big><big>Understanding node names</big></big></font></p>
+
+<p align="left"><font face="Arial">While in a flat list of nodes, the node name is enough
+to uniquely identify the single data item, in a tree structure, it is necessary to define
+the whole path. Let's take an example: select the popup item show data in jTraverser over
+node SUB_NODES2. After enlarging the displayed window we get:</font></p>
+
+<p align="center"><font face="Arial"><img src="Undefined.jpg" width="436" height="124"
+alt="Undefined.jpg (10278 byte)"></font></p>
+
+<p align="left"><font face="Arial">The dialog tells us that the node is undefined (does
+not contain data yet), and a couple of other information we shall see later. We are now
+interested in the title of the dialog which shows the path name of node SUB_NODE2. The
+first part \MY_TREE::TOP indicates the root of tree MY_TREE and the rest of the name is
+the path from the root to node SUB_NODE2. Observe the dots and the colons: the hierarchy
+organization in MDSplus trees defines two kinds of nodes for every subtree: members, whose
+name is preceded by a colon, and children, whose name is preceded by a dot. In this
+example SUB_NODE2 is a member of node SUB2 which is in turn a child of node SUB1. The
+MDSplus data organization defines also the concept of default position. Node pathnames can
+in fact be absolute (i.e. starting from the root) or relative (i.e. starting from the
+default node), and the default node position is indicated in red in jTraverser and can be
+changed selecting the popup menu item <strong>Set Default</strong> (don't worry about it,
+you will use it very seldom). </font></p>
+
+<p align="left"><font face="Arial">Even though MDSplus allows an arbitrary organization of
+members and children (a member node may have members and/or children), the usual approach
+is to define members for containing data and children for defining the structure (data
+cannot never inserted into a child node).</font></p>
+
+<p align="left"><font face="Arial">Even in this simple example, it is clear that node
+pathnames can be very lengthy, increasing also the probability of typing errors. For this
+reason, MDSplus allows one or mode unique names to be associated with a given node. These
+identifiers are called <strong>tags</strong> and are very useful for providing a short and
+easy name to nodes (usually containing acquired data) which are often referred for data
+display. <br>
+Even though it is possible to define tags in TCL, it is easier to do it with jTraverser.
+To give tag name MY_SPECIAL_NODE to node&nbsp; \MY_TREE::TOP.SUB1.SUB2:SUB_NODE2 using
+jTraverser, you need to open experiment my_tree selecting also the edit checkbox in the
+open dialog. Then you position the mouse over the node, press MB3 button and select the <strong>Modify
+Tags</strong> item in the popup menu. You then get the following window:</font></p>
+
+<p align="center"><font face="Arial"><img src="AddTag.jpg" width="458" height="240"
+alt="AddTag.jpg (15148 byte)"></font></p>
+
+<p align="left"><font face="Arial">in which you can add/remove the tag name(s) which will
+be associated with that node. Add MY_SPECIAL_NODE in the list (remember to press Add Tag
+button) and press Ok. From now, the tag is associated with that node, and is shown in the
+data dialog when showing or modifying data. </font></p>
+
+<p align="left"><font face="Arial">(Note that in this example, the first time you select
+the <strong>modify data</strong> popup item for this node, the node will be shown as
+undefined, as no data has been added to it in TCL. You can insert new data into it by
+changing the <strong>undefined</strong> option into <strong>expression</strong> and then
+typing an expression)</font></p>
+
+<p align="left"><font face="Arial">Tag names can be used everywhere a node reference is
+required, e.g. in an expression referring to that node, and the general syntax is:</font></p>
+
+<p align="left"><font face="Arial">\&lt;tree name&gt;::&lt;tag name&gt;&nbsp; (e.g.
+\MY_TREE::MY_SPECIAL_NODE in our example)</font></p>
+
+<p align="left"><font face="Arial">When only one tree is open (we shall see in another
+tutorial that it is possible to open at the same time several trees), the first part
+(&lt;tree_name&gt;::) may be omitted.<br>
+Tag names can have an arbitrary number of characters. Node names are instead limited to 12
+characters.</font></p>
+
+<hr>
+
+<p align="center"><font face="Arial"><big><big>The TCL and jTraverser tools</big></big></font></p>
+
+<p align="left"><font face="Arial">TCL and jTraverser are two equivalent tools, in the
+sense that both allow the creation and modification of MDSplus trees. It is in fact
+possible in TCL to navigate into the tree structure using the commands <strong>set def</strong>
+and <strong>dir</strong>. It is even&nbsp; possible to look at data in TCL, but what we
+see is not exactly what you would expect. Let's try it with the following commands:</font></p>
+
+<p align="left"><font face="Arial">TCL&gt;<strong>set tree my_tree</strong><br>
+Open my_tree experiment model. Note that the command is now set tree, and no more edit.
+The command edit is required when adding/removing nodes or when changing node names, but
+is not required for displaying or modifying data associated wit nodes.<br>
+TCL&gt;<strong>show data NUM3</strong><br>
+Want to see data associated with node NUM3. Note that this is a relative path name (colon
+in front of the name is assumed by default) to the default position which is now the root
+of the tree. We get the following:<br>
+<br>
+\MY_TREE::TOP:NUM3<br>
+DTYPE_FUNCTION : OPC$ADD<br>
+DTYPE_NID : \MY_TREE::TOP:NUM1<br>
+DTYPE_L : 2<br>
+DTYPE_FUNCTION : OPC$MULTIPLY<br>
+DTYPE_L : 3<br>
+DTYPE_NID : \MY_TREE::TOP:NUM2<br>
+DTYPE_L : Array [ 7 ]</font></p>
+
+<p align="left"><font face="Arial">Not very clear, isn't it? In fact the <strong>show data</strong>
+command displays the internal organization of the information required to specify the
+expression <strong>NUM1 + 3 * NUM2</strong>, an information very useful when debugging the
+system, but surely not easily readable to end users.&nbsp; </font></p>
+
+<p align="left"><font face="Arial">On the other side, jTraverser can be used also for
+changing node names, adding/removing tag names and adding/removing nodes. For these
+operations you need to select the <strong>edit</strong> checkbox in the <strong>Open</strong>
+dialog. You will note that the popup list in this case is more complete: </font></p>
+
+<p align="center"><font face="Arial"><img src="jTraverser4.jpg" width="308" height="450"
+alt="jTraverser4.jpg (30517 byte)"></font></p>
+
+<p align="left"><font face="Arial">The new commands in which we are interested (the others
+will be discussed in other tutorials)&nbsp; now are;</font></p>
+
+<p align="left"><font face="Arial">- <strong>Add Node</strong>: add a member node to the
+selected node (that over which MDB3 has been pressed), whose usage is specified by the
+associated sublist (good occasion for looking at the usages supported by MDSplus - for now
+we know only Text and Numeric)<br>
+- <strong>Delete Node</strong>: remove the currently selected node;<br>
+- <strong>Modify Tags</strong>: add/remove tag names for this node;<br>
+- <strong>Rename node</strong>: rename the pathname, possibly moving the node to another
+subtree.(It is also possible to change the name of a node &quot;a la Windows&quot; by
+slowly clicking twice over the node name, editing the new name, and then pressing Ok).</font></p>
+
+<p align="left"><font face="Arial"><strong>Concluding tip<em>: </strong>use TCL for
+creating and populating a tree the first time. Use jTraverser for looking at it, and for
+changes in its structure.</em></font></p>
+
+<p align="left">&nbsp;</p>
+
+<hr>
+
+<p align="center"><font face="Arial"><big><big>Understanding MDSplus signals</big></big></font></p>
+
+<p align="left"><font face="Arial">In our current exercise he have dealt with strings,
+numbers, arrays and expressions. A data type which is very useful in data acquisition is
+the signal, i.e. an array of data (y axis values) with associated x axis information. Most
+times, signals refer to some physical signal acquired at a certain frequency for a certain
+time. In this case the X axis represents the time value of the acquired samples.<br>
+MDSplus defines explicitly a data type for signals, and a signal usage for tree nodes.
+Though signals are usually produced by some data acquisition routine, it is possible to
+define signals manually. How?? By defining the corresponding expression, of course!</font></p>
+
+<p align="left"><font face="Arial">Let's add to my_tree a node called SIGNAL1 containing a
+sine wave made of 1000 sampled points taken over a period of 1 second.</font></p>
+
+<p align="left"><font face="Arial">TCL&gt;<strong>edit my_tree</strong><br>
+TCL&gt;<strong>add node SIGNAL1/usage=signal</strong><br>
+TCL&gt;<strong>put SIGNAL1 &quot;build_signal(sin(6.28 * [0..999]/1000.),,
+[0..999]/1000.)&quot;</strong><br>
+TCL&gt;<strong>write</strong><br>
+TCL&gt;<strong>close</strong></font></p>
+
+<p align="left"><font face="Arial">The TDI expression syntax for defining signals is the
+following (full reference to TDI expressions is <a
+href="http://nstx.pppl.gov/nstx/Software/TDI/TDI_TOP.HTML">here</a>):</font></p>
+
+<p align="left"><font face="Arial">BUILD_SIGNAL(DATA, RAW,&nbsp; [DIMENSION...])</font></p>
+
+<p align="left"><font face="Arial">where:</font></p>
+
+<p align="left"><font face="Arial">&nbsp;&nbsp;&nbsp; - DATA is an expression defining the
+Y values. (sin(6.28 * [0..999]/1000.) in our example)<br>
+&nbsp;&nbsp;&nbsp; - RAW is an expression indicating raw data. Often an acquired signal is
+made of raw data converted then by taking into account parameters such as gain and offset.
+Now we are not interested in it, so we omit its definition (the two commas in the TCL
+example are not a typing error).<br>
+&nbsp;&nbsp;&nbsp; - DIMENSION is an expression returning the array of X axis, usually
+(but not always) time values. (In our example the expression is [0..999]/1000.)</font></p>
+
+<p align="left">&nbsp;</p>
+
+<hr>
+
+<p align="center"><font face="Arial"><big><big>More on MDSplus expressions</big></big></font></p>
+
+<p><font face="Arial">You will have understood that expressions are ubiquitous in MDSplus.
+Expressions are defined by means of a very rich syntax, called TDI, with tens of possible
+operators supporting many different data types. Just a few examples of expression:</font> 
+
+<ul>
+  <li><font face="Arial">2.3
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    A floating point number</font></li>
+  <li><font face="Arial">2 + 3.14
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    A summation evaluated to a floating point number</font></li>
+  <li><font face="Arial">'This is a string'
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    A text string</font></li>
+  <li><font face="Arial">'A string '//'Another string'
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The concatenation of two strings</font></li>
+  <li><font face="Arial">[1,2,5,7]
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    An integer array</font></li>
+  <li><font face="Arial">2. * ([1,2,5,7] + [2,2,2,7])
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; An (IDL or Matlab like) expression
+    involving scalars and arrays. </font></li>
+  <li><font face="Arial">\MY_TREE:NODE1
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    A reference to a MDSplus tree node</font></li>
+  <li><font face="Arial">2 * (\MY_TREE:NODE1 + 3) An expression involving number and tree
+    nodes</font></li>
+</ul>
+
+<p><font face="Arial">You can do more: it is in fact possible to define variable in TDI.
+Once defined, they can be later used. For example:</font></p>
+
+<p><font face="Arial">_a = 2 * (\MY_TREE:NODE1 + 3)&nbsp;&nbsp;&nbsp;&nbsp; Assign an
+expression to variable _a<br>
+_b = sqrt(_a)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Assign to _b the square root of _a<br>
+<br>
+Remember that TDI variable always begin with an underscore! </font></p>
+
+<p><font face="Arial">You may wonder what are variables useful for. In fact, it makes no
+sense to use variable in insulated expressions, but expressions can be concatenated to
+form a TDI function, much like you would do in IDL, Matlab, or a programming language.
+Here is an example of a TDI function which returns the sum of all the members in a given
+array:</font></p>
+
+<p><font face="HE_TERMINAL">fun public vector_sum(in _a)<br>
+{<br>
+&nbsp;&nbsp;&nbsp; _sum = 0;<br>
+&nbsp;&nbsp;&nbsp; for(_i = 0; _i &lt; size(_a); _i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _sum = _sum + _a[_i];<br>
+&nbsp;&nbsp;&nbsp; return(_sum);<br>
+}</font></p>
+
+<p><font face="Arial">Looks like a real program, isn't it? Note that variables (remember
+the underscore!!) are not declared, and can contain any type of data. </font></p>
+
+<p><font face="Arial">You save this function in a text file called <strong>vector_sum.fun</strong>
+and you put it in a subdirectory of MDSPLUS_DIR/tdi, where MDSPLUS_DIR is the root of the
+MDSplus distribution of your system.</font></p>
+
+<p><font face="Arial">After copying it in the right place, you can use without any
+compilation. Here is an example of usage:</font></p>
+
+<p><font face="HE_TERMINAL">_arr = [1,2,4,5];<br>
+_sum = vector_sum(_arr);<br>
+write(*, 'The sum of the elements of ', _arr, ' is ', _sum);<br>
+_sum2 = 2 * vector_sum(_arr);</font></p>
+
+<p><font face="Arial">As everybody who wrote a program knows, it is possible to make
+syntax errors when writing TDI expressions and programs. As there is no compilation, the
+errors arise when that expression is evaluated. The error message is often not very clear
+(just to be polite </font><img src="Embarrased.jpg" width="21" height="22"
+alt="Embarrased.jpg (707 byte)">), <font face="Arial">so correcting errors when writing
+TDI functions my be very frustrating.&nbsp; In this case the TDITEST tool can be very
+useful, and allows to spare quite a lot of debugging time.</font></p>
+
+<p><font face="Arial">When starting TDITEST you get an empty screen in which you can write
+TDI expression and see the result of their evaluation. You can define variables and use
+them in later expressions. You can also exercise the cornucopia of TDI predefined
+functions listed in the TDI <a
+href="http://www.mdsplus.org/documentation/pppl_tcl/TCL_index.html">reference</a> in order
+to understand their meaning. When developing TDI functions, you can test each line
+individually, thus achieving an acceptable debugging.</font></p>
+
+<hr>
+
+<p align="center"><font face="Arial"><big><big>What next?</big></big></font></p>
+
+<p><font face="Arial">We have now learnt how to build and populate a MDSplus tree. We know
+also how references into the tree are specified and we know that it is possible to use
+expressions for a flexible definition of data. </font></p>
+
+<p><font face="Arial">We are now ready to go <a href="DataAccess.shtml">further</a>, and
+to access data contained in the tree. The next tutorial will show you how to export
+MDSplus trees over the network, and how to access data from programs and from jScope, the
+MDSplus tool for waveform display.</font></p>
+
+<hr>
+</body>
+</html>

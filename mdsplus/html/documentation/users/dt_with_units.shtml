@@ -1,0 +1,57 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - DTYPE_WITH_UNITS</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>With Units Data Type</b>
+<P>MDSplus provides a with units data type which enables you to attach units
+to a value. A with units data item is a structure containing two
+"fields". The first field is the value and the second is the units.
+Each part of a with units data time can be either
+missing or a value of any other supported data type. General applications
+available at your site may assume some convention on the type of data each field
+contains (i.e. a units field that when evaluated returns DTYPE_T, a string).
+<p>
+A with units item can be created using the BUILD_WITH_UNITS or MAKE_WITH_UNITS functions. For
+example:
+<p>
+<PRE>
+_mydata = BUILD_WITH_UNITS(42,"volts")
+</PRE>
+<p>The following table lists some of the functions available for creating or accessing with units items:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00"><td><b>Function</b></td><td><b>Description</b></td></tr>
+
+<tr><td>BUILD_WITH_UNITS</td><td>Build a with units structure</td></tr>
+<tr><td>DATA</td><td>Evaluates value portion of with units item converting to one of integer, float or text</td></tr>
+<tr><td>MAKE_WITH_UNITS</td><td>Make a with units structure</td></tr>
+<tr><td>UNITS</td><td>Return units or blank</td></tr>
+<tr><td>UNITS_OF</td><td>Return the units field of with units structure</td></tr>
+<tr><td>VALUE_OF</td><td>Return the value field of with units structure</td></tr>
+</table>
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

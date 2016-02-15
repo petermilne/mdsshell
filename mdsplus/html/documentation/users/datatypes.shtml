@@ -1,0 +1,308 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>MDSplus Data Types</b>
+<p>MDSplus supports numerous data types, from simple numeric or text types
+to complex entities which combine related information in a structure. Some of
+the data types are used internally for representing things such as data acquisition
+devices, compiled representations of expressions and data acquisition actions and
+you may likely never have to interact with these items. Most users will normally
+be accessing the primitive data types including all integer, floating point or
+text data types as well as several of the more complicated MDSplus data types such
+as signals, dimensions, with units, with errors and ranges.
+<p>Many of the MDSplus data types consist of structures or records containing two
+or more fields. There are built in functions in the TDI expression evaluation language
+for extracting these fields from the structure.
+<p>One of the more important data types provided by MDSplus is the signal, DTYPE_SIGNAL.
+A signal is a structure which combines a value part, optionally a raw data part, and
+one or more dimension descriptions. Data from measurement devices as well as analysis
+results are often stored as signals. Many visualization applications will generate
+plots of signals by plotting the value portion versus the dimensions. The value part
+of a signal can be an expression which references the raw data part of the signal.
+Support for transient recorders often use this feature by storing the raw counts values
+in the raw data part and then put an expression to convert this raw data to engineering
+units (such as voltage) in the value part of the signal. In the case of the support
+for a transient record, a representation of the time base would normally be stored in
+the first dimension part of the signal. 
+<p>The following table list all the supported types. Click on the data
+type for more information on each type.
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00">
+<td><b>Name</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr BGCOLOR="#FFFF00">
+<td COLSPAN="2"><b>Integer Data Types</b></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_BU</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Unsigned Byte (8-bit)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_WU</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Unsigned Word (16-bit)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_LU</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Unsigned Long (32-bit)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_QU</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Unsigned Quadword (64-bit)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_OU</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Unsigned Octaword (128-bit)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_B</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Byte (8-bit)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_W</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Word (16-bit)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_L</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Long (32-bit)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_Q</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Quadword (64-bit)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_integer.shtml" class="small">DTYPE_O</a></td>
+
+<td><a href="dt_integer.shtml" class="small">Octaword (128-bit)</a></td>
+</tr>
+
+<tr>
+<td COLSPAN="2" BGCOLOR="#FFFF00"><b>Floating Point / Real Data Types</b></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_F</a></td>
+
+<td><a href="dt_float.shtml" class="small">32-bit Vax F_FLOAT</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_D</a></td>
+
+<td><a href="dt_float.shtml" class="small">64-bit Vax D_FLOAT</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_G</a></td>
+
+<td><a href="dt_float.shtml" class="small">64-bit Vax G_FLOAT</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_FC</a></td>
+
+<td><a href="dt_float.shtml" class="small">32-bit Vax F_FLOAT complex</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_DC</a></td>
+
+<td><a href="dt_float.shtml" class="small">64-bit Vax D_FLOAT complex</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_GC</a></td>
+
+<td><a href="dt_float.shtml" class="small">64-bit Vax G_FLOAT complex</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_FS</a></td>
+
+<td><a href="dt_float.shtml" class="small">32-bit IEEE Float</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_FT</a></td>
+
+<td><a href="dt_float.shtml" class="small">64-bit IEEE Float</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_FSC</a></td>
+
+<td><a href="dt_float.shtml" class="small">32-bit IEEE Float complex</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_float.shtml" class="small">DTYPE_FTC</a></td>
+
+<td><a href="dt_float.shtml" class="small">64-bit IEEE Float complex</a></td>
+</tr>
+
+<tr>
+<td COLSPAN="2" BGCOLOR="#FFFF00"><b>Text / String Data Type</b></td>
+</tr>
+
+<tr>
+<td><a href="dt_text.shtml" class="small">DTYPE_T</a></td>
+
+<td><a href="dt_text.shtml" class="small">Text</a></td>
+</tr>
+
+<tr>
+<td COLSPAN="2" BGCOLOR="#FFFF00"><b>MDSplus Data Types</b></td>
+</tr>
+
+<tr>
+<td><a href="dt_action.shtml" class="small">DTYPE_ACTION</a></td>
+
+<td><a href="dt_action.shtml" class="small">Action definition</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_call.shtml" class="small">DTYPE_CALL</a></td>
+
+<td><a href="dt_call.shtml" class="small">Call function</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_conglom.shtml" class="small">DTYPE_CONGLOM</a></td>
+
+<td><a href="dt_conglom.shtml" class="small">Conglomerate / Device</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_dimension.shtml" class="small">DTYPE_DIMENSION</a></td>
+
+<td><a href="dt_dimension.shtml" class="small">Dimension definition</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_dispatch.shtml" class="small">DTYPE_DISPATCH</a></td>
+
+<td><a href="dt_dispatch.shtml" class="small">Dispatch information</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_function.shtml" class="small">DTYPE_FUNCTION</a></td>
+
+<td><a href="dt_function.shtml" class="small">Function reference</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_ident.shtml" class="small">DTYPE_IDENT</a></td>
+
+<td><a href="dt_ident.shtml" class="small">MDSplus identifier "Ken variable"</a></a></td>
+</tr>
+
+<tr>
+<td><a href="dt_method.shtml" class="small">DTYPE_METHOD</a></td>
+
+<td><a href="dt_method.shtml" class="small">Invoke device method</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_nid_path.shtml" class="small">DTYPE_NID</a></td>
+
+<td><a href="dt_nid_path.shtml" class="small">32-bit Node Identifier</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_param.shtml" class="small">DTYPE_PARAM</a></td>
+
+<td><a href="dt_param.shtml" class="small">Parameter</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_nid_path.shtml" class="small">DTYPE_PATH</a></td>
+
+<td><a href="dt_nid_path.shtml" class="small">Node specifier (Path)</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_range.shtml" class="small">DTYPE_RANGE</a></td>
+
+<td><a href="dt_range.shtml" class="small">Range</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_routine.shtml" class="small">DTYPE_ROUTINE</a></td>
+
+<td><a href="dt_routine.shtml" class="small">Routine</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_signal.shtml" class="small">DTYPE_SIGNAL</a></td>
+
+<td><a href="dt_signal.shtml" class="small">Signal</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_window.shtml" class="small">DTYPE_WINDOW</a></td>
+
+<td><a href="dt_window.shtml" class="small">Window</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_with_error.shtml" class="small">DTYPE_WITH_ERROR</a></td>
+
+<td><a href="dt_with_error.shtml" class="small">Attach error to value</a></td>
+</tr>
+
+<tr>
+<td><a href="dt_with_units.shtml" class="small">DTYPE_WITH_UNITS</a></td>
+
+<td><a href="dt_with_units.shtml" class="small">Attach units to value</a></td>
+</tr>
+</table>
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

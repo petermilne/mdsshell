@@ -1,0 +1,198 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - Floating point data types</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>Floating Point Data Types in MDSplus</b>
+<p>MDSplus supports several formats of floating point values including
+several types of floating values found on OpenVMS systems as well as the
+more common IEEE standard floating representations. Floating point data
+can be stored in any of the various types of floating point values. The
+floating point values will be converted to "native" floating point types
+when application referent the data. You may have applications running on
+an OpenVMS system storing data in Vax F_FLOAT format but an application
+running on a Unix system will receive IEEE format data when it accesses
+the data.
+<p>&nbsp;Like most programming languages, when operations are performed
+with values of different size, the values are converted to a common size
+(the largest of the values being operated on) before performing the operation.
+For example, if you were to add a single precision floating point value
+with a double precision value the single precision valu&nbsp; would first
+be converted to a double precision before performing the add operation.
+<p>Floating point data can be simple scalar values or regular arrays with
+one to seven dimensions. When loaded into MDSplus trees, floating point
+arrays may be compressed using a non-destructive delta compression algorithm
+automatically depending on the characteristics of the node in the tree
+where the data is being stored. Decompression of this data occurs automatically
+when the data is referenced. While floating point data does not generally
+compress as well as integer data, it is not uncommon to see a floating
+point data reduced to one half of its original size.
+<p><b>Expression evaluator (TDI) operations used on Floating Point Data
+Types</b>
+<p>The following table lists some of the more common operations performed
+on floating point datatypes:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00"><td><b>Function</b></td><td><b>Description</b></td></tr>
+
+<tr><td>ABS</td><td>Absolute Value</td></tr>
+<tr><td>ABS1</td><td>Absolute Value with L1 norm</td></tr>
+<tr><td>ABSSQ</td><td>Absolute Value Squared</td></tr>
+<tr><td>ACCUMULATE</td><td>Running Sum</td></tr>
+<tr><td>ACOS</td><td>Arc Cosine</td></tr>
+<tr><td>ACOSD</td><td>Arc Cosine (degrees)</td></tr>
+<tr><td>ADD (+)</td><td>Add</td></tr>
+<tr><td>AIMAG</td><td>Imaginary part of complex</td></tr>
+<tr><td>AINT</td><td>Truncation to a whole number</td></tr>
+<tr><td>ANINT</td><td>Nearest whole number</td></tr>
+<tr><td>ARG</td><td>Argument of complex number in radians</td></tr>
+<tr><td>ARRAY</td><td>Construct array (uninitialized values)</td></tr>
+<tr><td>ASIN</td><td>Arc Sine</td></tr>
+<tr><td>ASIND</td><td>Arc Sine (degrees)</td></tr>
+<tr><td>ATAN</td><td>Arc Tangent</td></tr>
+<tr><td>ATAN2</td><td>Arc Tangent</td></tr>
+<tr><td>ATAND</td><td>Arc Tangent (degrees)</td></tr>
+<tr><td>ATAN2D</td><td>Arc Tangent (degrees)</td></tr>
+<tr><td>ATANH</td><td>Hyperbolic Arc Tangent (degrees)</td></tr>
+<tr><td>BSEARCH</td><td>Binary search in sorted table</td></tr>
+<tr><td>BYTE</td><td>Convert to 8-bit signed data type</td></tr>
+<tr><td>BYTE_UNSIGNED</td><td>Convert to 8-bit unsigned data type</td></tr>
+<tr><td>CEILING</td><td>Smallest whole number above argument</td></tr>
+<tr><td>CMPLX</td><td>Convert to complex</td></tr>
+<tr><td>CONDITIONAL (test ? a : b)</td><td>Select from 2 sources based on test value</td></tr>
+<tr><td>CONJG</td><td>Conjugate of complex number</td></tr>
+<tr><td>COS</td><td>Cosine</td></tr>
+<tr><td>COSD</td><td>Cosine (degrees)</td></tr>
+<tr><td>COSH</td><td>Hyperbolic Cosine</td></tr>
+<tr><td>CVT</td><td>Convert to other data type</td></tr>
+<tr><td>DBLE</td><td>Double the precision, 8-bit values become 16-bit etc.</td></tr>
+<tr><td>DECOMPILE</td><td>Convert to text representation</td></tr>
+<tr><td>DIAGONAL</td><td>Create a diagonal matrix</td></tr>
+<tr><td>DIGITS</td><td>Number of significant digits</td></tr>
+<tr><td>DIM (/)</td><td>Positive difference</td></tr>
+<tr><td>DIVIDE (/)</td><td>Divide</td></tr>
+<tr><td>DOT_PRODUCT</td><td>Dot-product multiplication</td></tr>
+<tr><td>DPROD (/)</td><td>Double precision product</td></tr>
+<tr><td>DTYPE_RANGE (/)</td><td>Build range</td></tr>
+<tr><td>D_COMPLEX (/)</td><td>DTYPE_D Complex</td></tr>
+<tr><td>D_FLOAT (/)</td><td>Convert to DTYPE_D</td></tr>
+<tr><td>ELBOUND</td><td>Lower bound of array</td></tr>
+<tr><td>EPSILON (/)</td><td>Smallest positive value</td></tr>
+<tr><td>EQ (==)</td><td>Tests for equality</td></tr>
+<tr><td>ESHAPE</td><td>Return shape of array or scalar</td></tr>
+<tr><td>ESIZE</td><td>Total number of elements of array</td></tr>
+<tr><td>EUBOUND</td><td>Upper bound of array</td></tr>
+<tr><td>EXP</td><td>Exponential</td></tr>
+<tr><td>EXPONENT</td><td>Exponent</td></tr>
+<tr><td>FINITE</td><td>True if not missing or reserved value</td></tr>
+<tr><td>FIX_ROPRAND</td><td>Replace missing or reserved value</td></tr>
+<tr><td>FLOAT</td><td>Convert to floating point</td></tr>
+<tr><td>FLOOR</td><td>Largest whole number less than or equal to arg</td></tr>
+<tr><td>FRACTION</td><td>Fractional part</td></tr>
+<tr><td>F_COMPLEX</td><td>Convert to DTYPE_F complex</td></tr>
+<tr><td>F_FLOAT</td><td>Convert to DTYPE_F</td></tr>
+<tr><td>FS_COMPLEX</td><td>Convert to DTYPE_FS complex</td></tr>
+<tr><td>FS_FLOAT</td><td>Convert to DTYPE_FS</td></tr>
+<tr><td>FT_COMPLEX</td><td>Convert to DTYPE_FT complex</td></tr>
+<tr><td>FT_FLOAT</td><td>Convert to DTYPE_FT</td></tr>
+<tr><td>GE (>=)</td><td>Test for first greater or equal to second</td></tr>
+<tr><td>GT (>)</td><td>Test for first greater than second</td></tr>
+<tr><td>G_COMPLEX</td><td>Convert to DTYPE_G complex</td></tr>
+<tr><td>G_FLOAT</td><td>Convert to DTYPE_G</td></tr>
+<tr><td>HUGE</td><td>Largest value of this data type</td></tr>
+<tr><td>INT</td><td>Convert to signed integer</td></tr>
+<tr><td>INT_UNSIGNED</td><td>Convert to unsigned integer</td></tr>
+<tr><td>LASTLOC</td><td>Locate trailing edges of a set of true elements of a logical mask</td></tr>
+<tr><td>LBOUND</td><td>Lower bound of array</td></tr>
+<tr><td>LE (&lt;=)</td><td>Test for first less than or equal to second</td></tr>
+<tr><td>LOG</td><td>Natural logarithm</td></tr>
+<tr><td>LOG10</td><td>Logarithm base 10</td></tr>
+<tr><td>LOG2</td><td>Logarithm base 2</td></tr>
+<tr><td>LONG</td><td>Convert to 32-bit signed integer</td></tr>
+<tr><td>LONG_UNSIGNED</td><td>Convert to 32-bit unsigned integer</td></tr>
+<tr><td>LT (&lt;)</td><td>Test for first less than second</td></tr>
+<tr><td>MAP</td><td>Element selection from an array</td></tr>
+<tr><td>MAX</td><td>Maximum of argument list</td></tr>
+<tr><td>MAXEXPONENT</td><td>Maximum exponent</td></tr>
+<tr><td>MAXLOC</td><td>Determine location of maximum value</td></tr>
+<tr><td>MAXVAL</td><td>Maximum value in an array</td></tr>
+<tr><td>MEAN</td><td>Average value of the elements of an array</td></tr>
+<tr><td>MERGE</td><td>Merge two arrays</td></tr>
+<tr><td>MIN</td><td>Minimum of argument list</td></tr>
+<tr><td>MINEXPONENT</td><td>Minimum exponent</td></tr>
+<tr><td>MINLOC</td><td>Determine location of minimum value</td></tr>
+<tr><td>MINVAL</td><td>Minimum value in an array</td></tr>
+<tr><td>MOD</td><td>Remainder</td></tr>
+<tr><td>MULTIPLY (*)</td><td>Multiply</td></tr>
+<tr><td>NE (!=)</td><td>Test for inequality</td></tr>
+<tr><td>OCTAWORD</td><td>Convert to 128-bit value</td></tr>
+<tr><td>OCTAWORD_UNSIGNED</td><td>Convert to 128-bit unsigned value</td></tr>
+<tr><td>PACK</td><td>Pack and array under control of mask</td></tr>
+<tr><td>POWER</td><td>Raise number to power</td></tr>
+<tr><td>PRECISION</td><td>The decimal precision</td></tr>
+<tr><td>PRODUCT</td><td>Product of all elements of an array</td></tr>
+<tr><td>QUADWORD</td><td>Convert to 64-bit integer</td></tr>
+<tr><td>QUADWORD_UNSIGNE</td><td>Convert to 64-bit unsigned integer</td></tr>
+<tr><td>RADIX</td><td>The base of the datatype</td></tr>
+<tr><td>RANDOM</td><td>Random number</td></tr>
+<tr><td>RANGE</td><td>The range of the datatype</td></tr>
+<tr><td>RANK</td><td>Number of dimensions</td></tr>
+<tr><td>REAL</td><td>Convert to real</td></tr>
+<tr><td>RRSPACING</td><td>The reciprocal of the spacing of datatype</td></tr>
+<tr><td>SCALE</td><td>Change exponent</td></tr>
+<tr><td>SET_EXPONENT</td><td>Change exponent</td></tr>
+<tr><td>SET_RANGE</td><td>Set array bounds</td></tr>
+<tr><td>SHAPE</td><td>Shape of array</td></tr>
+<tr><td>SIGNED</td><td>Convert to signed integer</td></tr>
+<tr><td>SIN</td><td>Sine</td></tr>
+<tr><td>SIND</td><td>Sine (degrees)</td></tr>
+<tr><td>SINH</td><td>Hyperbolic Sine</td></tr>
+<tr><td>SIZE</td><td>Total number of elements in an array</td></tr>
+<tr><td>SIZEOF</td><td>Total number of bytes</td></tr>
+<tr><td>SORT</td><td>Make index list of ascending array</td></tr>
+<tr><td>SORTVAL</td><td>Rearrange array in ascending order</td></tr>
+<tr><td>SPACING</td><td>Absolute spacing near arg</td></tr>
+<tr><td>SPREAD</td><td>Replicate an array by adding a dimension</td></tr>
+<tr><td>SQRT</td><td>Square root</td></tr>
+<tr><td>SQUARE</td><td>Product of number with itself</td></tr>
+<tr><td>SUBSCRIPT</td><td>Pick certain elements of array</td></tr>
+<tr><td>SUBTRACT (-)</td><td>Subtract</td></tr>
+<tr><td>SUM</td><td>Sum all elements of array</td></tr>
+<tr><td>TAN</td><td>Tangent</td></tr>
+<tr><td>TAND</td><td>Tangent (degrees)</td></tr>
+<tr><td>TANH</td><td>Hyperbolic Tangent</td></tr>
+<tr><td>TEXT</td><td>Convert to text</td></tr>
+<tr><td>TINY</td><td>Smallest positive number</td></tr>
+<tr><td>UBOUND</td><td>Upper bound of array</td></tr>
+<tr><td>UNION</td><td>Union of sets keeping only unique values</td></tr>
+<tr><td>UNSIGNED</td><td>Convert to unsigned value</td></tr>
+<tr><td>WORD</td><td>Convert to 16-bit integer</td></tr>
+<tr><td>WORD_UNSIGNED</td><td>Convert to 16-bit unsigned integer</td></tr>
+<tr><td>ZERO</td><td>Create array initialized to zero</td></tr>
+</table>
+<br>&nbsp;
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

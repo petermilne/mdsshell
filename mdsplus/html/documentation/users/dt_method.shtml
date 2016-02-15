@@ -1,0 +1,86 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - DTYPE_METHOD</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>Method Data Type</b>
+<P>MDSplus provides a method data type for describing an operation to be performed on
+an MDSplus device to be used as the task portion of an 
+<a href="dt_action.shtml" class="small">action data item</a>. MDSplus devices
+support various "methods" which can be performed on the device. For example, transient
+digitizer device may support an "INIT" method to prepare the device to acquire data and
+a "STORE" method which would retrieve the data from the physical device and store it into
+the device nodes in the MDSplus tree.
+<p>
+The method data type is a structure consisting of three fields followed by optional arguments to the method
+being performed. 
+<p>The first field is a timeout value specified in seconds. When the method is
+being performed on the device and a timeout is specified, a timer is started when the operation
+is started and if the operation is not completed before the specified timeout, the operation
+will be aborted abruptly. This field can either be omitted or should contain a value or expression which
+when evaluated will result in a scalar numeric value.
+<p>
+The next field in the method data type is the name of the method to be performed. This should contain
+a value or expression which when evaluated will result in a scalar text value representing a supported
+method for the device being operated on (i.e. "INIT", "STORE","EXECUTE"). The set of available methods
+is device specific.
+<p>
+The next field is the object on which this operation is to be performed. This should be a node reference
+to one of the nodes which make up the device, usually the top node in the device node structure.
+<p>
+These first three fields can be followed by optional parameters which will be interpretted by the
+implementation of the method. These fields are specific to the implementation of the various methods.
+<p>The following shows an example of creating an MDSplus method. This example
+is written in TDI (the MDSplus expression evaluator language).
+<p>
+<PRE>
+_MYACTION = BUILD_ACTION(
+             BUILD_DISPATCH(2,"CAMAC_SERVER","STORE",50,"A12_42_DONE"),
+             BUILD_METHOD(*,"STORE",A12_42)
+            )
+</PRE>
+The above example builds an action item consisting of a dispatch item and a method item. The dispatch item
+is specifying that this action should be run on the action server called "CAMAC_SERVER" during the "STORE"
+phase using sequential scheduling, executed after all actions with sequence numbers between 1-49 have completed.
+When this action completes the dispatcher should issue the MDSplus event called "A12_42_DONE"). The task portion
+of the action is a method item specifying the "STORE" action is to be performed on the A14_42 (tree node) device.
+<p>Normally actions are defined using tools such as the "traverser" and "actions" applications and the contents
+of actions are referenced by action dispatchers so you rarely need
+to build or access the parts of actions, dispatch and method items by hand. 
+<p>
+The following table lists some of the functions available for creating and accessing method:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00"><td><b>Function</b></td><td><b>Description</b></td></tr>
+
+<tr><td>BUILD_METHOD</td><td>Build a method structure</td></tr>
+<tr><td>MAKE_METHOD</td><td>Make a method structure</td></tr>
+<tr><td>METHOD_OF</td><td>Return the method name part of a method</td></tr>
+<tr><td>OBJECT_OF</td><td>Return the object part of a method</td></tr>
+<tr><td>TIME_OUT_OF</td><td>Return the timeout part of a method</td></tr>
+</table>
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

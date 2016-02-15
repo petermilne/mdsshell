@@ -1,0 +1,16 @@
+# MDSSHELL : MDSTCP thin client for x86 and xscale
+# $Id: README,v 1.1 2006/09/20 09:16:51 pgm Exp $
+#
+# To build documentation:
+doxygen
+
+# To install MDSplus tree support:
+sudo make install_canonical_tree_support
+
+# To build for xscale:
+make
+
+# to build for x86
+make CROSS=NO
+
+

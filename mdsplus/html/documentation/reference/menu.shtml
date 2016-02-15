@@ -1,0 +1,81 @@
+<html>
+
+<head>
+<title></title>
+</head>
+
+<body>
+
+<table>
+  <tr>
+    <td><b class="menu"><a class="small" href="../../intro/index.shtml">Introduction</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../index.shtml">Documentation</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../tutorial/index.shtml">- The MDSplus Tutorial</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../beginners/index.shtml">- Beginners' Guide</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../users/index.shtml">- Users' Guide</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="index.shtml">- Reference</a></b></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="tdi.shtml">TDI</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="../pppl_tcl/TCL_index.html">TCL</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="ccl.pdf">CCL</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="mdsplus_idl.html">IDL</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="small" href="c.shtml">C</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="f.shtml">Fortran</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="python.shtml">Python</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="perl.shtml">Perl</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="vb.shtml">Visual Basic</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="labview.shtml">Labview</a></td>
+  </tr>
+  <tr>
+    <td>&#149;<a class="smallmissing" xhref="matlab.shtml">Matlab</a></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../glossary.shtml">- Glossary</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="smallmissing" xhref="../../projects/index.shtml">Projects</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../../software/index.shtml">Software</a></b></td>
+  </tr>
+  <tr>
+    <td><b class="menu"><a class="small" href="../../links/index.shtml">Links</a></b></td>
+  </tr>
+  <tr>
+    <td></td>
+  </tr>
+  <tr>
+    <td><!--#include virtual="../../search.shtml" --> </td>
+  </tr>
+</table>
+</body>
+</html>

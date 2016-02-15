@@ -1,0 +1,692 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../../mdsplus_css.css" type="text/css">
+<title>MDSplus Data Types - Integer data types</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Documentation" -->
+<!--#include virtual="../../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<b>Integer Data Types in MDSplus</b><b></b>
+<p>MDSplus supports several formats of integers including 8-bit, 16-bit,
+32-bit, 64-bit and 128-bit signed and unsigned integers. The data is stored
+in 2's complement representation and little endian format. The endian is
+converted to big or little endian depending on the computer platform being
+used to reference the data. Like most programming languages, when operations
+are performed with values of different size, the values are converted to
+a common size (the largest of the values being operated on) before performing
+the operation. For example, if you were to add a 16-bit integer with a
+32-bit integer the 16-bit integer would first be converted to a 32-bit
+integer before performing the add operation.
+<p>Integers can be simple scalar values or regular arrays with one to seven
+dimensions. When loaded into MDSplus trees, integer arrays may be compressed
+using a non-destructive delta compression algorithm automatically depending
+on the characteristics of the node in the tree where the data is being
+stored. Decompression of this data occurs automatically when the data is
+referenced. Raw data from data acquisition hardware is often stored in
+integer format and often compresses to one third or less of its orginal
+size requiring less disk space for storage and network bandwidth when accessing
+the data remotely.
+<p><b>Expression evaluator (TDI) operations used on Integer Data Types</b><b></b>
+<p>The following table lists some of the more common operations performed
+on integer datatypes:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr BGCOLOR="#FFCC00">
+<td><b>Function</b></td>
+
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>ABS</td>
+
+<td>Absolute Value</td>
+</tr>
+
+<tr>
+<td>ABSSQ</td>
+
+<td>Absolute Value Squared</td>
+</tr>
+
+<tr>
+<td>ADD (+)</td>
+
+<td>Add</td>
+</tr>
+
+<tr>
+<td>ALL</td>
+
+<td>Determine if all values are true</td>
+</tr>
+
+<tr>
+<td>AND</td>
+
+<td>Logical And</td>
+</tr>
+
+<tr>
+<td>AND_NOT</td>
+
+<td>Logical And with negation of second</td>
+</tr>
+
+<tr>
+<td>ANY</td>
+
+<td>Determine if any values are true</td>
+</tr>
+
+<tr>
+<td>ARRAY</td>
+
+<td>Construct array (uninitialized values)</td>
+</tr>
+
+<tr>
+<td>BIT_SIZE</td>
+
+<td>Size in bits of data type</td>
+</tr>
+
+<tr>
+<td>BSEARCH</td>
+
+<td>Binary search in sorted table</td>
+</tr>
+
+<tr>
+<td>BTEST</td>
+
+<td>Test a bit of a number</td>
+</tr>
+
+<tr>
+<td>BYTE</td>
+
+<td>Convert to 8-bit signed data type</td>
+</tr>
+
+<tr>
+<td>BYTE_UNSIGNED</td>
+
+<td>Convert to 8-bit unsigned data type</td>
+</tr>
+
+<tr>
+<td>CHAR</td>
+
+<td>Convert to text character</td>
+</tr>
+
+<tr>
+<td>CONDITIONAL (test ? a : b)</td>
+
+<td>Select from 2 sources based on test value</td>
+</tr>
+
+<tr>
+<td>COUNT</td>
+
+<td>Count number of true elements</td>
+</tr>
+
+<tr>
+<td>CVT</td>
+
+<td>Convert to other data type</td>
+</tr>
+
+<tr>
+<td>DATE_TIME</td>
+
+<td>Convert 64-bit internal date format to ascii date and time string</td>
+</tr>
+
+<tr>
+<td>DBLE</td>
+
+<td>Double the precision, 8-bit values become 16-bit etc.</td>
+</tr>
+
+<tr>
+<td>DECOMPILE</td>
+
+<td>Convert to text representation</td>
+</tr>
+
+<tr>
+<td>DIAGONAL</td>
+
+<td>Create a diagonal matrix</td>
+</tr>
+
+<tr>
+<td>DIGITS</td>
+
+<td>Number of significant digits</td>
+</tr>
+
+<tr>
+<td>DIVIDE (/)</td>
+
+<td>Divide</td>
+</tr>
+
+<tr>
+<td>DOT_PRODUCT</td>
+
+<td>Dot-product multiplication</td>
+</tr>
+
+<tr>
+<td>ELBOUND</td>
+
+<td>Lower bound of array</td>
+</tr>
+
+<tr>
+<td>EQ (==)</td>
+
+<td>Tests for equality</td>
+</tr>
+
+<tr>
+<td>EQV</td>
+
+<td>Tests for logical equality</td>
+</tr>
+
+<tr>
+<td>ESHAPE</td>
+
+<td>Return shape of array or scalar</td>
+</tr>
+
+<tr>
+<td>ESIZE</td>
+
+<td>Total number of elements of array</td>
+</tr>
+
+<tr>
+<td>EUBOUND</td>
+
+<td>Upper bound of array</td>
+</tr>
+
+<tr>
+<td>FLOAT</td>
+
+<td>Convert to floating point</td>
+</tr>
+
+<tr>
+<td>GE (>=)</td>
+
+<td>Test for first greater or equal to second</td>
+</tr>
+
+<tr>
+<td>GT (>)</td>
+
+<td>Test for first greater than second</td>
+</tr>
+
+<tr>
+<td>HUGE</td>
+
+<td>Largest value of this data type</td>
+</tr>
+
+<tr>
+<td>IAND (&amp;)</td>
+
+<td>Bit-by-bit intersection</td>
+</tr>
+
+<tr>
+<td>IAND_NOT</td>
+
+<td>Bit-by-bit intersection with complement of second</td>
+</tr>
+
+<tr>
+<td>IBCLR</td>
+
+<td>Clear one bit to zero</td>
+</tr>
+
+<tr>
+<td>IBSET</td>
+
+<td>Set one bit to one</td>
+</tr>
+
+<tr>
+<td>IEOR</td>
+
+<td>Bit-by-bit exclusive or</td>
+</tr>
+
+<tr>
+<td>IEOR_NOT</td>
+
+<td>Bit-by-bit exclusive or with complement of second</td>
+</tr>
+
+<tr>
+<td>IF</td>
+
+<td>IF statement</td>
+</tr>
+
+<tr>
+<td>INAND</td>
+
+<td>Complement of bit-by-bit intersection</td>
+</tr>
+
+<tr>
+<td>INAND_NOT</td>
+
+<td>Complement of bit-by-bit intersection with complement of second</td>
+</tr>
+
+<tr>
+<td>INOR</td>
+
+<td>Complement of bit-by-bit union</td>
+</tr>
+
+<tr>
+<td>INOR_NOT</td>
+
+<td>Complement of bit-by-bit union with complement of second</td>
+</tr>
+
+<tr>
+<td>INOT</td>
+
+<td>Complement bit-by-bit</td>
+</tr>
+
+<tr>
+<td>INT</td>
+
+<td>Convert to signed integer</td>
+</tr>
+
+<tr>
+<td>INT_UNSIGNED</td>
+
+<td>Convert to unsigned integer</td>
+</tr>
+
+<tr>
+<td>IOR (|)</td>
+
+<td>Bit-by-bit inclusive or</td>
+</tr>
+
+<tr>
+<td>IOR_NOT</td>
+
+<td>Bit-by-bit union with complement of second</td>
+</tr>
+
+<tr>
+<td>ISHFT</td>
+
+<td>Logical shift</td>
+</tr>
+
+<tr>
+<td>LASTLOC</td>
+
+<td>Locate trailing edges of a set of true elements of a logical mask</td>
+</tr>
+
+<tr>
+<td>LBOUND</td>
+
+<td>Lower bound of array</td>
+</tr>
+
+<tr>
+<td>LE (&lt;=)</td>
+
+<td>Test for first less than or equal to second</td>
+</tr>
+
+<tr>
+<td>LOGICAL</td>
+
+<td>Convert to logical</td>
+</tr>
+
+<tr>
+<td>LONG</td>
+
+<td>Convert to 32-bit signed integer</td>
+</tr>
+
+<tr>
+<td>LONG_UNSIGNED</td>
+
+<td>Convert to 32-bit unsigned integer</td>
+</tr>
+
+<tr>
+<td>LT (&lt;)</td>
+
+<td>Test for first less than second</td>
+</tr>
+
+<tr>
+<td>MAP</td>
+
+<td>Element selection from an array</td>
+</tr>
+
+<tr>
+<td>MAX</td>
+
+<td>Maximum of argument list</td>
+</tr>
+
+<tr>
+<td>MAXLOC</td>
+
+<td>Determine location of maximum value</td>
+</tr>
+
+<tr>
+<td>MAXVAL</td>
+
+<td>Maximum value in an array</td>
+</tr>
+
+<tr>
+<td>MEAN</td>
+
+<td>Average value of the elements of an array</td>
+</tr>
+
+<tr>
+<td>MERGE</td>
+
+<td>Merge two arrays</td>
+</tr>
+
+<tr>
+<td>MIN</td>
+
+<td>Minimum of argument list</td>
+</tr>
+
+<tr>
+<td>MINLOC</td>
+
+<td>Determine location of minimum value</td>
+</tr>
+
+<tr>
+<td>MINVAL</td>
+
+<td>Minimum value in an array</td>
+</tr>
+
+<tr>
+<td>MOD</td>
+
+<td>Remainder</td>
+</tr>
+
+<tr>
+<td>MULTIPLY (*)</td>
+
+<td>Multiply</td>
+</tr>
+
+<tr>
+<td>NAND</td>
+
+<td>Negation of logical intersection</td>
+</tr>
+
+<tr>
+<td>NAND_NOT</td>
+
+<td>Negation of logical intersection with negation of second</td>
+</tr>
+
+<tr>
+<td>NE (!=)</td>
+
+<td>Test for inequality</td>
+</tr>
+
+<tr>
+<td>NEQV</td>
+
+<td>Test inequality of logical values</td>
+</tr>
+
+<tr>
+<td>NOR</td>
+
+<td>Negation of logical union of elements</td>
+</tr>
+
+<tr>
+<td>NOR_NOT</td>
+
+<td>Negation of logical union with negation of second</td>
+</tr>
+
+<tr>
+<td>NOT (!)</td>
+
+<td>Negate a logical</td>
+</tr>
+
+<tr>
+<td>OCTAWORD</td>
+
+<td>Convert to 128-bit value</td>
+</tr>
+
+<tr>
+<td>OCTAWORD_UNSIGNED</td>
+
+<td>Convert to 128-bit unsigned value</td>
+</tr>
+
+<tr>
+<td>OR (||)</td>
+
+<td>Logical union</td>
+</tr>
+
+<tr>
+<td>OR_NOT</td>
+
+<td>Logical union with negation of second</td>
+</tr>
+
+<tr>
+<td>PACK</td>
+
+<td>Pack and array under control of mask</td>
+</tr>
+
+<tr>
+<td>PRODUCT</td>
+
+<td>Product of all elements of an array</td>
+</tr>
+
+<tr>
+<td>QUADWORD</td>
+
+<td>Convert to 64-bit integer</td>
+</tr>
+
+<tr>
+<td>QUADWORD_UNSIGNED</td>
+
+<td>Convert to 64-bit unsigned integer</td>
+</tr>
+
+<tr>
+<td>SET_RANGE</td>
+
+<td>Set array bounds</td>
+</tr>
+
+<tr>
+<td>SHAPE</td>
+
+<td>Shape of array</td>
+</tr>
+
+<tr>
+<td>SHIFT_LEFT (&lt;&lt;)</td>
+
+<td>Bitwise shift of value</td>
+</tr>
+
+<tr>
+<td>SHIFT_RIGHT (>>)</td>
+
+<td>Bitwise shift of value</td>
+</tr>
+
+<tr>
+<td>SIGNED</td>
+
+<td>Convert to signed integer</td>
+</tr>
+
+<tr>
+<td>SIZE</td>
+
+<td>Total number of elements in an array</td>
+</tr>
+
+<tr>
+<td>SIZEOF</td>
+
+<td>Total number of bytes</td>
+</tr>
+
+<tr>
+<td>SORT</td>
+
+<td>Make index list of ascending array</td>
+</tr>
+
+<tr>
+<td>SORTVAL</td>
+
+<td>Rearrange array in ascending order</td>
+</tr>
+
+<tr>
+<td>SPREAD</td>
+
+<td>Replicate an array by adding a dimension</td>
+</tr>
+
+<tr>
+<td>SQUARE</td>
+
+<td>Product of number with itself</td>
+</tr>
+
+<tr>
+<td>SUBSCRIPT</td>
+
+<td>Pick certain elements of array</td>
+</tr>
+
+<tr>
+<td>SUBTRACT (-)</td>
+
+<td>Subtract</td>
+</tr>
+
+<tr>
+<td>SUM</td>
+
+<td>Sum all elements of array</td>
+</tr>
+
+<tr>
+<td>TEXT</td>
+
+<td>Convert to text</td>
+</tr>
+
+<tr>
+<td>UBOUND</td>
+
+<td>Upper bound of array</td>
+</tr>
+
+<tr>
+<td>UNION</td>
+
+<td>Union of sets keeping only unique values</td>
+</tr>
+
+<tr>
+<td>UNSIGNED</td>
+
+<td>Convert to unsigned value</td>
+</tr>
+
+<tr>
+<td>WORD</td>
+
+<td>Convert to 16-bit integer</td>
+</tr>
+
+<tr>
+<td>WORD_UNSIGNED</td>
+
+<td>Convert to 16-bit unsigned integer</td>
+</tr>
+
+<tr>
+<td>ZERO</td>
+
+<td>Create array initialized to zero</td>
+</tr>
+</table>
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>

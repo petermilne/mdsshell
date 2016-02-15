@@ -1,0 +1,32 @@
+#!/bin/sh 
+# loads mdsplus image from /dev/mtd8 
+# $Id: load.mdsplus,v 1.4 2006/12/07 16:23:14 pgm Exp $
+
+# load standard image
+
+mkdir /mdsplus
+gunzip </dev/mtd8 >/dev/ram3
+mount /dev/ram3 /mdsplus
+echo LD_LIBRARY_PATH=/mdsplus/lib:/mdsplus/glib	>>/etc/profile
+export LD_LIBRARY_PATH=/mdsplus/lib:/mdsplus/glib
+
+# start mdsip - use trampoline mdsip.inet to set MDS_PATH
+
+cat - >/etc/mdsip.inet <<EOF
+#!/bin/sh
+export LD_LIBRARY_PATH=/mdsplus/lib:/mdsplus/glib
+export MDS_PATH=/mdsplus/tdi
+
+PORT=\${1:-8000}
+/mdsplus/bin/mdsip -p \$PORT -h /etc/mdsip.hosts -c 9 2>&1 | logger -t mdsip
+EOF
+
+chmod a+rx /etc/mdsip.inet
+
+cat - >>/etc/inetd.conf <<EOF
+8000 stream tcp nowait root /etc/mdsip.inet mdsip.inet 8000
+8106 stream tcp nowait root /etc/mdsip.inet mdsip.inet 8106
+EOF
+
+killall -sighup inetd
+

@@ -1,0 +1,93 @@
+#!/bin/bash
+# make_acqtree <tree> [card,nchannels] ...
+# $Revision: 1.1 $
+
+help() {
+cat - <<EOF
+Instructions:
+
+add make_acqtree to your path (~/bin) or /usr/local/bin
+
+Shell script make_acqtree should be located in /usr/local/bin
+TDI funs used:
+/usr/local/mdsplus/tdi/d-tacq/add_cps_card.fun
+/usr/local/mdsplus/tdi/d-tacq/iii.fun
+
+
+Usage:
+cd mount-point-for-tree
+
+make_acqtree TREE   card,nchan [card,nchan]
+
+eg
+
+cd /mnt/mdsdata/trees0
+make_acqtree z3 acq196_078,32
+
+add tree_path statement to envsyms:
+
+sudo vi /usr/local/mdsplus/local/envsyms
+z3_path /mnt/mdsdata/trees/z3
+EOF
+}
+
+JOB=/tmp/make_acqtree.sh
+
+TREE=$1
+shift
+
+if [ "$1" = "" ]
+then
+	help
+	exit
+fi
+
+
+cat - >$JOB <<EOF
+#!/bin/bash
+
+echo building TREE $TREE at $PWD
+
+export ${TREE}_path=$(pwd)/$TREE
+
+mkdir -p $TREE
+
+tdic <<TDIC_EOF
+Tcl("edit/new $TREE");
+
+EOF
+while [ "$1" != "" ]
+do
+        BD=${1%%,*}
+	CH=${1##*,}
+        if [ "$CH" = "BD" ]
+        then
+               echo "Bad board def $1 MUST be BDNAME,NUMCHAN"
+               exit
+        fi
+        cat - >>$JOB <<EOF
+add_cps_card( "$BD", $CH );
+EOF
+        shift
+done
+
+
+cat - >>$JOB <<EOF
+Tcl("write");
+Tcl("close");
+quit
+TDIC_EOF
+
+echo
+echo
+echo '# add path to global mds environment like this:'
+echo echo ${TREE}_path $(pwd)/${TREE} '>>/usr/local/mdsplus/local/envsyms'
+
+EOF
+
+
+chmod u+rx $JOB
+$JOB
+
+
+

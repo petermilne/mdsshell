@@ -1,0 +1,4 @@
+# README for ./root - home directory contents for mdsPutCh
+# WARNING this directory is NOT empty!
+.mdsPutCh.nosh  - mdsPutCh variable initialization, no shell interpretation
+.mdsPutCh.sh	- mdsPutCh variable initialization, with shell interpretation

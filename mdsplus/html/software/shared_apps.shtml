@@ -1,0 +1,98 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="../mdsplus_css.css" type="text/css">
+<title>MDSplus Home Page</title>
+</head>
+
+<body>
+
+<!--#set var="SUBHEADING" value="Software" -->
+<!--#include virtual="../heading.shtml" -->
+
+</body>
+
+<table cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td>
+<table>
+<!--#include virtual="menu.shtml" -->
+</table>
+</td>
+<td>
+<!-- BEGIN: Put content here -->
+<p>MDSplus users have developed very interesting applications and tools which they are willing to share with the
+MDSplus community. If you have a package that you would like to add to this list, please send an email to
+<a href="mailto:webmaster@mdsplus.org">webmaster@mdsplus.org</a> including a URL for accessing your package.
+<P>
+<table cellpadding="2" cellspacing="2" border="1"
+ style="text-align: left; width: 100%;">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Package
+Name</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Description</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Author</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a
+ href="http://www.ipp.mpg.de/%7EWolfgang.Suttrop/mdsplus/">scilab</a><br>
+      </td>
+      <td style="vertical-align: top;">MDSplus client for Scilab<br>
+      </td>
+      <td style="vertical-align: top;">Wolfgang Suttrop<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a
+ href="http://www.ipp.mpg.de/%7EWolfgang.Suttrop/mdsplus/">mdsTcl</a><br>
+      </td>
+      <td style="vertical-align: top;">MDSplus client for Tcl/Tk<br>
+      </td>
+      <td style="vertical-align: top;">Wolfgang Suttrop<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a
+ href="http://www.ipp.mpg.de/%7EWolfgang.Suttrop/mdsplus/">mdsodbc</a><br>
+      </td>
+      <td style="vertical-align: top;">iODBC data base interface<br>
+      </td>
+      <td style="vertical-align: top;">Wolfgang Suttrop<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a
+ href="http://www.ipp.mpg.de/%7EWolfgang.Suttrop/mdsplus/">ASDEX
+Upgrade Data Access</a><br>
+      </td>
+      <td style="vertical-align: top;">Packages for MDSplus interface
+to ASDEX Upgrade shot files<br>
+      </td>
+      <td style="vertical-align: top;">Wolfgang Suttrop<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a
+ href="http://fusion.gat.com/~osborne/python.html">Python Interface
+</a><br>
+      </td>
+      <td style="vertical-align: top;">Python Packages including an MDSplus interface
+
+      </td>
+      <td style="vertical-align: top;">Tom Osborne<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<!-- END: put content here -->
+</td>
+</tr>
+</table>
+
+</html>
