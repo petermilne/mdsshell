@@ -5,8 +5,7 @@
 #ifndef __INPUTBLOCK_H__
 #define __INPUTBLOCK_H__
 
-/* specific to ACQ400 */
-extern int site;
+
 
 #define CONFIG_FILE "/etc/cal/caldef.xml"
 
@@ -134,7 +133,12 @@ class InputBlock : public PObject {
 	const char* devroot;
 	InputBlock(const char* _devroot);
 
- public:	
+	int site;
+
+ public:
+	void setSite(int _site) {
+		site = 1;
+	}
 	virtual ~InputBlock();
 	virtual TiXmlHandle getCalibrationHandle(void) = 0;
 	virtual int getNumChannels(void) = 0;

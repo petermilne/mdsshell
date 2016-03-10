@@ -414,13 +414,15 @@ class CommandElement : public SingleChildElement {
 
 
 class ConcreteInputBlock : public InputBlock {
+
+protected:
 	struct RangeElement {
 		TiXmlElement* element;
 		Range* cal_tab;      // @@ {0..channelCount} [0] is nominal 
 	};
 
 
-	void getVoltsRange(RangeElement& re);
+	virtual void getVoltsRange(RangeElement& re);
 
 	static void insertOrReplace(TiXmlNode* info, TiXmlElement* element) {
 		TiXmlHandle infoH(info);
@@ -934,21 +936,73 @@ public:
 		}	
 };
 
-int site = 1;
 
-class Acq420InputBlock : public ConcreteInputBlock {
+class Acq42xInputBlock : public ConcreteInputBlock {
 	char root[128];
 	const char* makeRoot() {
-		sprintf(root, "acq400.%d.knobs/", ::site);
+		sprintf(root, "acq400.%d.knobs/", site);
 		return root;
 	}
  public:
-	Acq420InputBlock(const char* fname, TiXmlDocument* _doc) :
+	Acq42xInputBlock(const char* fname, TiXmlDocument* _doc) :
 		ConcreteInputBlock(fname, _doc, makeRoot()) {
 		setRangeSelector(new ConcreteRangeSelector(this, "acq420", sw));
 		dbg(1, "Hello");
 	}
 };
+
+class Acq400InputBlock : public ConcreteInputBlock {
+ public:
+	Acq400InputBlock(const char* fname, TiXmlDocument* _doc) :
+		ConcreteInputBlock(fname, _doc, "") {
+			setRangeSelector(new DebugRangeSelector("default"));
+		}
+};
+class Acq480InputBlock : public Acq400InputBlock {
+	const char* dg;
+ public:
+	Acq480InputBlock(const char* fname, TiXmlDocument* _doc) :
+		Acq400InputBlock(fname, _doc) {
+		dg = data->Attribute("DG");
+		if (dg != 0){
+			dbg(1, "dg set %s", dg);
+		}
+	}
+
+	virtual Range getRange(int channel = 1) {
+		Range r = ConcreteInputBlock::getRange(channel);
+
+		if (dg != 0){
+			char knob[32];
+			char cmd[128];
+
+			sprintf(knob, dg, channel);
+			sprintf(cmd, "get.site %d %s", site, knob);
+			FILE *pp = popen(cmd, "r");
+			if (!pp){
+				perror(cmd);
+			}else{
+				float db = 0;
+				char rsp[128]; rsp[0] = '\0';
+
+				if (fgets(rsp, 128, pp) &&
+					sscanf(rsp, "%*s %f dB", &db) != 1){
+					fprintf(stderr, "WARNING: cmd \"%s\" rsp \"%s\"\n", cmd, rsp);
+				}
+				pclose(pp);
+				// more gain, less range, mult faster than div, use logs
+				float g = pow(10, -db/20);
+
+				dbg(1, "dB %.0f apply gain. range *= %.3f", db, g);
+				r.rmax *= g;
+				r.rmin *= g;
+			}
+		}
+		return r;
+
+	}
+};
+
 void ConcreteInputBlock::getVoltsRange(RangeElement& re) {
 	TiXmlNode *nominal_node;
 	Range* nominal = &re.cal_tab[0];
@@ -1018,8 +1072,12 @@ class BlockFactory {
 				return new Acq164InputBlock(fname, doc);
 			}else if (strstr(model, "ACQ132")){
 				return new Acq132InputBlock(fname, doc);
-			}else if (strncmp(model, "ACQ4", 4) == 0){
-				return new Acq420InputBlock(fname, doc);
+			}else if (strncmp(model, "ACQ42", 5) == 0){
+				return new Acq42xInputBlock(fname, doc);
+			}else if (strncmp(model, "ACQ48", 5) == 0) {
+				return new Acq480InputBlock(fname, doc);
+			}else if (strncmp(model, "ACQ4",  4) == 0) {
+				return new Acq400InputBlock(fname, doc);
 			}else{
 				err("AcqCalibration.Info.Model %s "
 				    "NOT SUPPORTED",

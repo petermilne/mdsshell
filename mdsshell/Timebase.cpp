@@ -260,7 +260,7 @@ public:
 			snprintf(dt_buf, MAXDT_BUF, 
 				"(%d * %.3g)",
 				 get_dt_multiplier(),	 
-				 (float)new_setting.stime/NSEC_PER_SEC);
+				 static_cast<double>(new_setting.stime)/NSEC_PER_SEC);
 
 			dbg(1, "dt_buf %p value:%s", dt_buf, dt_buf);
 		}

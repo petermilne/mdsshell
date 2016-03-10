@@ -928,7 +928,6 @@ static int mdsPutCh(InputBlock& inputBlock) {
 		    ch, 
 		    inputBlock.getRange(ch).rmin,
 		    inputBlock.getRange(ch).rmax );
-
 		expression.evaluate(
 			channel_exp, MAXEXP, inputBlock.getRange(ch));
 
@@ -1103,6 +1102,7 @@ int main(int argc, const char* argv[])
 	}
 	dbg(1, "instantiate inputBlock... config:%s", config_file);
 	InputBlock& inputBlock = InputBlock::getInstance(config_file);
+	inputBlock.setSite(site);
 	
 	if (nparams == 0){
 		/** command[s] on stdin - saves inputBlock overhead */
