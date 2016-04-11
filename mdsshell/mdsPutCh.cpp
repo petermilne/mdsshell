@@ -830,6 +830,7 @@ static void mdsPutChannel(int ch, const char* expr, Timebase& timebase, char* cm
 	char *cmdp = cmd_buf;
 
 	cmdp += sprintf(cmdp, "mdsPut --format short --expr %s ", expr);
+	cmdp += sprintf(cmdp, "--timebase %s ", GL.timebase);
 	cmdp += sprintf(cmdp, "--dim %d %s ",
 			timebase.getSamples(), 
 			sendfileOk(timebase)? "--sendfile": "--file");
