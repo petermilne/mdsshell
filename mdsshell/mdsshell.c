@@ -322,6 +322,8 @@ char *mdsshell_rev = BUILD;
 
 #include "acq-util.h"
 
+#include "acq400_fs_ioctl.h"
+
 #define DTYPE_NONE	-1
 
 extern void set_timeout(int timeout_secs, jmp_buf* env);
@@ -420,6 +422,46 @@ static int getImmediateData(struct MdsPutDescriptor* pd, struct GetDataDef* data
 	return pd->dims[0];
 }
 
+static int _setStartStide(FILE *fp, struct GetDataDef* datadef, unsigned el_size)
+{
+	/* start,samples,stride */
+	int start = 0, stride = 1, len = 0;
+	int dontcare;
+
+	if (sscanf(datadef->tbdef, ",*,%d", &stride) == 1){
+		dbg(1, "%d stride set %d", __LINE__, stride);
+	}else if (sscanf(datadef->tbdef, ",:,%d", &stride) == 1){
+		dbg(1, "%d stride set %d", __LINE__, stride);
+	}else if (sscanf(datadef->tbdef, "%d,%c,%d", &start, &dontcare, &stride) == 3){
+		dbg(1, "%d start, stride set %d,%d", __LINE__, start, stride);
+	}else if (sscanf(datadef->tbdef, "%d,%d,%d", &start, &len, &stride) >= 1){
+		dbg(1, "%d start, length, stride set %d,%d,%d", __LINE__, start, len, stride);
+	}else{
+		dbg(1, "%d TB \"%s\" ignored", __LINE__, datadef->tbdef);
+	}
+
+
+	if (start){
+		if (fseek(fp, start*el_size, SEEK_SET) != 0){
+			perror("fseek");
+			exit(1);
+		}
+	}
+	if (stride != 1){
+		if (ioctl(fileno(fp), ACQ400_FS_STRIDE, stride) != 0){
+			perror("ioctl");
+		}
+	}
+	return len;
+}
+static int setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_size)
+{
+	if (datadef->tbdef != 0){
+		return _setStartStide(fp, datadef, el_size);
+	}else{
+		return 0;
+	}
+}
 static int _getFileData(
 	struct MdsPutDescriptor* pd, struct GetDataDef* datadef,
 	void* dest, int nread)
@@ -427,6 +469,10 @@ static int _getFileData(
 	const char* fn = fname(datadef->filedef);
 	FILE* fp = fopen(fn, "r");
 	int rc;
+	int nr2 = setStartStride(fp, datadef, pd->element_size);
+	if (nr2){
+		nread = nr2;
+	}
 
 	dbg(3, "process file %s", fn);
 	if (!fp){
