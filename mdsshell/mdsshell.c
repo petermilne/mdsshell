@@ -541,53 +541,7 @@ static int fillData(
 	return nelems;
 }
 
-#ifdef __arm
-extern void  setSendFile(int enable);
 
-static int initSendFile(
-	struct MdsPutDescriptor* pd, const char* fname, int nelems
-	)
-{
-	int length = pd->element_size;
-	int max_nelems = 1;
-	int id;
-
-	int fd = open(fname, O_RDONLY);
-
-	if (fd <= 0){
-		iobPrintf(pd->out, "ERROR failed to open \"%s\"\n", 
-			  fname);
-		return errno;
-	}
-
-	dbg(2, "fd set %d\n", fd);
-
-	for (id = 0; id != pd->ndims; ++id){
-		max_nelems *= pd->dims[id];
-	}	
-
-	pd->max_nelems = max_nelems;
-	pd->len = length;
-	
-	makeDims(&pd->desc, DTYPE_NONE, (void*)fd,
-			pd->ndims, pd->dims, nelems, pd->element_size);
-	setSendFile(1);
-	dbg(3, "returns %d setSendFile(1) called", nelems);
-
-
-	return nelems;
-}
-
-static void cleanupSendFile(struct MdsPutDescriptor* pd)
-{
-	int fd = (int)pd->desc.ptr;
-	if (fd >= 0){
-		close(fd);
-	}
-	setSendFile(0);
-	dbg(3, "setSendFile(0) called");
-}
-#endif /* __arm */
 
 static void freeData(struct MdsPutDescriptor* pd)
 {
@@ -1234,7 +1188,6 @@ static int doMdsPut(int argc, const char *argv[], struct Buf* out)
 		char* dimdef;
 		char* file_def;
 		char* subdef;      /* offset, # elements */
-		int sendfile;
 	};
 	static struct SwitchArgs switch_defaults = {
 		.format_select = "short",
@@ -1242,7 +1195,6 @@ static int doMdsPut(int argc, const char *argv[], struct Buf* out)
 		.dimdef = "",
 		.file_def = 0,
 		.subdef = FULL_ARRAY,
-		.sendfile = 0
 	};
 	/* has to be static for opt_table to work */
 	static struct SwitchArgs sw;
@@ -1254,7 +1206,6 @@ static int doMdsPut(int argc, const char *argv[], struct Buf* out)
 		{ "subarray", 's', POPT_ARG_STRING, &sw.subdef, 's' },
 		{ "expr",   'e', POPT_ARG_STRING, &mds_put_expr, 'e' },
 		{ "file",   'f', POPT_ARG_STRING, &sw.file_def, 'f' },
-		{ "sendfile", 'S', POPT_ARG_STRING, &sw.file_def, 'S' },
 		{ "root",   't', POPT_ARG_STRING, &froot, 't' },
 		{ "help",   'h', POPT_ARG_NONE,   0, 'h' },
 		{ "usage",   'u', POPT_ARG_NONE,   0, 'u' },
@@ -1291,9 +1242,6 @@ static int doMdsPut(int argc, const char *argv[], struct Buf* out)
 			break;
 		case 'd':
 			ndims = getDims(sw.dimdef, dims, MAXDIMS);
-			break;
-		case 'S':
-			sw.sendfile = 1;
 			break;
 /*
  * we dont use POPT_ARG_AUTOHELP because it calls exit().
@@ -1338,24 +1286,12 @@ static int doMdsPut(int argc, const char *argv[], struct Buf* out)
 			putdesc.dims[id] = dims[id];
 		}
 		putdesc.out = out;
-#ifdef __arm
-		if (sw.sendfile){
-			int elems = 1;
-			int id;
 
-			for (id = 0; id != ndims; ++id){
-				elems *= dims[id];
-			}
-			
-			cleanupDesc = cleanupSendFile;
-			rc = initSendFile(&putdesc, sw.file_def, elems);
-		}else 
-#endif
-			if(sw.file_def != 0){
-				rc = fillData(&putdesc, getFileData, sw.file_def);
-			}else{
-				rc = fillData(&putdesc, getPipeData, value);
-			}
+		if(sw.file_def != 0){
+			rc = fillData(&putdesc, getFileData, sw.file_def);
+		}else{
+			rc = fillData(&putdesc, getPipeData, value);
+		}
 
 		if (rc > 0){
 			dbg(2, "MdsPut %s", field);

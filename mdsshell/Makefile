@@ -1,5 +1,6 @@
 # Makefile for mdsshell
 
+
 CROSS := YES
 DEBUG := NO
 
@@ -129,5 +130,8 @@ endif
 
 include ../d-bot.mak
 
+zynq:
+	./make.zynq
+	
 
 .PHONEY: install_canonical_tree_support
