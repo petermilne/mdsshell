@@ -60,6 +60,9 @@ PACKOPTS := --exclude-from=mdsshell/dontpack
 
 all: .depend $(XAPPS)
 
+zynq:
+	./make.zynq
+
 # DO NOT USE TRANSFORM. Simple shell script does it better
 
 $(patsubst %,$(EXEDIR)/%, mdsshell): $(MDSSHELL_OBJ)
@@ -130,8 +133,6 @@ endif
 
 include ../d-bot.mak
 
-zynq:
-	./make.zynq
 	
 
 .PHONEY: install_canonical_tree_support

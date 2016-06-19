@@ -322,6 +322,8 @@ char *mdsshell_rev = BUILD;
 
 #include "acq-util.h"
 
+#include "acq400_fs_ioctl.h"
+
 #define DTYPE_NONE	-1
 
 extern void set_timeout(int timeout_secs, jmp_buf* env);
@@ -388,9 +390,13 @@ static void makeDims(
 		struct descrip* valss, int dtype, void* ptr,
 		int ndims, int dims[], int nelems, int size);
 
-static int getImmediateData(struct MdsPutDescriptor* pd, const char* filedef)
+struct GetDataDef {
+	const char* filedef;
+	const char* tbdef;
+};
+static int getImmediateData(struct MdsPutDescriptor* pd, struct GetDataDef* datadef)
 {
-	const char* first = filedef+1;
+	const char* first = datadef->filedef+1;
 	char fmt[64];
 	void* dst = pd->desc.ptr;
 
@@ -416,45 +422,91 @@ static int getImmediateData(struct MdsPutDescriptor* pd, const char* filedef)
 	return pd->dims[0];
 }
 
+static int _setStartStide(FILE *fp, struct GetDataDef* datadef, unsigned el_size)
+{
+	/* start,samples,stride */
+	int start = 0, stride = 1, len = 0;
+	int dontcare;
+
+	if (sscanf(datadef->tbdef, ",*,%d", &stride) == 1){
+		dbg(1, "%d stride set %d", __LINE__, stride);
+	}else if (sscanf(datadef->tbdef, ",:,%d", &stride) == 1){
+		dbg(1, "%d stride set %d", __LINE__, stride);
+	}else if (sscanf(datadef->tbdef, "%d,%c,%d", &start, &dontcare, &stride) == 3){
+		dbg(1, "%d start, stride set %d,%d", __LINE__, start, stride);
+	}else if (sscanf(datadef->tbdef, "%d,%d,%d", &start, &len, &stride) >= 1){
+		dbg(1, "%d start, length, stride set %d,%d,%d", __LINE__, start, len, stride);
+	}else{
+		dbg(1, "%d TB \"%s\" ignored", __LINE__, datadef->tbdef);
+	}
+
+
+	if (start){
+		if (fseek(fp, start*el_size, SEEK_SET) != 0){
+			perror("fseek");
+			exit(1);
+		}
+	}
+	if (stride != 1){
+		if (ioctl(fileno(fp), ACQ400_FS_STRIDE, stride) != 0){
+			perror("ioctl");
+		}
+	}
+	return len;
+}
+static int setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_size)
+{
+	if (datadef->tbdef != 0){
+		return _setStartStide(fp, datadef, el_size);
+	}else{
+		return 0;
+	}
+}
 static int _getFileData(
-	struct MdsPutDescriptor* pd, const char* filedef, 
+	struct MdsPutDescriptor* pd, struct GetDataDef* datadef,
 	void* dest, int nread)
 {
-	FILE* fp = fopen(filedef, "r");
+	const char* fn = fname(datadef->filedef);
+	FILE* fp = fopen(fn, "r");
 	int rc;
+	int nr2 = setStartStride(fp, datadef, pd->element_size);
+	if (nr2){
+		nread = nr2;
+	}
 
-	dbg(3, "process file %s", filedef);
+	dbg(3, "process file %s", fn);
 	if (!fp){
-		iobPrintf(pd->out, "ERROR: failed to open %s\n", filedef);
+		iobPrintf(pd->out, "ERROR: failed to open %s\n", fn);
 		return -1;
 	}
 	rc = fread(dest, pd->element_size, nread, fp);
 	fclose(fp);
 
-	dbg(2, "process file %s returns %d", filedef, rc);
+	dbg(2, "process file %s returns %d", fn, rc);
 
 	return rc;
 }
 
-static int getFileData(struct MdsPutDescriptor* pd, const char* filedef)
+static int getFileData(struct MdsPutDescriptor* pd, struct GetDataDef* datadef)
 /** returns # elements */
 {
 	const char* end;
 
-	if ((end = strpbrk(filedef, LIST_SEPS)) == 0){
-		return _getFileData(pd, fname(filedef), 
+	if ((end = strpbrk(datadef->filedef, LIST_SEPS)) == 0){
+		return _getFileData(pd, datadef,
 				    pd->desc.ptr, pd->max_nelems);
 	}else{
 		/* foreach file in filedef read... */
 		int nelems = 0;
 
 		char thisfile[MAXFILE+1];
-		const char* start = filedef;
+		const char* start = datadef->filedef;
 		int rc;
 		void* dest = pd->desc.ptr;
 
 		
 		do {
+			struct GetDataDef _datadef;
 			if ((end = strpbrk(start, LIST_SEPS)) == 0){
 				end = start + strlen(start);
 			}
@@ -464,7 +516,9 @@ static int getFileData(struct MdsPutDescriptor* pd, const char* filedef)
 			}
 			strncpy(thisfile, start, end - start);
 			thisfile[end-start] = '\0';
-			rc = _getFileData(pd, fname(thisfile), dest, 
+			_datadef.filedef = thisfile;
+			_datadef.tbdef = 0;
+			rc = _getFileData(pd, &_datadef, dest,
 					  pd->max_nelems - nelems);
 			if (rc < 0){
 				iobPrintf(pd->out, "ERROR: read failed %s\n",
@@ -482,12 +536,13 @@ static int getFileData(struct MdsPutDescriptor* pd, const char* filedef)
 		return nelems;
 	}
 }
-static int getPipeData(struct MdsPutDescriptor* pd, const char* pipedef)
+static int getPipeData(struct MdsPutDescriptor* pd, struct GetDataDef* datadef)
 /** returns # elements */
 {
+	const char* pipedef = datadef->filedef;
 	/** if it's an immediate array decode it, else read from pipe */
 	if (pipedef[0] == IMMEDIATE_IDENT){
-		return getImmediateData(pd, pipedef);
+		return getImmediateData(pd, datadef);
 	}else{
 		int rc;
 		FILE* datapipe =  popen(pipedef, "r");
@@ -515,8 +570,8 @@ static int total_dims(struct MdsPutDescriptor* pd)
 }
 static int fillData(
 	struct MdsPutDescriptor* pd,
-	int (*getData)(struct MdsPutDescriptor* pd, const char* value),
-	const char* value)
+	int (*getData)(struct MdsPutDescriptor* pd, struct GetDataDef* datadef),
+	struct GetDataDef* datadef)
 {
 	int length = pd->element_size * total_dims(pd);
 	void *ptr = malloc(length);
@@ -529,9 +584,9 @@ static int fillData(
 	pd->desc.ptr = ptr;
 	pd->len = length;
 	
-	int nelems = getData(pd, value);
+	int nelems = getData(pd, datadef);
 	if (nelems <= 0){
-		iobPrintf(pd->out, "ERROR: failed to read %s\n", value);
+		iobPrintf(pd->out, "ERROR: failed to read %s\n", datadef->filedef);
 		return -1;
 	}
 
@@ -1188,6 +1243,7 @@ static int doMdsPut(int argc, const char *argv[], struct Buf* out)
 		char* dimdef;
 		char* file_def;
 		char* subdef;      /* offset, # elements */
+		char* timebase;
 	};
 	static struct SwitchArgs switch_defaults = {
 		.format_select = "short",
@@ -1209,9 +1265,12 @@ static int doMdsPut(int argc, const char *argv[], struct Buf* out)
 		{ "root",   't', POPT_ARG_STRING, &froot, 't' },
 		{ "help",   'h', POPT_ARG_NONE,   0, 'h' },
 		{ "usage",   'u', POPT_ARG_NONE,   0, 'u' },
+		{ "timebase", 'T', POPT_ARG_STRING, &sw.timebase, 0,
+		        "start,length,stride" },
 		POPT_TABLEEND
 	};
 
+	struct GetDataDef datadef;
 	memcpy(&sw, &switch_defaults, sizeof(sw));
 	poptContext opt_context = 
 		poptGetContext(argv[0], argc, argv, opt_table, 0);
@@ -1288,9 +1347,13 @@ static int doMdsPut(int argc, const char *argv[], struct Buf* out)
 		putdesc.out = out;
 
 		if(sw.file_def != 0){
-			rc = fillData(&putdesc, getFileData, sw.file_def);
+			datadef.filedef = sw.file_def;
+			datadef.tbdef = sw.timebase;
+			rc = fillData(&putdesc, getFileData, &datadef);
 		}else{
-			rc = fillData(&putdesc, getPipeData, value);
+			datadef.filedef = value;
+			datadef.tbdef = 0;
+			rc = fillData(&putdesc, getPipeData, &datadef);
 		}
 
 		if (rc > 0){
