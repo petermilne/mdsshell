@@ -809,6 +809,14 @@ public:
 		}
 	}
 
+	static const bool hasRangeSw(TiXmlDocument* doc) {
+		TiXmlElement* data = makeCalibrationHandle(doc).
+				FirstChild("Data").Element();
+		assert(data);
+		const char* sw = data->Attribute("SW");
+		return sw && strcmp(sw, "default") != 0;
+	}
+
 	const char* getModel(void) {
 		return getModel(doc);
 	}
@@ -1072,16 +1080,20 @@ class BlockFactory {
 				return new Acq164InputBlock(fname, doc);
 			}else if (strstr(model, "ACQ132")){
 				return new Acq132InputBlock(fname, doc);
-			}else if (strncmp(model, "ACQ42", 5) == 0){
-				return new Acq42xInputBlock(fname, doc);
-			}else if (strncmp(model, "ACQ48", 5) == 0) {
-				return new Acq480InputBlock(fname, doc);
 			}else if (strncmp(model, "ACQ4",  4) == 0) {
-				return new Acq400InputBlock(fname, doc);
-			}else{
-				err("AcqCalibration.Info.Model %s "
-				    "NOT SUPPORTED",
-				    model);
+				if (ConcreteInputBlock::hasRangeSw(doc)){
+					if (strncmp(model, "ACQ42", 5) == 0 ||
+					    strncmp(model, "ACQ437", 6) == 0){
+						return new Acq42xInputBlock(fname, doc);
+					}else if (strncmp(model, "ACQ48", 5) == 0) {
+						return new Acq480InputBlock(fname, doc);
+					}else{
+						err("AcqCalibration.Info.Model %s with ranges"
+							"NOT SUPPORTED", model);
+					}
+				}else{
+					return new Acq400InputBlock(fname, doc);
+				}
 			}
 		}else{
 			err("AcqCalibration.Info.Model field not found");
