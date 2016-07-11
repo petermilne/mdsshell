@@ -47,6 +47,7 @@ class SingleInputBlockWrapper : public InputBlockWrapper {
 		return _config_file;
 	}
 public:
+	static int debug;
 	SingleInputBlockWrapper(const char* config_file, int site = -1) :
 		inputBlock(InputBlock::getInstance(config_file))
 	{
@@ -58,6 +59,11 @@ public:
 	SingleInputBlockWrapper(int site) :
 		inputBlock(InputBlock::getInstance(configFileName(site)))
 	{
+		if (debug){
+			fprintf(stderr,
+				"SingleInputBlockWrapper %d \"%s\"\n",
+				site, configFileName(site));
+		}
 		inputBlock.setSite(site);
 	}
 	virtual Range getRange(int channel) {
@@ -74,6 +80,8 @@ public:
 	}
 };
 
+int SingleInputBlockWrapper::debug;
+
 class AggregatorInputBlockWrapper : public InputBlockWrapper {
 	std::vector<InputBlockWrapper*> inputBlocks;
 	int nchan;
@@ -82,7 +90,7 @@ class AggregatorInputBlockWrapper : public InputBlockWrapper {
 		strtk::std_string::token_list_type site_list;
 		strtk::split(",",sites,std::back_inserter(site_list));
 		strtk::std_string::token_list_type::iterator itr = site_list.begin();
-		while (site_list.end() != itr){
+		for (; site_list.end() != itr; ++itr){
 			int site = atoi(itr->first);
 			if (site > 0){
 				inputBlocks.push_back(new SingleInputBlockWrapper(site));
@@ -91,6 +99,9 @@ class AggregatorInputBlockWrapper : public InputBlockWrapper {
 		for (unsigned ii = 0; ii < inputBlocks.size(); ++ii){
 			nchan += inputBlocks[ii]->getNumChannels();
 		}
+		if (debug){
+			fprintf(stderr, "AggregatorInputBlockWrapper nchan %d\n", nchan);
+		}
 	}
 	int getMemberFromChannel(int channel, int* pchan = 0){
 		int ic1 = 0;
@@ -98,7 +109,13 @@ class AggregatorInputBlockWrapper : public InputBlockWrapper {
 		assert(channel <= nchan);
 
 		for (unsigned ii = 0; ii < inputBlocks.size(); ++ii, ic1 = ic2){
+
 			ic2 = ic1 + inputBlocks[ii]->getNumChannels();
+			if (debug){
+				fprintf(stderr,
+					"getMemberFromChannel() channel:%d ii:%d site:%d ic1:%d ic2:%d\n",
+					channel, ii, inputBlocks[ii]->getSite(0), ic1, ic2);
+			}
 			if (channel <= ic2){
 				if (pchan) *pchan = channel - ic1;
 				return ii;
@@ -107,6 +124,8 @@ class AggregatorInputBlockWrapper : public InputBlockWrapper {
 		return 0;
 	}
 public:
+	static int debug;
+
 	AggregatorInputBlockWrapper(): nchan(0)
 	{
 		FILE *pp = popen("sh -c 'eval $(get.site 0 aggregator);echo $sites'", "r");
@@ -114,6 +133,9 @@ public:
 		sites[0] = '\0';
 		fgets(sites, 80, pp);
 		pclose(pp);
+		if (debug){
+			fprintf(stderr, "AggregatorInputBlockWrapper() sites %s\n", sites);
+		}
 		parse(sites);
 	}
 	virtual Range getRange(int channel) {
@@ -133,8 +155,17 @@ public:
 		return _pchan;
 	}
 };
+
+int AggregatorInputBlockWrapper::debug;
+
 InputBlockWrapper& InputBlockWrapper::create(int site)
 {
+	if (getenv("AggregatorInputBlockWrapperDebug")){
+		AggregatorInputBlockWrapper::debug = atoi(getenv("AggregatorInputBlockWrapperDebug"));
+	}
+	if (getenv("SingleInputBlockWrapperDebug")){
+		SingleInputBlockWrapper::debug = atoi(getenv("AggregatorInputBlockWrapperDebug"));
+	}
 	if (site == -1){
 		return * new SingleInputBlockWrapper(CONFIG_FILE);
 	}else if (site == 0){
