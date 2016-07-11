@@ -280,7 +280,7 @@ public:
 };
 
 
-int site;			/* global share with InputBlock */
+int site = -1;			/* global share with InputBlock */
 
 static struct Globs {
 	const char *expr;
@@ -1081,19 +1081,32 @@ int process(int nparams, const char** params, InputBlock& inputBlock)
 
 #define MAXLINE 4096
 
+static InputBlock& createInputBlock(int site)
+{
+	if (site == -1){
+		return InputBlock::getInstance(CONFIG_FILE);
+/*
+	}else if (site == 0){
+		; // new stuff
+*/
+	}else{
+		char* _config_file = new char[80];
+		sprintf(_config_file, "/dev/sites/%d/caldef.xml", site);
+
+		InputBlock& inputBlock =  InputBlock::getInstance(_config_file);
+		inputBlock.setSite(site);
+		return inputBlock;
+	}
+}
+
 int main(int argc, const char* argv[])
 {
-	const char *config_file = CONFIG_FILE;
 	initContext();
 
 	const char** params;
 	int nparams = get_args(argc, argv, params);
 
-	if (site != 0){
-		char* _config_file = new char[80];
-		sprintf(_config_file, "/dev/sites/%d/caldef.xml");
-		config_file = _config_file;
-	}
+	InputBlock& inputBlock = createInputBlock(site);
 
 	/* parent may set COMMAND_SOCK=N where N is an open file descriptor */
 	if (atoi(COMMAND_SOCK) > 0){
@@ -1101,9 +1114,6 @@ int main(int argc, const char* argv[])
 	}else{
 		GL.mds =  new UnixSocket(COMMAND_SOCK);
 	}
-	dbg(1, "instantiate inputBlock... config:%s", config_file);
-	InputBlock& inputBlock = InputBlock::getInstance(config_file);
-	inputBlock.setSite(site);
 	
 	if (nparams == 0){
 		/** command[s] on stdin - saves inputBlock overhead */
