@@ -37,7 +37,7 @@ MDSSHELL_OBJ := $(patsubst %,$(OBJDIR)/%.o,$(MDSSHELL_SRC))
 MDSSHELL_INET_SRC := mdsshell.af_inet $(MDSSHELL_CORE)
 MDSSHELL_INET_OBJ := $(patsubst %,$(OBJDIR)/%.o,$(MDSSHELL_INET_SRC))
 
-MDSPUTCH_SRC := mdsPutCh $(MDSSHELL_UTIL) Timebase 
+MDSPUTCH_SRC := mdsPutCh InputBlockWrapper $(MDSSHELL_UTIL) Timebase 
 MDSPUTCH_OBJ := $(patsubst %,$(OBJDIR)/%.o,$(MDSPUTCH_SRC))
 
 MDSPUTCAL_SRC := mdsPutCal $(MDSSHELL_UTIL)  

@@ -191,7 +191,7 @@ int acq200_debug = 0;
 
 #include "parser.h"
 
-#include "../vin/InputBlock.h"
+#include "InputBlockWrapper.h"
 
 
 #include "Timebase.h"
@@ -245,6 +245,10 @@ public:
 	}
 	~CBuf() { delete [] buf; }
 };
+
+
+
+
 
 class MdsShellTransaction {
 	UnixSocket& us;
@@ -906,7 +910,7 @@ unsigned guard2 = 0xdeadbeef;
 
 
 
-static int mdsPutCh(InputBlock& inputBlock) {
+static int mdsPutCh(InputBlockWrapper& inputBlock) {
 	RootExpression expression("%top", GL.expr);
 	ChannelSelectionIterator it(*GL.channels);
 	Timebase* timebase = Timebase::create(GL.timebase, !norestore);
@@ -953,7 +957,7 @@ static void handleUsr2(int signum){
 	// do nothing
 
 }
-static int doRepeatMode(InputBlock& inputBlock) {
+static int doRepeatMode(InputBlockWrapper& inputBlock) {
         static struct sigaction sa = { { 0 } };
 	sa.sa_handler = handleUsr2;
 
@@ -1065,7 +1069,7 @@ int get_args(int argc, const char* argv[], const char **&params)
 	return argc2;	
 }  
 
-int process(int nparams, const char** params, InputBlock& inputBlock)
+int process(int nparams, const char** params, InputBlockWrapper& inputBlock)
 {
 	dbg(1, "make ChannelSelection %d", nparams);
 
@@ -1081,23 +1085,6 @@ int process(int nparams, const char** params, InputBlock& inputBlock)
 
 #define MAXLINE 4096
 
-static InputBlock& createInputBlock(int site)
-{
-	if (site == -1){
-		return InputBlock::getInstance(CONFIG_FILE);
-/*
-	}else if (site == 0){
-		; // new stuff
-*/
-	}else{
-		char* _config_file = new char[80];
-		sprintf(_config_file, "/dev/sites/%d/caldef.xml", site);
-
-		InputBlock& inputBlock =  InputBlock::getInstance(_config_file);
-		inputBlock.setSite(site);
-		return inputBlock;
-	}
-}
 
 int main(int argc, const char* argv[])
 {
@@ -1106,7 +1093,9 @@ int main(int argc, const char* argv[])
 	const char** params;
 	int nparams = get_args(argc, argv, params);
 
-	InputBlock& inputBlock = createInputBlock(site);
+	InputBlockWrapper& inputBlock = InputBlockWrapper::create(site);
+
+	dbg(1, "InputBlockWrapper with %d channels", inputBlock.getNumChannels());
 
 	/* parent may set COMMAND_SOCK=N where N is an open file descriptor */
 	if (atoi(COMMAND_SOCK) > 0){
