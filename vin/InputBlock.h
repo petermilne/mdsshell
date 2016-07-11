@@ -182,7 +182,7 @@ class InputBlock : public PObject {
 	virtual const char* getModel(void) = 0;
 
 	void setSite(int _site) {
-		site = 1;
+		site = _site;
 	}
 	int getSite() const {
 		return site;
