@@ -1104,24 +1104,22 @@ class BlockFactory {
 
 
 InputBlock& InputBlock::getInstance(const char* fname, const char* model)
+/* singleton no more */
 {
-	static InputBlock* instance;
+	InputBlock* instance = 0;
 
-	if (!instance){
-		TiXmlDocument* doc = new TiXmlDocument(fname);
-		if (doc->LoadFile()){
-			instance = BlockFactory::create(fname, doc);
+	TiXmlDocument* doc = new TiXmlDocument(fname);
+	if (doc->LoadFile()){
+		instance = BlockFactory::create(fname, doc);
 
-			if (!instance){
-				my_exit(-1);
-			}
-		}else{
-			err("Cal File \"%s\" not a cal file, "
-			      "run model default\n", fname);
+		if (!instance){
 			my_exit(-1);
 		}
+	}else{
+		err("Cal File \"%s\" not a cal file, "
+		      "run model default\n", fname);
+		my_exit(-1);
 	}
-
 	return *instance;
 }
 
