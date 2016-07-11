@@ -207,8 +207,7 @@ void iobFlush(
 	struct IoBuf *iob, struct UnixSocketConnection *connection)
 {
 	if (iob->out.len){
-		int rc;
-		rc = write(connection->fd_active, iob->out.buf, iob->out.len);
+		write(connection->fd_active, iob->out.buf, iob->out.len);
 		if (iob->out.error){
 			write(connection->fd_active, "EOF ERR\n", 8);
 		}else{

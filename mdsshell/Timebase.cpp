@@ -24,18 +24,6 @@ extern "C" {
 #define STIME_EXT	NSEC_PER_SEC
 
 
-static void _getRoot(char *root, char* file, char* buf, int maxbuf)
-{
-	char fname[128];
-	sprintf(fname, "%s/%s", root, file);
-
-	FILE *fp = fopen(fname, "r");
-	assert(fp);
-		
-	fgets(buf, maxbuf, fp);
-	fclose(fp);
-}
-
 class StartSampleStride {
 	int start;
 	int samples;

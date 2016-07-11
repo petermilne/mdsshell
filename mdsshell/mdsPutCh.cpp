@@ -303,7 +303,7 @@ static struct Globs {
 		/* .timebase = */ DEFTIMEBASE,
 		/* .subshots = */ "",
 		/* .subfield = */ "",
-		/* .dataroot_format = */ "/dev/acq200/data/%02d",
+		/* .dataroot_format = */ "/dev/acq400/data/%d/%02d",
 		0
 	};
 
@@ -819,11 +819,7 @@ void RootExpression::createEvaluations() {
 }
 
 
-static int sendfileOk(Timebase& timebase) {
-	return GL.sendfile == 1 && timebase.getStride() == 1;
-}
-
-static void mdsPutChannel(int ch, const char* expr, Timebase& timebase, char* cmd_buf, int max_buf){
+static void mdsPutChannel(int ch, const char* src_file, const char* expr, Timebase& timebase, char* cmd_buf, int max_buf){
 	dbg(1, "ch %02d expr \"%s\" timebase \"%s\" =>", ch, expr, 
 	     timebase.toString());
 
@@ -835,11 +831,8 @@ static void mdsPutChannel(int ch, const char* expr, Timebase& timebase, char* cm
 
 	cmdp += sprintf(cmdp, "mdsPut --format short --expr %s ", expr);
 	cmdp += sprintf(cmdp, "--timebase %s ", GL.timebase);
-	cmdp += sprintf(cmdp, "--dim %d %s ",
-			timebase.getSamples(), 
-			sendfileOk(timebase)? "--sendfile": "--file");
-	cmdp += sprintf(cmdp, GL.dataroot_format, ch);
-	strcat(cmdp, " ");
+	cmdp += sprintf(cmdp, "--dim %d %s %s ", timebase.getSamples(), "--file", src_file);
+
 	sprintf(tbuf, GL.field, ch);
 	strcat(cmdp, tbuf);
 
@@ -936,10 +929,13 @@ static int mdsPutCh(InputBlockWrapper& inputBlock) {
 		expression.evaluate(
 			channel_exp, MAXEXP, inputBlock.getRange(ch));
 
-		dbg(2, "evaluate done, call mdsPutChannel(%d, %s)",
-		    ch, channel_exp);
+		char src_file[128];
+		sprintf(src_file, GL.dataroot_format,
+				inputBlock.getSite(ch), inputBlock.pchan(ch));
+		dbg(2, "evaluate done, call mdsPutChannel(%d, %s, %s)",
+		    ch, src_file, channel_exp);
 
-		mdsPutChannel(ch, channel_exp, *timebase, cmd_buf, MAXCMD);
+		mdsPutChannel(ch, src_file, channel_exp, *timebase, cmd_buf, MAXCMD);
 
 		dbg(2, "mdsPutChannel() returned guard0:%x guard1:%x guard2:%x", guard0, guard1, guard2);
 	}
@@ -1084,7 +1080,6 @@ int process(int nparams, const char** params, InputBlockWrapper& inputBlock)
 } 
 
 #define MAXLINE 4096
-
 
 int main(int argc, const char* argv[])
 {

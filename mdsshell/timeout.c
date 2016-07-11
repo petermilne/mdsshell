@@ -24,12 +24,14 @@ static void alarm_handler(int signum) {
 static void install_handlers(void) {
 	static int installed = 0;
 
-        struct sigaction sa;
-        memset(&sa, 0, sizeof(sa));
-        sa.sa_handler = alarm_handler;
-        if (sigaction(SIGALRM, &sa, NULL)) perror ("sigaction");
+	if (!installed){
+		struct sigaction sa;
+		memset(&sa, 0, sizeof(sa));
+		sa.sa_handler = alarm_handler;
+		if (sigaction(SIGALRM, &sa, NULL)) perror ("sigaction");
 
-	installed = 1;
+		installed = 1;
+	}
 }
 
 void set_timeout(int timeout_secs, jmp_buf* env)

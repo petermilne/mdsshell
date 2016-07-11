@@ -29,13 +29,15 @@
 #include "../vin/InputBlock.h"
 
 class InputBlockWrapper {
-
 public:
 	virtual ~InputBlockWrapper() {};
 	static InputBlockWrapper& create(int site);
 
 	virtual Range getRange(int channel = 1) = 0;
 	virtual int getNumChannels(void) = 0;
+
+	virtual int getSite(int lchan) = 0;
+	virtual int pchan(int lchan) = 0;
 };
 
 

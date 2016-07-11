@@ -49,7 +49,7 @@ struct UnixSocket {
 	const char *name;
 	struct sockaddr_un unx_addr;
 	struct sockaddr *address;
-	int addr_len;
+	socklen_t addr_len;
 };
 
 struct UnixSocketConnection {

@@ -88,8 +88,8 @@ const char* COMMAND_SOCK = _COMMAND_SOCK;
 
 
 // canonical subfields
-char* GAIN_V = "GAIN_V";
-char* OFFSET_V = "OFFSET_V";
+const char* GAIN_V = "GAIN_V";
+const char* OFFSET_V = "OFFSET_V";
 
 extern "C" int readline( int fd, char *bufptr, size_t len );
 
@@ -264,7 +264,6 @@ static int mdsPutCal(InputBlock& inputBlock) {
 
 		dbg(1, "ch[%2d] gain:%f offset:%f", ch, gain_v, offset_v);
 
-		char command[128];
 		char field_exp[128];
 
 		sprintf(field_exp, GL.field, ch);
@@ -276,10 +275,7 @@ static int mdsPutCal(InputBlock& inputBlock) {
 	return 0;
 }
 
-static void handleUsr2(int signum){
-	// do nothing
 
-}
 
 static struct poptOption opt_table[] = {
 { "field", 'F', POPT_ARG_STRING, &GL.field, 0,

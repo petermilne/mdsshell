@@ -27,6 +27,7 @@
 #include <vector>
 #include <string>
 
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -65,6 +66,12 @@ public:
 	virtual int getNumChannels(void) {
 		return inputBlock.getNumChannels();
 	}
+	virtual int getSite(int lchan) {
+		return inputBlock.getSite();
+	}
+	virtual int pchan(int lchan) {
+		return lchan;
+	}
 };
 
 class AggregatorInputBlockWrapper : public InputBlockWrapper {
@@ -85,6 +92,20 @@ class AggregatorInputBlockWrapper : public InputBlockWrapper {
 			nchan += inputBlocks[ii]->getNumChannels();
 		}
 	}
+	int getMemberFromChannel(int channel, int* pchan = 0){
+		int ic1 = 0;
+		int ic2;
+		assert(channel <= nchan);
+
+		for (unsigned ii = 0; ii < inputBlocks.size(); ++ii, ic1 = ic2){
+			ic2 = ic1 + inputBlocks[ii]->getNumChannels();
+			if (channel <= ic2){
+				if (pchan) *pchan = channel - ic1;
+				return ii;
+			}
+		}
+		return 0;
+	}
 public:
 	AggregatorInputBlockWrapper(): nchan(0)
 	{
@@ -96,18 +117,20 @@ public:
 		parse(sites);
 	}
 	virtual Range getRange(int channel) {
-		int ic1 = 0;
-		int ic2;
-		for (unsigned site = 0; site < inputBlocks.size(); ++site, ic1 = ic2){
-			ic2 = ic1 + inputBlocks[site]->getNumChannels();
-			if (channel <= ic2){
-				return inputBlocks[site]->getRange(channel-ic1);
-			}
-		}
-		return * new Range(0,0);
+		int pchan = 0;
+		int ii = getMemberFromChannel(channel, &pchan);
+		return inputBlocks[ii]->getRange(pchan);
 	}
 	virtual int getNumChannels(void) {
 		return nchan;
+	}
+	virtual int getSite(int lchan) {
+		return inputBlocks[getMemberFromChannel(lchan)]->getSite(0);
+	}
+	virtual int pchan(int lchan) {
+		int _pchan = 0;
+		getMemberFromChannel(lchan, &_pchan);
+		return _pchan;
 	}
 };
 InputBlockWrapper& InputBlockWrapper::create(int site)
