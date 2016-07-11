@@ -136,9 +136,7 @@ class InputBlock : public PObject {
 	int site;
 
  public:
-	void setSite(int _site) {
-		site = 1;
-	}
+
 	virtual ~InputBlock();
 	virtual TiXmlHandle getCalibrationHandle(void) = 0;
 	virtual int getNumChannels(void) = 0;
@@ -182,6 +180,13 @@ class InputBlock : public PObject {
 
 	const char* getDevRoot(void);
 	virtual const char* getModel(void) = 0;
+
+	void setSite(int _site) {
+		site = 1;
+	}
+	void getSite() const {
+		return site;
+	}
 };
 
 
