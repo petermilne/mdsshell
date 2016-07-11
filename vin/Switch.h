@@ -22,7 +22,7 @@ class SwitchFactory {
 
  public:
 	static Switch* create(
-		const char* model, int is, 
+		const char* model, int site, int is,
 		const char* root, const char*file);
 
 	static void enableEmulation(unsigned short* _ebuf);

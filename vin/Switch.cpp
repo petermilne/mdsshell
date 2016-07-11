@@ -16,8 +16,6 @@
 
 extern void my_exit(int eno);
 
-extern int site;
-
 class DefaultSwitch : public Switch {
  public:
 	DefaultSwitch() {}
@@ -271,13 +269,16 @@ SimpleSwitch* M5_TopsideSwitch::logical[2];
 
 
 class Acq400Switch : public Switch {
+	const int site;
 	const char* knob;
 	const char* knob_base;
 	int nchan;
 	char* switch_string;
 
+
  public:
-	Acq400Switch(const char* _knob) : knob(_knob), switch_string(0)
+	Acq400Switch(int _site, const char* _knob) : site(_site),
+		knob(_knob), switch_string(0)
  	{
 		if (strcmp(knob, "gains") == 0){
 			knob_base = "gain";
@@ -299,14 +300,14 @@ class Acq400Switch : public Switch {
 	virtual int setState(int channel, int value) {
 		char cmd[128];
 		switch_string[channel-1] = value + '0';
-		sprintf(cmd, "set.site %d %s%d=%d", ::site, knob_base, channel, value);
+		sprintf(cmd, "set.site %d %s%d=%d", site, knob_base, channel, value);
 		FILE *fp = popen(cmd, "w");
 		pclose(fp);
 		return 0;
 	}
 	virtual int read() {
 		char query[128];
-		sprintf(query, "get.site %d %s", ::site, knob);
+		sprintf(query, "get.site %d %s", site, knob);
 		FILE* fp = popen(query, "r");
 		fgets(query, 128, fp);
 		chomp(query);
@@ -333,14 +334,14 @@ void SwitchFactory::enableEmulation(unsigned short *_ebuf) {
 
 /** @todo: for host side operation, create "in-memory switch option */
 Switch* SwitchFactory::create(
-	const char* model, int is, 
+	const char* model, int site, int is,
 	const char* root, const char*file){
 
 
 	SimpleSwitch* the_switch;
 /* select on model, is, create appropriate switch */
 	if (strstr(model, "acq420")){
-		return new Acq400Switch(file);
+		return new Acq400Switch(site, file);
 	}else if (strstr(model, "M2")){
 
 		if (is == 0){

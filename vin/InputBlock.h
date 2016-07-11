@@ -184,7 +184,7 @@ class InputBlock : public PObject {
 	void setSite(int _site) {
 		site = 1;
 	}
-	void getSite() const {
+	int getSite() const {
 		return site;
 	}
 };

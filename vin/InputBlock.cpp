@@ -219,7 +219,7 @@ class ConcreteRangeSelector : public RangeSelector {
 		for (tok = swbuf;
 		     (tok = strtok_r(tok, ",", &swbuf2)) != 0; ++is, tok = 0){
 			switches[is] = SwitchFactory::create(
-				model, is, input_block->getDevRoot(), tok);
+				model, input_block->getSite(), is, input_block->getDevRoot(), tok);
 		}
 
 		dbg(2, "99", SW);
