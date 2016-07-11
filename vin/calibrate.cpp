@@ -181,7 +181,7 @@
 
 int acq200_debug;
 
-extern int site;
+int site;
 
 static int acq200_zero;			/** adjust for code 0x0000 = 0V */
 static double acq200_zcode_volts;	/** code 0x000 = xV */
@@ -800,6 +800,7 @@ int main( int argc, const char* argv[] )
 
 	dbg(2, "GB.nmean %d", GB.nmean);
 	InputBlock& inputBlock = InputBlock::getInstance(config_file);
+	inputBlock.setSite(::site);
 	ChannelSelection* selection = 
 		cs_def==0?
 		new ChannelSelection(inputBlock.getNumChannels(), ALL):
