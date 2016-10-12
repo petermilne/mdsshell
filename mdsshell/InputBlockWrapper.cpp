@@ -76,6 +76,7 @@ public:
 		return inputBlock.getSite();
 	}
 	virtual int pchan(int lchan) {
+		if (debug) fprintf(stderr, "SingleInputBlockWrapper::pchan(%d)\n", lchan);
 		return lchan;
 	}
 };
