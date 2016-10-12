@@ -52,6 +52,7 @@ export ${TREE}_path=$(pwd)/$TREE
 
 mkdir -p $TREE
 
+
 tdic <<TDIC_EOF
 Tcl("edit/new $TREE");
 
@@ -65,9 +66,15 @@ do
                echo "Bad board def $1 MUST be BDNAME,NUMCHAN"
                exit
         fi
-        cat - >>$JOB <<EOF
-add_card( "$BD", $CH );
-EOF
+	# field width CH01 or CH001
+	if [ $CH -gt 99 ]; then
+		ND=3
+	else
+		ND=2
+	fi
+        cat - >>$JOB <<EOF2
+add_card( "$BD", $CH, $ND );
+EOF2
         shift
 done
 

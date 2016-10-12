@@ -1,4 +1,4 @@
-fun public add_card(in _node, in _nchan)
+fun public add_card(in _node, in _nchan, in _ndigits)
 {
 	Tcl("set def \\TOP");
 	_card="."//_node;
@@ -17,7 +17,7 @@ fun public add_card(in _node, in _nchan)
 
 	for(_i=1; _i<= _nchan; _i++)
 	{
-		_field=":CH"//iii(_i,2);
+		_field=":CH"//iii(_i,_ndigits);
 		Tcl("add node/usage=signal "//_field);
 		Tcl("set node/nocompress_on_put "//_field);
 
