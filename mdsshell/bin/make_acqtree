@@ -28,6 +28,8 @@ add tree_path statement to envsyms:
 
 sudo vi /usr/local/mdsplus/local/envsyms
 z3_path /mnt/mdsdata/trees/z3
+
+newer mdsplus versions appear to use /etc/mdsplus.conf
 EOF
 }
 
