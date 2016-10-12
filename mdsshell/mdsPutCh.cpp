@@ -978,7 +978,7 @@ static struct poptOption opt_table[] = {
 { "field", 'F', POPT_ARG_STRING, &GL.field, 0,
 	"mdsplus field name %02d substitutes channel" },
 { "dataroot-format", 'D', POPT_ARG_STRING, &GL.dataroot_format, 0,
-		"source data format, %02d substitutes channel" },
+	"source data format, eg /dev/acq400/data/%d/%02d %d: site, %02d substitutes channel" },
 { "timebase", 'T', POPT_ARG_STRING, &GL.timebase, 0,
         "start,length,stride, default: all [" DEFTIMEBASE "]" },
 { "subshots", 'S', POPT_ARG_INT, &GL.subshots, 'S',
