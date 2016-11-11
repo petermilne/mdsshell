@@ -23,6 +23,8 @@
  * TODO
 \* ------------------------------------------------------------------------- */
 
+#include "local.h"
+#include "acq-util.h"
 
 #include <vector>
 #include <string>
@@ -49,7 +51,7 @@ class SingleInputBlockWrapper : public InputBlockWrapper {
 public:
 	static int debug;
 	SingleInputBlockWrapper(const char* config_file, int site = -1) :
-		inputBlock(InputBlock::getInstance(config_file))
+		inputBlock(InputBlock::getInstance(config_file, site))
 	{
 		if (site != -1){
 			inputBlock.setSite(site);
@@ -57,7 +59,7 @@ public:
 	}
 
 	SingleInputBlockWrapper(int site) :
-		inputBlock(InputBlock::getInstance(configFileName(site)))
+		inputBlock(InputBlock::getInstance(configFileName(site), site))
 	{
 		if (debug){
 			fprintf(stderr,
@@ -87,16 +89,22 @@ class AggregatorInputBlockWrapper : public InputBlockWrapper {
 	std::vector<InputBlockWrapper*> inputBlocks;
 	int nchan;
 
-	void parse(std::string sites) {
-		strtk::std_string::token_list_type site_list;
-		strtk::split(",",sites,std::back_inserter(site_list));
-		strtk::std_string::token_list_type::iterator itr = site_list.begin();
-		for (; site_list.end() != itr; ++itr){
-			int site = atoi(itr->first);
+	void parse(char* sites) {
+		char* site_args[8];
+		int nsites = strsplit(sites, site_args, 8, ",");
+
+		if (debug) fprintf(stderr, "%s nsites:%d\n", _PFN, nsites);
+
+		for (int ii = 0; ii != nsites; ++ii){
+			int site = atoi(site_args[ii]);
+			if (debug){
+				fprintf(stderr, "%s site:%d\n", _PFN, site);
+			}
 			if (site > 0){
 				inputBlocks.push_back(new SingleInputBlockWrapper(site));
 			}
 		}
+
 		for (unsigned ii = 0; ii < inputBlocks.size(); ++ii){
 			nchan += inputBlocks[ii]->getNumChannels();
 		}
@@ -134,6 +142,15 @@ public:
 		sites[0] = '\0';
 		fgets(sites, 80, pp);
 		pclose(pp);
+
+		// chomp()
+		for (int rr = strlen(sites)-1; rr > 0; --rr){
+			if (strspn(sites+rr, "\n\r ") > 0){
+				sites[rr] = '\0';
+			}else{
+				break;
+			}
+		}
 		if (debug){
 			fprintf(stderr, "AggregatorInputBlockWrapper() sites %s\n", sites);
 		}

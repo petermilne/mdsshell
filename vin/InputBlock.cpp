@@ -156,11 +156,13 @@ void getVoltsRange(TiXmlNode* data, const char* _sw) {
 }
 
 
-InputBlock::InputBlock(const char* _devroot)
+InputBlock::InputBlock(const char* _devroot, int _site) : site(_site)
 {
 	char* buf = new char[strlen(_devroot)+20];
 	sprintf(buf, "/dev/%s", _devroot);
 	devroot = buf;
+
+	dbg(1, "%s devroot \"%s\" site %d\n", _PFN, devroot, site);
 }
 
 InputBlock::~InputBlock()
@@ -551,8 +553,8 @@ protected:
 	
 	ConcreteInputBlock(		
 		const char* _fname, TiXmlDocument* _doc,
-		const char* _devroot) :
-		InputBlock(_devroot),
+		const char* _devroot, int _site = 0) :
+		InputBlock(_devroot, _site),
 		fname(_fname), doc(_doc) {
 
 		TiXmlHandle calHandle = makeCalibrationHandle(doc);
@@ -952,8 +954,8 @@ class Acq42xInputBlock : public ConcreteInputBlock {
 		return root;
 	}
  public:
-	Acq42xInputBlock(const char* fname, TiXmlDocument* _doc) :
-		ConcreteInputBlock(fname, _doc, makeRoot()) {
+	Acq42xInputBlock(const char* fname, TiXmlDocument* _doc, int _site) :
+		ConcreteInputBlock(fname, _doc, makeRoot(), _site) {
 		setRangeSelector(new ConcreteRangeSelector(this, "acq420", sw));
 		dbg(1, "Hello");
 	}
@@ -961,16 +963,16 @@ class Acq42xInputBlock : public ConcreteInputBlock {
 
 class Acq400InputBlock : public ConcreteInputBlock {
  public:
-	Acq400InputBlock(const char* fname, TiXmlDocument* _doc) :
-		ConcreteInputBlock(fname, _doc, "") {
+	Acq400InputBlock(const char* fname, TiXmlDocument* _doc, int _site) :
+		ConcreteInputBlock(fname, _doc, "", _site) {
 			setRangeSelector(new DebugRangeSelector("default"));
 		}
 };
 class Acq480InputBlock : public Acq400InputBlock {
 	const char* dg;
  public:
-	Acq480InputBlock(const char* fname, TiXmlDocument* _doc) :
-		Acq400InputBlock(fname, _doc) {
+	Acq480InputBlock(const char* fname, TiXmlDocument* _doc, int _site) :
+		Acq400InputBlock(fname, _doc, _site) {
 		dg = data->Attribute("DG");
 		if (dg != 0){
 			dbg(1, "dg set %s", dg);
@@ -1062,7 +1064,7 @@ void ConcreteInputBlock::getVoltsRange(RangeElement& re) {
 
 class BlockFactory {
  public:
-	static InputBlock* create(const char* fname, TiXmlDocument* doc) {
+	static InputBlock* create(const char* fname, TiXmlDocument* doc, int site) {
 		TiXmlHandle docHandle(doc);
 		
 		const char* model = ConcreteInputBlock::getModel(doc);
@@ -1084,15 +1086,15 @@ class BlockFactory {
 				if (ConcreteInputBlock::hasRangeSw(doc)){
 					if (strncmp(model, "ACQ42", 5) == 0 ||
 					    strncmp(model, "ACQ437", 6) == 0){
-						return new Acq42xInputBlock(fname, doc);
+						return new Acq42xInputBlock(fname, doc, site);
 					}else if (strncmp(model, "ACQ48", 5) == 0) {
-						return new Acq480InputBlock(fname, doc);
+						return new Acq480InputBlock(fname, doc, site);
 					}else{
 						err("AcqCalibration.Info.Model %s with ranges"
 							"NOT SUPPORTED", model);
 					}
 				}else{
-					return new Acq400InputBlock(fname, doc);
+					return new Acq400InputBlock(fname, doc, site);
 				}
 			}
 		}else{
@@ -1103,14 +1105,16 @@ class BlockFactory {
 };
 
 
-InputBlock& InputBlock::getInstance(const char* fname, const char* model)
+InputBlock& InputBlock::getInstance(const char* fname, int site)
 /* singleton no more */
 {
 	InputBlock* instance = 0;
 
+	dbg(1, "%s fname:%s site:%d\n", _PFN, fname, site);
+
 	TiXmlDocument* doc = new TiXmlDocument(fname);
 	if (doc->LoadFile()){
-		instance = BlockFactory::create(fname, doc);
+		instance = BlockFactory::create(fname, doc, site);
 
 		if (!instance){
 			my_exit(-1);

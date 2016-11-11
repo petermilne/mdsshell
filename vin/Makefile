@@ -62,6 +62,8 @@ all:  lib apps crossed-wires
 
 
 lib: $(LIBDIR)/$(LIBFILE)
+	echo zynq cp -va a9/lib/* ../../../lib/
+	cp -va a9/lib/* ../../../lib/
 
 apps: $(XAPPS)
 

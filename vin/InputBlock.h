@@ -131,8 +131,7 @@ class InputBlock : public PObject {
 /** Factory Class */
  protected:
 	const char* devroot;
-	InputBlock(const char* _devroot);
-
+	InputBlock(const char* _devroot, int _site = 0);
 	int site;
 
  public:
@@ -163,8 +162,7 @@ class InputBlock : public PObject {
 
 	virtual void print(void) = 0;
 
-	static InputBlock& getInstance(
-		const char* fname, const char* model = 0);
+	static InputBlock& getInstance(const char* fname, int site = -1);
 
 	virtual void finalize(void) {}
 	virtual void validate(void) {}

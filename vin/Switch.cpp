@@ -308,6 +308,7 @@ class Acq400Switch : public Switch {
 	virtual int read() {
 		char query[128];
 		sprintf(query, "get.site %d %s", site, knob);
+		dbg(1, "Acq400Switch::read() query: \"%s\"\n", query);
 		FILE* fp = popen(query, "r");
 		fgets(query, 128, fp);
 		chomp(query);
@@ -335,7 +336,7 @@ void SwitchFactory::enableEmulation(unsigned short *_ebuf) {
 /** @todo: for host side operation, create "in-memory switch option */
 Switch* SwitchFactory::create(
 	const char* model, int site, int is,
-	const char* root, const char*file){
+	const char* root, const char* file){
 
 
 	SimpleSwitch* the_switch;
