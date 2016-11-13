@@ -12,7 +12,7 @@ INCS=-I ../mdsplus/include -I../include -I../../../include/
 
 
 ifeq (YES, $(CROSS))
-CFLAGS += $(INCS)  -D__arm $(RELEASE_CFLAGS) 
+CFLAGS += $(INCS)  -D__arm -D__zynq $(RELEASE_CFLAGS) 
 LIBS=-L../../../lib/ -L../mdsplus/lib/ -l popt -l acq -lMdsIpShr
 else
 CFLAGS += $(INCS)

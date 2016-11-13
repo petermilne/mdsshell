@@ -283,8 +283,12 @@ public:
 	}
 };
 
-
-int site = -1;			/* global share with InputBlock */
+#ifdef __zynq
+#define DEFSITE	0
+#else
+#define DEFSITE -1
+#endif
+int site = DEFSITE;  		/* global share with InputBlock */
 
 static struct Globs {
 	const char *expr;
