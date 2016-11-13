@@ -948,20 +948,21 @@ public:
 
 
 class Acq42xInputBlock : public ConcreteInputBlock {
-	char root[128];
-	const char* makeRoot() {
-		sprintf(root, "acq400.%d.knobs/", site);
+	static const char* makeRoot(int _site) {
+		char * root = new char[128];
+		sprintf(root, "acq400.%d.knobs/", _site);
 		return root;
 	}
  public:
 	Acq42xInputBlock(const char* fname, TiXmlDocument* _doc, int _site) :
-		ConcreteInputBlock(fname, _doc, makeRoot(), _site) {
+		ConcreteInputBlock(fname, _doc, makeRoot(_site), _site) {
 		setRangeSelector(new ConcreteRangeSelector(this, "acq420", sw));
 		dbg(1, "Hello");
 	}
 };
 
 class Acq400InputBlock : public ConcreteInputBlock {
+
  public:
 	Acq400InputBlock(const char* fname, TiXmlDocument* _doc, int _site) :
 		ConcreteInputBlock(fname, _doc, "", _site) {
