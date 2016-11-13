@@ -23,7 +23,8 @@ class Range;
 class Timebase {
 
 protected:
-	Timebase() {}
+	static int verbose;
+	Timebase();
 public:
 	virtual ~Timebase() {} 
 

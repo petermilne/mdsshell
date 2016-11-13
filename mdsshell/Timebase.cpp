@@ -205,6 +205,14 @@ public:
 
 #define MAXDT_BUF 128
 
+int Timebase::verbose;
+
+Timebase::Timebase() {
+	if (getenv("TimebaseVerbose")){
+		verbose = atoi(getenv("TimebaseVerbose"));
+		fprintf(stderr, "%s verbose=%d\n", _PFN, verbose);
+	}
+}
 class TimebaseImpl: public Timebase {
 
 protected:
@@ -214,6 +222,9 @@ protected:
 	static char *dt_buf;
 
 	virtual int get_dt_multiplier() {
+		if (verbose) {
+			fprintf(stderr, "%s %d\n", _PFN, new_setting.stride);
+		}
 		return new_setting.stride;
 	}
 public:
@@ -249,9 +260,11 @@ public:
 				"(%d * %.3g)",
 				 get_dt_multiplier(),	 
 				 static_cast<double>(new_setting.stime)/NSEC_PER_SEC);
+			if (verbose) fprintf(stderr, "%s %s\n", _PFN, dt_buf);
 
 			dbg(1, "dt_buf %p value:%s", dt_buf, dt_buf);
 		}
+		if (verbose) fprintf(stderr, "%s %s\n", _PFN, dt_buf);
 		return dt_buf;
 	}
 };
