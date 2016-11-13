@@ -1082,16 +1082,12 @@ class BlockFactory {
 				return new Acq164InputBlock(fname, doc);
 			}else if (strstr(model, "ACQ132")){
 				return new Acq132InputBlock(fname, doc);
-			}else if (strncmp(model, "ACQ4",  4) == 0) {
+			}else if (strncmp(model, "ACQ4",  4) == 0 || strncmp(model, "BOLO8BLF", 8) == 0) {
 				if (ConcreteInputBlock::hasRangeSw(doc)){
-					if (strncmp(model, "ACQ42", 5) == 0 ||
-					    strncmp(model, "ACQ437", 6) == 0){
-						return new Acq42xInputBlock(fname, doc, site);
-					}else if (strncmp(model, "ACQ48", 5) == 0) {
+					if (strncmp(model, "ACQ48", 5) == 0) {
 						return new Acq480InputBlock(fname, doc, site);
 					}else{
-						err("AcqCalibration.Info.Model %s with ranges"
-							"NOT SUPPORTED", model);
+						return new Acq42xInputBlock(fname, doc, site);
 					}
 				}else{
 					return new Acq400InputBlock(fname, doc, site);
