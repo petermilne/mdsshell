@@ -30,8 +30,8 @@ DEBUG_CFLAGS     := -Wall -Wno-unknown-pragmas -Wno-format -g -DDEBUG
 RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O3
 
 ifeq (YES, ${CROSS})
-DEBUG_CFLAGS += -D__arm
-RELEASE_CFLAGS += -D__arm
+DEBUG_CFLAGS += -D__arm -D__zynq
+RELEASE_CFLAGS += -D__arm -D__zynq
 endif
 
 DEBUG_CXXFLAGS   := ${DEBUG_CFLAGS}
