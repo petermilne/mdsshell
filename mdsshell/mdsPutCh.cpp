@@ -363,7 +363,7 @@ class RootExpression : public Expression {
 	static list<Expression*> substitutions;     /* list of Expressions, simple expansion required */
 	static list<Expression*> evaluations;        /* list of Expressions, per channel evaluation required */
 
-
+	static int verbose;
 
 	void substitute(VSI ito, const Expression* src_exp) {
 		const list<string> src_list = src_exp->parser.const_list();
@@ -410,6 +410,9 @@ public:
 	static void create() {
 		static int in_create;
 
+		if (getenv("RootExpressionVerbose")){
+			verbose = atoi(getenv("RootExpressionVerbose"));
+		}
 		if (in_create){
 			return;
 		}else{
@@ -467,6 +470,8 @@ public:
 
 
 		dbg(2, "outputs buf \"%s\"", buf);
+
+		if (verbose) fprintf(stderr, "%s \"%s\"\n", _PFN, buf);
 
 		assert(pbuf-buf < maxbuf);
 
@@ -546,6 +551,7 @@ list<Expression*> RootExpression::substitutions;
 list<Expression*> RootExpression::evaluations;
 list<Expression*> RootExpression::expressions;
 
+int RootExpression::verbose;
 Timebase* RootExpression::timebase;
 
 class ExpressionLoader {
