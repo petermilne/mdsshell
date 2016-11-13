@@ -88,8 +88,9 @@ public:
 		}else{
 			start = 0;
 		}
-		start /= stride;
+
 		start += s0;	/* s0 is negative */
+		start /= stride;
 
 		if (rc >= 2){
 			if (isDefault(tok = args.list()[1].c_str())){
