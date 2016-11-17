@@ -1,0 +1,63 @@
+README.D-TACQ
+
+Canonical tree for ACQ400 series
+
+make_acqtree TREE TOPNODE,NCHAN
+eg
+make_acqtree a038 AI,192
+
+Where a038 is a contraction of acq2106_038 *
+* subtrees fail with long names
+
+make_acqtree a038 AI,192
+
+append /etc/mdsplus.conf
+
+log out / log in
+
+newshot a038
+
+Run this postshot script:
+acq2106_038> cat /mnt/local/postshot 
+#!/bin/sh
+
+
+[ -e /mnt/local/sysconfig/mdsshell.sh ] && source /mnt/local/sysconfig/mdsshell.sh
+
+if [ "x$MDSHOST" = "x" ]; then
+	logger -t postshot MDSHOST not defined
+	exit 1
+fi
+
+
+HN=$(hostname)
+TN=a${HN#*_}
+
+mdsConnect $MDSHOST
+mdsOpen $TN
+mdsPutCh --field AI.CH%03d --expr %calsig :
+mdsClose
+mdsValue setEvent\(\'${TN}_99\',42ub\)
+mdsDisconnect
+
+acq2106_038> cat /mnt/local/sysconfig/mdsshell.sh 
+MDSHOST=seil
+
+
+Plot with dwscope
+
+cd SCOPES
+make_scope_32 a038 1 2 3 4 5 6
+
+dwscope &
+load from .dat file
+dt100@seil:~$ ls -1 TREES/uto/SCOPES/a038*
+TREES/uto/SCOPES/a038-001-032.dat
+TREES/uto/SCOPES/a038-033-064.dat
+TREES/uto/SCOPES/a038-065-096.dat
+TREES/uto/SCOPES/a038-097-128.dat
+TREES/uto/SCOPES/a038-129-160.dat
+TREES/uto/SCOPES/a038-161-192.dat
+
+
+

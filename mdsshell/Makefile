@@ -108,10 +108,12 @@ install_canonical_tree_support:
 
 make_acqtree:
 	@echo make patch for standard MDSplus dist for canonical tree
-	mkdir -p tmp/bin
+	mkdir -p tmp/bin tmp/SCOPES
 	mkdir -p tmp/mdsplus/tdi/d-tacq
 	rsync -aC tdi/ tmp/mdsplus/tdi/d-tacq
 	rsync -aC bin/ tmp/bin
+	cp README.D-TACQ tmp
+	cp SCOPES/* tmp/SCOPES
 	cd tmp;tar cvf ../make_acqtree.$(DC).tar .
 	@echo make_acqtree.$(DC).tar created. extract from /usr/local
 

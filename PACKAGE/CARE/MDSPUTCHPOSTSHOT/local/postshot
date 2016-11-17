@@ -1,0 +1,20 @@
+#!/bin/sh
+
+
+[ -e /mnt/local/sysconfig/mdsshell.sh ] && source /mnt/local/sysconfig/mdsshell.sh
+
+if [ "x$MDSHOST" = "x" ]; then
+	logger -t postshot MDSHOST not defined
+	exit 1
+fi
+
+
+HN=$(hostname)
+TN=a${HN#*_}
+
+mdsConnect $MDSHOST
+mdsOpen $TN
+mdsPutCh --field AI.CH%03d --expr %calsig :
+mdsClose
+mdsValue setEvent\(\'${TN}_99\',42ub\)
+mdsDisconnect
