@@ -300,6 +300,7 @@ static struct Globs {
 	UnixSocket* mds;
 	ChannelSelection *channels;
 	int sendfile;
+	int brief;
 }
 	GL = {
 		/* .expr =  */ "$",
@@ -856,6 +857,9 @@ static void mdsPutChannel(int ch, const char* src_file, const char* expr, Timeba
 		exit(-errno);
 	}
 
+	if (GL.brief){
+		fprintf(stderr, "mdsPutCh %d\n", ch);
+	}
 	dbg(1, "done: \"%s\"", chomp(tbuf));
 
 	if (command.errors){
@@ -995,6 +999,7 @@ static struct poptOption opt_table[] = {
 	"number of times to step and repeat timebase [0]"},
 { "subfield", 's', POPT_ARG_STRING, &GL.subfield, 's',
 	"mdsfield name prepends \"field\", %04d substitutes subshot [blank]"},
+{ "brief", 'b', POPT_ARG_INT, &GL.brief, 0, "one line report each channel" },
 { "verbose", 'v', POPT_ARG_INT, &acq200_debug, 0 },
 { "norestore", 0, POPT_ARG_INT, &norestore, 0 },
 { "version",   0, POPT_ARG_NONE, 0, 'v' },
