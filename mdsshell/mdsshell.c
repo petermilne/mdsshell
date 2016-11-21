@@ -422,7 +422,7 @@ static int getImmediateData(struct MdsPutDescriptor* pd, struct GetDataDef* data
 	return pd->dims[0];
 }
 
-static int _setStartStide(FILE *fp, struct GetDataDef* datadef, unsigned el_size)
+static int _setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_size)
 {
 	/* start,samples,stride */
 	int start = 0, stride = 1, len = 0;
@@ -457,7 +457,7 @@ static int _setStartStide(FILE *fp, struct GetDataDef* datadef, unsigned el_size
 static int setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_size)
 {
 	if (datadef->tbdef != 0){
-		return _setStartStide(fp, datadef, el_size);
+		return _setStartStride(fp, datadef, el_size);
 	}else{
 		return 0;
 	}
