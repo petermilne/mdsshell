@@ -343,6 +343,8 @@ static long S_sock;           /* handle of the mdstcpip socket */
 static const char* froot;     /* file root */
 
 
+int user_space_stride = 1;
+
 const char* fname(const char* fn) {
 	if (froot == 0){
 		return fn;
@@ -422,7 +424,7 @@ static int getImmediateData(struct MdsPutDescriptor* pd, struct GetDataDef* data
 	return pd->dims[0];
 }
 
-static int _setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_size)
+static int _setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_size, int *pstride)
 {
 	/* start,samples,stride */
 	int start = 0, stride = 1, len = 0;
@@ -447,21 +449,47 @@ static int _setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_siz
 			exit(1);
 		}
 	}
-	if (stride != 1){
+	if (user_space_stride == 0 && stride != 1){
 		if (ioctl(fileno(fp), ACQ400_FS_STRIDE, stride) != 0){
 			perror("ioctl");
 		}
 	}
+	*pstride = stride;
 	return len;
 }
-static int setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_size)
+static int setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_size, int *stride)
 {
 	if (datadef->tbdef != 0){
-		return _setStartStride(fp, datadef, el_size);
+		return _setStartStride(fp, datadef, el_size, stride);
 	}else{
 		return 0;
 	}
 }
+
+#define _getFileDataStrider_(T) \
+int _getFileDataStrider_##T (void* dest, int nelems, int stride, FILE* fp)	\
+{										\
+	static T* tbuf;								\
+	static int len; 							\
+	int rc; int ii;								\
+	T* destt = (T*)dest; 							\
+										\
+	if (nelems*stride > len){ 						\
+		if (len){ 							\
+			free(tbuf); 						\
+		} 								\
+		len = nelems * stride; 						\
+		tbuf = malloc(sizeof(T)*len); 					\
+	} 									\
+	rc = fread(tbuf, sizeof(T), nelems*stride, fp); 			\
+	for (ii = 0; ii < rc; ++ii){ 						\
+		destt[ii] = tbuf[ii*stride]; 					\
+	} 									\
+	return rc; 								\
+}
+
+_getFileDataStrider_(short);
+_getFileDataStrider_(long);
 static int _getFileData(
 	struct MdsPutDescriptor* pd, struct GetDataDef* datadef,
 	void* dest, int nread)
@@ -469,7 +497,8 @@ static int _getFileData(
 	const char* fn = fname(datadef->filedef);
 	FILE* fp = fopen(fn, "r");
 	int rc;
-	int nr2 = setStartStride(fp, datadef, pd->element_size);
+	int stride = 1;
+	int nr2 = setStartStride(fp, datadef, pd->element_size, &stride);
 	if (nr2){
 		nread = nr2;
 	}
@@ -479,7 +508,16 @@ static int _getFileData(
 		iobPrintf(pd->out, "ERROR: failed to open %s\n", fn);
 		return -1;
 	}
-	rc = fread(dest, pd->element_size, nread, fp);
+	if (user_space_stride && stride != 1){
+		if (pd->element_size == sizeof(short)){
+			return _getFileDataStrider_short(dest, nread, stride, fp);
+		}else{
+			return _getFileDataStrider_long(dest, nread, stride, fp);
+		}
+	}else{
+		rc = fread(dest, pd->element_size, nread, fp);
+	}
+
 	fclose(fp);
 
 	dbg(2, "process file %s returns %d", fn, rc);
