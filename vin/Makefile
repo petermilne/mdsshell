@@ -51,7 +51,7 @@ CXXFLAGS += $(INCS)
 #****************************************************************************
 
 #APPS += vin calibrate xml_lookup cbm 
-APPS += vin calibrate
+APPS += vin calibrate xml_lookup
 #test test_cs input_offsets set_nacc
 
 XAPPS := $(patsubst %,$(EXEDIR)/%,$(APPS))
