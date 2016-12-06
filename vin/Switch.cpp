@@ -277,12 +277,13 @@ class Acq400Switch : public Switch {
 
 
  public:
-	Acq400Switch(int _site, const char* _knob) : site(_site),
-		knob(_knob), switch_string(0)
+	Acq400Switch(int _site, const char* _knob) : site(_site), switch_string(0)
  	{
-		if (strcmp(knob, "gains") == 0){
+		if (strncmp(_knob, "gain", strlen("gain")) == 0){
+			knob = "gains";
 			knob_base = "gain";
 		}else{
+			knob = _knob;
 			err("WARNING: guessing at knob_base:%s", knob);
 			knob_base = knob;
 		}
