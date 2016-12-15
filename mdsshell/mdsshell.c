@@ -485,7 +485,7 @@ int _getFileDataStrider_##T (void* dest, int nelems, int stride, FILE* fp)	\
 	for (ii = 0; ii < rc; ++ii){ 						\
 		destt[ii] = tbuf[ii*stride]; 					\
 	} 									\
-	return rc; 								\
+	return nelems; 								\
 }
 
 _getFileDataStrider_(short);
