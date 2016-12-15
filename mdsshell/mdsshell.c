@@ -482,7 +482,7 @@ int _getFileDataStrider_##T (void* dest, int nelems, int stride, FILE* fp)	\
 		tbuf = malloc(sizeof(T)*len); 					\
 	} 									\
 	rc = fread(tbuf, sizeof(T), nelems*stride, fp); 			\
-	for (ii = 0; ii < rc; ++ii){ 						\
+	for (ii = 0; ii < nelems; ++ii){ 						\
 		destt[ii] = tbuf[ii*stride]; 					\
 	} 									\
 	return nelems; 								\
