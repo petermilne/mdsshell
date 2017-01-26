@@ -99,10 +99,18 @@ protected:
 		TiXmlNode* child = 0;
 
 		for (int iarg = 0; iarg != fields.getArgc(); ++iarg){
-			if (!child){
-				child = doc->FirstChild(fields.getArg(iarg));
+			const char* tag = fields.getArg(iarg);
+			TiXmlNode* parent = child==0? doc: child;
+			if (tag[0] == '@'){
+				const char* attr = parent->ToElement()->Attribute(++tag);
+				if (attr){
+					printf("%s\n", attr);
+				}else{
+					fprintf(stderr, "ERROR, attr %s not found\n", tag);
+				}
+				return 0;
 			}else{
-				child = child->FirstChild(fields.getArg(iarg));
+				child = parent->FirstChild(fields.getArg(iarg));
 			}
 
 			if (!child){
