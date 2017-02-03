@@ -19,7 +19,8 @@ cp -a ../mdsshell/a9/bin/* opkg/usr/local/bin
 cp CARE/* opkg/usr/local/CARE
 cp -a init/* opkg/usr/local/init
 cp -a ../mdsshell/root/.mds* ../mdsshell/root/README opkg/root
-cp -a ../vin/a9/bin/xml_lookup opkg/usr/local/bin
+# xml_lookup moved up to libute
+#cp -a ../vin/a9/bin/xml_lookup opkg/usr/local/bin
 cp -a ../vin/a9/bin/vin opkg/usr/local/bin
 
 

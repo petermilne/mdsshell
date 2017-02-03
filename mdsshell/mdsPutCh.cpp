@@ -130,7 +130,7 @@ Examples
 mdsPutCh  -- subshots 10 --timebase 1,10000,1 --subfield "SUBSHOT%04d" --field "CH%02d" 1:96
 */
 
-#define BUILD "$Id: mdsPutCh.cpp,v 1.35 2010/06/15 16:52:31 pgm Exp $ $Revision: 1.35 $ B1015"
+#define BUILD "$Id: mdsPutCh.cpp B1016"
 
 #include <stdio.h>
 #include <string.h>
@@ -297,6 +297,7 @@ static struct Globs {
 	const char* subshots;
 	const char* subfield;	
 	const char* dataroot_format;
+	int datasz;
 	UnixSocket* mds;
 	ChannelSelection *channels;
 	int sendfile;
@@ -309,6 +310,7 @@ static struct Globs {
 		/* .subshots = */ "",
 		/* .subfield = */ "",
 		/* .dataroot_format = */ "/dev/acq400/data/%d/%02d",
+		/* .datasz = */ sizeof(short),
 		0
 	};
 
@@ -840,7 +842,7 @@ static void mdsPutChannel(int ch, const char* src_file, const char* expr, Timeba
 	char tbuf[128];
 	char *cmdp = cmd_buf;
 
-	cmdp += sprintf(cmdp, "mdsPut --format short --expr %s ", expr);
+	cmdp += sprintf(cmdp, "mdsPut --format %s --expr %s ", GL.datasz==4? "long": "short", expr);
 	cmdp += sprintf(cmdp, "--timebase %s ", GL.timebase);
 	cmdp += sprintf(cmdp, "--dim %d %s %s ", timebase.getSamples(), "--file", src_file);
 
@@ -989,6 +991,9 @@ static struct poptOption opt_table[] = {
 { "site", 0, POPT_ARG_INT, &::site, 0 },
 { "expr",  'E', POPT_ARG_STRING, &GL.expr, 0,
        "default : $" },
+{ "size", 'z', POPT_ARG_INT, &GL.datasz, 0,
+	"data element size in bytes [2], 4 is also valid"
+},
 { "field", 'F', POPT_ARG_STRING, &GL.field, 0,
 	"mdsplus field name %02d substitutes channel" },
 { "dataroot-format", 'D', POPT_ARG_STRING, &GL.dataroot_format, 0,
