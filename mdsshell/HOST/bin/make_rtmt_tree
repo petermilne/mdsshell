@@ -1,0 +1,118 @@
+#!/bin/bash
+# make_rtmt_tree <tree>
+# $Revision: 1.2 $
+
+help() {
+cat - <<EOF
+Instructions:
+
+makes tree with 3 subtrees
+
+tree name MUST be of the form acq196_NNN
+
+EOF
+}
+
+ACQ=$1
+let SN=${ACQ#*acq196_}
+
+SUBTREES="a${SN}_1 a${SN}_2 a${SN}_3"
+
+
+if [ $SN -lt 10 -o $SN -ge 1000 ]; then
+	echo ERROR make_rtmt_tree acq196_nnn
+	exit 1
+fi
+
+echo make_rtmt_tree $ACQ serial $SN
+
+
+JOB=/tmp/make_rtmt_tree.sh
+ESY=/tmp/$ACQ.envsyms
+
+TREE=$ACQ
+
+mkdir -p $TREE
+
+echo >$ESY '# environment syms for '$ACQ
+( cd $TREE
+for subtree in $SUBTREES
+do
+	echo >>$JOB "	"export ${subtree}_path=$PWD/${subtree}
+	echo >>$ESY ${subtree}_path=$PWD/${subtree}
+done
+)
+
+
+cat - >$JOB <<EOF
+#!/bin/bash
+
+echo building TREE $TREE at $PWD
+
+export ${TREE}_path=$(pwd)/$TREE
+
+
+
+(
+	cd $TREE
+EOF
+
+
+
+
+let c2=0
+for subtree in $SUBTREES
+do
+	let c1=$c2+1
+	let c2=$c2+32
+	NODE=$(printf AI%02d%02d $c1 $c2)
+	echo >>$JOB "	"make_acqtree $subtree $NODE,32
+done
+	
+cat - >>$JOB <<EOF
+)
+
+tdic <<TDIC_EOF
+Tcl("edit/new $TREE");
+EOF
+
+for subtree in $SUBTREES
+do
+cat - >>$JOB << EOF
+Tcl("add node .$subtree");
+Tcl("set node .$subtree /subtree");
+EOF
+done
+
+cat - >>$JOB <<EOF
+Tcl("write");
+Tcl("close");
+quit
+TDIC_EOF
+
+echo
+echo
+echo '# add path to global mds environment like this:'
+echo >>$ESY ${TREE}_path=$(pwd)/${TREE}
+echo cat $ESY '>>/usr/local/mdsplus/local/envsyms'
+
+EOF
+
+cat - >~/bin/${TREE}_newshot <<EOF
+for tree in ${TREE} ${SUBTREES}
+do
+	newshot \$tree
+	echo Tree:\$tree shot:\$(getshot \$tree)
+done
+EOF
+
+
+	
+chmod a+rx ~/bin/${TREE}_newshot
+echo created ~/bin/${TREE}_newshot
+
+chmod u+rx $JOB
+echo now run $JOB
+
+
+

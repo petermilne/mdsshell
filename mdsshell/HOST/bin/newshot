@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ "x$1" = "x" ]
+then
+	echo newshot tree \[tree\]
+	exit
+fi
+
+for TREE in $*
+do
+mdstcl <<EOF
+set tree $TREE /shot=-1
+set current $TREE /increment
+create pulse 0
+set tree $TREE /shot=0
+EOF
+done
+
