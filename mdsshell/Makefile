@@ -110,6 +110,7 @@ make_acqtree:
 	@echo make patch for standard MDSplus dist for canonical tree
 	mkdir -p tmp/bin tmp/SCOPES
 	mkdir -p tmp/mdsplus/tdi/d-tacq
+	rsync -ax HOST/* tmp
 	rsync -aC tdi/ tmp/mdsplus/tdi/d-tacq
 	rsync -aC bin/ tmp/bin
 	cp README.D-TACQ tmp

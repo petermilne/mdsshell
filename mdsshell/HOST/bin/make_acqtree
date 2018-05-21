@@ -90,7 +90,9 @@ TDIC_EOF
 echo
 echo
 echo '# add path to global mds environment like this:'
-echo echo ${TREE}_path $(pwd)/${TREE} '>>/usr/local/mdsplus/local/envsyms'
+echo "${TREE}_path $(pwd)/${TREE} "
+[ -e /usr/local/mdsplus/local/envsyms] && echo 'file possibly /usr/local/mdsplus/local/envsyms'
+[ -e /etc/mdsplus.conf ] && echo echo 'file possibly /etc/mdsplus.conf'
 
 EOF
 

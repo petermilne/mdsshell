@@ -130,7 +130,7 @@ Examples
 mdsPutCh  -- subshots 10 --timebase 1,10000,1 --subfield "SUBSHOT%04d" --field "CH%02d" 1:96
 */
 
-#define BUILD "$Id: mdsPutCh.cpp B1016"
+#define BUILD "$Id: mdsPutCh.cpp B1017"
 
 #include <stdio.h>
 #include <string.h>
@@ -1018,8 +1018,22 @@ POPT_AUTOHELP
 POPT_TABLEEND		
 };
 
+void getDataSize() {
+	FILE *fp = popen("get.site 0 data32", "r");
+	if (fp){
+		char buf [80];
+		fgets(buf, 80, fp);
+		if (atoi(buf)){
+			GL.datasz = 4;
+		}
+		pclose(fp);
+	}
+}
 static void initContext()
 {
+#ifdef __zynq
+	getDataSize();
+#else
 	/** sendfile mode default if no switch, else MUST be specified */
 	const char* sendfile = getenv("SENDFILE");
 
@@ -1036,6 +1050,7 @@ static void initContext()
 	}
 
 	dbg(2, "sendfile %d", GL.sendfile);
+#endif
 
 	const char *command_sock = getenv("COMMAND_SOCK");
 	if (command_sock){
