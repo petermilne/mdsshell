@@ -302,6 +302,7 @@ static struct Globs {
 	ChannelSelection *channels;
 	int sendfile;
 	int brief;
+	char* filter;
 }
 	GL = {
 		/* .expr =  */ "$",
@@ -843,7 +844,11 @@ static void mdsPutChannel(int ch, const char* src_file, const char* expr, Timeba
 	char *cmdp = cmd_buf;
 
 	cmdp += sprintf(cmdp, "mdsPut --format %s --expr %s ", GL.datasz==4? "long": "short", expr);
-	cmdp += sprintf(cmdp, "--timebase %s ", GL.timebase);
+	if (timebase.getStride() > 1 && GL.filter != 0){
+		cmdp += sprintf(cmdp, "--timebase=%s,%s ", GL.timebase, GL.filter);
+	}else{
+		cmdp += sprintf(cmdp, "--timebase %s ", GL.timebase);
+	}
 	cmdp += sprintf(cmdp, "--dim %d %s %s ", timebase.getSamples(), "--file", src_file);
 
 	sprintf(tbuf, GL.field, ch);
@@ -1000,6 +1005,9 @@ static struct poptOption opt_table[] = {
 	"source data format, eg /dev/acq400/data/%d/%02d %d: site, %02d substitutes channel" },
 { "timebase", 'T', POPT_ARG_STRING, &GL.timebase, 0,
         "start,length,stride, default: all [" DEFTIMEBASE "]" },
+{ "filter", 'f', POPT_ARG_STRING, &GL.filter, 0,
+	"mean  : stride>1 : filter data using "
+},
 { "subshots", 'S', POPT_ARG_INT, &GL.subshots, 'S',
 	"number of times to step and repeat timebase [0]"},
 { "subfield", 's', POPT_ARG_STRING, &GL.subfield, 's',
