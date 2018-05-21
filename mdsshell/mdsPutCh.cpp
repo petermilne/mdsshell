@@ -95,6 +95,7 @@ It is possible to create a custom user expression based on these values, for exa
   - Saving data to MDSPLUS SIGNALS with correct timebase
    - use the %calsig expression
    - works with full, and sub timebases - the --timebase switch is automatically translated into the MDSplus expression.
+   - when stride>1, --filter=mean will enable a compute mean of values between stride.
 
 @todo: future options to supporting REPEATED GATE:
 
@@ -121,6 +122,10 @@ Examples
 
 - mdsPutCh --field "HYPERACQ:SUB_CH%02d" --expr %calsig --timebase 1,:,100 1:96
 
+# as before, but with subrate filter :
+
+- mdsPutCh --field "HYPERACQ:SUB_CH%02d" --expr %calsig --timebase 1,:,100 --filter=mean 1:96
+
 # upload 10000 samples starting at sample #50000 :
 
 - mdsPutCh --field "HYPERACQ:ROI_CH%02d" --expr %calsig --timebase 50000,10000,1 1:96
@@ -130,7 +135,7 @@ Examples
 mdsPutCh  -- subshots 10 --timebase 1,10000,1 --subfield "SUBSHOT%04d" --field "CH%02d" 1:96
 */
 
-#define BUILD "$Id: mdsPutCh.cpp B1017"
+#define BUILD "$Id: mdsPutCh.cpp B1020"
 
 #include <stdio.h>
 #include <string.h>
