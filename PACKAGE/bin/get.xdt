@@ -1,4 +1,8 @@
 #!/bin/sh
 # ASSUMES SITE1 is the MCLK
 get.site 0 SIG:CLK_S1:FREQ | awk '{print 1/$2}'
+# For ACQ480:
+#get.site 1 ACQ480:OSR | awk '{print 1/$2}'
+
+
 

@@ -1,9 +1,11 @@
 #!/bin/sh
-# example postshot script
-# to activate, copy to /mnt/local/postshot
-mdsConnect andros
-mdsOpen acq1001
-mdsPutCh --site=1 --field=A017_1.CH%02d -D=/dev/shm/transient/ch/%02d -v 1 --expr %calsig 1:4
-mdsValue setEvent\(\'acq1001done\',42ub\)
+MDSHOST=192.168.1.155
+HN=$(hostname)
+mdsConnect $MDSHOST
+mdsOpen ${HN}
+mdsPutCh --site=0  --field=${HN}.AI.CH%02d --expr %calsig :
+# use next line if NCHAN > 99
+#mdsPutCh --site=0  --field=${HN}.AI.CH%03d --expr %calsig :
+mdsValue setEvent\(\'${HN}_done\',42ub\)
 mdsClose
-
+mdsDisconnect
