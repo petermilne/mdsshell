@@ -483,9 +483,22 @@ int _getFileDataStrider_##T (void* dest, int nelems, int stride, FILE* fp)	\
 	} 									\
 	rc = fread(tbuf, sizeof(T), nelems*stride, fp); 			\
 	nelems = rc/stride;							\
-	for (ii = 0; ii < nelems; ++ii){ 					\
-		destt[ii] = tbuf[ii*stride]; 					\
-	} 									\
+	if (stride < 0){							\
+		/* mean required */						\
+		stride = -stride;						\
+		for (ii = 0; ii < nelems; ++ii){ 				\
+			long mean = 0;						\
+			int im = 0;						\
+			for (im = 0; im < stride; ++im){			\
+				mean += tbuf[ii*stride + im];			\
+			}							\
+			destt[ii] = mean/stride; 				\
+		}								\
+	}else{									\
+		for (ii = 0; ii < nelems; ++ii){ 				\
+			destt[ii] = tbuf[ii*stride]; 				\
+		} 								\
+	}									\
 	return nelems; 								\
 }
 
@@ -510,6 +523,9 @@ static int _getFileData(
 		return -1;
 	}
 	if (user_space_stride && stride != 1){
+		if (strstr(datadef->tbdef, "mean") != 0){
+			stride = -stride;
+		}
 		if (pd->element_size == sizeof(short)){
 			return _getFileDataStrider_short(dest, nread, stride, fp);
 		}else{

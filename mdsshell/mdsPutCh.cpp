@@ -95,6 +95,7 @@ It is possible to create a custom user expression based on these values, for exa
   - Saving data to MDSPLUS SIGNALS with correct timebase
    - use the %calsig expression
    - works with full, and sub timebases - the --timebase switch is automatically translated into the MDSplus expression.
+   - when stride>1, --filter=mean will enable a compute mean of values between stride.
 
 @todo: future options to supporting REPEATED GATE:
 
@@ -121,6 +122,10 @@ Examples
 
 - mdsPutCh --field "HYPERACQ:SUB_CH%02d" --expr %calsig --timebase 1,:,100 1:96
 
+# as before, but with subrate filter :
+
+- mdsPutCh --field "HYPERACQ:SUB_CH%02d" --expr %calsig --timebase 1,:,100 --filter=mean 1:96
+
 # upload 10000 samples starting at sample #50000 :
 
 - mdsPutCh --field "HYPERACQ:ROI_CH%02d" --expr %calsig --timebase 50000,10000,1 1:96
@@ -130,7 +135,7 @@ Examples
 mdsPutCh  -- subshots 10 --timebase 1,10000,1 --subfield "SUBSHOT%04d" --field "CH%02d" 1:96
 */
 
-#define BUILD "$Id: mdsPutCh.cpp B1016"
+#define BUILD "$Id: mdsPutCh.cpp B1020"
 
 #include <stdio.h>
 #include <string.h>
@@ -302,6 +307,7 @@ static struct Globs {
 	ChannelSelection *channels;
 	int sendfile;
 	int brief;
+	char* filter;
 }
 	GL = {
 		/* .expr =  */ "$",
@@ -843,7 +849,11 @@ static void mdsPutChannel(int ch, const char* src_file, const char* expr, Timeba
 	char *cmdp = cmd_buf;
 
 	cmdp += sprintf(cmdp, "mdsPut --format %s --expr %s ", GL.datasz==4? "long": "short", expr);
-	cmdp += sprintf(cmdp, "--timebase %s ", GL.timebase);
+	if (timebase.getStride() > 1 && GL.filter != 0){
+		cmdp += sprintf(cmdp, "--timebase=%s,%s ", GL.timebase, GL.filter);
+	}else{
+		cmdp += sprintf(cmdp, "--timebase %s ", GL.timebase);
+	}
 	cmdp += sprintf(cmdp, "--dim %d %s %s ", timebase.getSamples(), "--file", src_file);
 
 	sprintf(tbuf, GL.field, ch);
@@ -1000,6 +1010,9 @@ static struct poptOption opt_table[] = {
 	"source data format, eg /dev/acq400/data/%d/%02d %d: site, %02d substitutes channel" },
 { "timebase", 'T', POPT_ARG_STRING, &GL.timebase, 0,
         "start,length,stride, default: all [" DEFTIMEBASE "]" },
+{ "filter", 'f', POPT_ARG_STRING, &GL.filter, 0,
+	"mean  : stride>1 : filter data using "
+},
 { "subshots", 'S', POPT_ARG_INT, &GL.subshots, 'S',
 	"number of times to step and repeat timebase [0]"},
 { "subfield", 's', POPT_ARG_STRING, &GL.subfield, 's',
@@ -1018,8 +1031,22 @@ POPT_AUTOHELP
 POPT_TABLEEND		
 };
 
+void getDataSize() {
+	FILE *fp = popen("get.site 0 data32", "r");
+	if (fp){
+		char buf [80];
+		fgets(buf, 80, fp);
+		if (atoi(buf)){
+			GL.datasz = 4;
+		}
+		pclose(fp);
+	}
+}
 static void initContext()
 {
+#ifdef __zynq
+	getDataSize();
+#else
 	/** sendfile mode default if no switch, else MUST be specified */
 	const char* sendfile = getenv("SENDFILE");
 
@@ -1036,6 +1063,7 @@ static void initContext()
 	}
 
 	dbg(2, "sendfile %d", GL.sendfile);
+#endif
 
 	const char *command_sock = getenv("COMMAND_SOCK");
 	if (command_sock){
