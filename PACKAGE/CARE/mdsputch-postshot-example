@@ -1,11 +1,12 @@
 #!/bin/sh
-MDSHOST=192.168.1.155
+MDSHOST=andros
 HN=$(hostname)
 mdsConnect $MDSHOST
 mdsOpen ${HN}
-mdsPutCh --site=0  --field=${HN}.AI.CH%02d --expr %calsig :
+mdsPutCh -b 1 --site=0  --field=AI.CH%02d --expr %calsig :
 # use next line if NCHAN > 99
-#mdsPutCh --site=0  --field=${HN}.AI.CH%03d --expr %calsig :
+#mdsPutCh --site=0  --field=AI.CH%03d --expr %calsig :
 mdsValue setEvent\(\'${HN}_done\',42ub\)
 mdsClose
 mdsDisconnect
+
