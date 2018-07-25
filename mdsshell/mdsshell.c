@@ -430,9 +430,11 @@ static int _setStartStride(FILE *fp, struct GetDataDef* datadef, unsigned el_siz
 	int start = 0, stride = 1, len = 0;
 	int dontcare;
 
-	if (sscanf(datadef->tbdef, ",*,%d", &stride) == 1){
+	if (sscanf(datadef->tbdef, ",*,%d", &stride) == 1 ||
+	    sscanf(datadef->tbdef, "*,*,%d", &stride) == 1   ){
 		dbg(1, "%d stride set %d", __LINE__, stride);
-	}else if (sscanf(datadef->tbdef, ",:,%d", &stride) == 1){
+	}else if (sscanf(datadef->tbdef, ",:,%d", &stride) == 1 ||
+	          sscanf(datadef->tbdef, ":,:,%d", &stride) == 1   ){
 		dbg(1, "%d stride set %d", __LINE__, stride);
 	}else if (sscanf(datadef->tbdef, "%d,%c,%d", &start, &dontcare, &stride) == 3){
 		dbg(1, "%d start, stride set %d,%d", __LINE__, start, stride);
