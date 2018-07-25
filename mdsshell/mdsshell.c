@@ -475,6 +475,11 @@ int _getFileDataStrider_##T (void* dest, int nelems, int stride, FILE* fp)	\
 	static int len; 							\
 	int rc; int ii;								\
 	T* destt = (T*)dest; 							\
+	int calc_mean = stride < 0;						\
+										\
+	if (calc_mean){								\
+		stride = -stride;						\
+	}									\
 										\
 	if (nelems*stride > len){ 						\
 		if (len){ 							\
@@ -485,9 +490,7 @@ int _getFileDataStrider_##T (void* dest, int nelems, int stride, FILE* fp)	\
 	} 									\
 	rc = fread(tbuf, sizeof(T), nelems*stride, fp); 			\
 	nelems = rc/stride;							\
-	if (stride < 0){							\
-		/* mean required */						\
-		stride = -stride;						\
+	if (calc_mean){								\
 		for (ii = 0; ii < nelems; ++ii){ 				\
 			long mean = 0;						\
 			int im = 0;						\
