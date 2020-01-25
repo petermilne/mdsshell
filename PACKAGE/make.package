@@ -3,7 +3,7 @@
 DC=$(date +%y%m%d%H%M)
 SEQ=70
 PKG=mdsshell
-PACKAGES=../../../PACKAGES
+PACKAGES=../../PACKAGES.OPT
 
 rm -Rf opkg/*
 mkdir -p opkg/usr/local/bin \
@@ -14,7 +14,7 @@ mkdir -p opkg/usr/local/bin \
 
 cp -a bin/* opkg/usr/local/bin
 cp -a ../mdsplus/lib/libMdsIpShr.so opkg/usr/local/lib
-cp -a ../mdstcpip/mdsshell opkg/usr/local/bin
+#cp -a ../mdstcpip/mdsshell opkg/usr/local/bin
 cp -a ../mdsshell/a9/bin/* opkg/usr/local/bin
 cp CARE/* opkg/usr/local/CARE
 cp -a init/* opkg/usr/local/init
