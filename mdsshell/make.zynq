@@ -1,2 +1,2 @@
-source ../../../setup.env
+source ../../setup.env
 make $*

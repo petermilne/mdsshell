@@ -6,7 +6,7 @@ CROSS := NO
 endif
 
 ifeq (YES, ${CROSS})
-        TOOLPREFIX=arm-xilinx-linux-gnueabi-
+        TOOLPREFIX=arm-linux-gnueabihf-
 	OUTDIR=a9
 	ARCH=a9
 else

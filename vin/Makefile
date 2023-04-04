@@ -24,7 +24,7 @@ LIBFILE=$(SONAME).0.1
 
 
 ifeq (YES, $(CROSS))
-EXTRA_LIBS=-L../../../lib -ltinyxml -lacq -lpopt -lrt
+EXTRA_LIBS=-L../../lib -ltinyxml -lacq -lpopt -lrt
 LIBS := -L../lib/$(ARCH)/lib -l$(patsubst lib%,%, $(LIBNAME))
 else
 EXTRA_LIBS=-L../tinyxml/$(ARCH)/lib -l tinyxml \
@@ -41,7 +41,7 @@ endif
 # Include paths
 #****************************************************************************
 
-INCS := -I../include -I../../../include/
+INCS := -I../include -I../../include/
 
 CFLAGS += $(INCS)
 CXXFLAGS += $(INCS)
@@ -62,8 +62,8 @@ all:  lib apps crossed-wires
 
 
 lib: $(LIBDIR)/$(LIBFILE)
-	echo zynq cp -va a9/lib/* ../../../lib/
-	cp -va a9/lib/* ../../../lib/
+	echo zynq cp -va a9/lib/* ../../lib/
+	cp -va a9/lib/* ../../lib/
 
 apps: $(XAPPS)
 

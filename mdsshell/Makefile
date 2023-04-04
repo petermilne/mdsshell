@@ -8,15 +8,19 @@ DEBUG := NO
 include ../d-top.mak
 
 
-INCS=-I ../mdsplus/include -I../include -I../../../include/
+INCS=-I ../mdsplus/include -I../include -I../../include/
 
 
 ifeq (YES, $(CROSS))
 CFLAGS += $(INCS)  -D__arm -D__zynq $(RELEASE_CFLAGS) 
-LIBS=-L../../../lib/ -L../mdsplus/lib/ -l popt -l acq -lMdsIpShr
+LIBS=-L../../../lib/ -L../mdsplus/lib/ \
+     -L../../target/lib/ \
+	-l popt -l acq -lMdsIpShr
+#     -L../../../buildroot/output/target/usr/lib/ \
+#     -L../../ACQ420FMC/ \
 else
 CFLAGS += $(INCS)
-LIBS=-L../lib/$(ARCH)/lib -l popt -lMdsIpShr
+LIBS=-L../lib/$(ARCH)/lib -l popt -L../mdsplus/lib -lMdsIpShr
 endif
 
 LFLAGS=$(LIBS)

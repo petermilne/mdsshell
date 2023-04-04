@@ -105,7 +105,7 @@ $(LIBDIR)/$(LIBFILE) : $(LOBJS)
 lib: $(LIBDIR)/$(LIBFILE)
 
 zynq: all
-	cp -a a9/lib/* ../../../lib/
+	cp -a a9/lib/* ../../lib/
 
 #****************************************************************************
 # common rules
